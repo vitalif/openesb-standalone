@@ -1,0 +1,206 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>net.open-esb</groupId>
+        <artifactId>openesb-standalone</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>openesb-standalone-packaging</artifactId>
+    <packaging>pom</packaging>
+    
+    <name>OpenESB - Standalone - Packaging</name>
+    <description>OpenESB runtime in standalone mode - Packaging</description>
+    
+    <build>
+        <finalName>openesb-standalone-${project.version}</finalName>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>open-esb</groupId>
+                                    <artifactId>core-top</artifactId>
+                                    <version>${openesb.version}</version>
+                                    <classifier>distribution</classifier>
+                                    <type>zip</type>
+                                    <outputDirectory>${stagingDir}</outputDirectory>
+                                    <destFileName>openesb-core-distribution.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-fetch-openesb-standalone</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.open-esb</groupId>
+                                    <artifactId>openesb-standalone-framework</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${stagingDir}</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>net.open-esb</groupId>
+                                    <artifactId>openesb-standalone-bootstrap</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${stagingDir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-fetch-openesb-standalone-ext</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.atomikos</groupId>
+                                    <artifactId>transactions-jta</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${stagingDir}/ext</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>                    
+                    <execution>
+                        <id>${project.artifactId}-unzip-openesb-core</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <unzip src="${stagingDir}/openesb-core-distribution.zip" dest="${project.build.outputDirectory}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-copy-standalone-libraries</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.outputDirectory}/lib">
+                                    <fileset dir="${stagingDir}">
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-copy-standalone-ext-libraries</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.outputDirectory}/lib/ext">
+                                    <fileset dir="${stagingDir}/ext">
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-copy-standalone-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.outputDirectory}">
+                                    <fileset dir="${basedir}/src/main/resources">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-zip</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        
+                        <configuration>
+                            <target>
+                                <mkdir dir="${project.build.directory}/logs"/>
+                                <delete file="${project.build.directory}/${project.build.finalName}.zip" />
+                                <zip destfile="${project.build.directory}/${project.build.finalName}.zip"
+                                     basedir="${project.build.outputDirectory}"
+                                 />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <!-- Framework and dependencies -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-standalone-bootstrap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-standalone-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jta</artifactId>
+            <version>${atomikos.version}</version>
+        </dependency>
+    </dependencies>
+    
+    <properties>
+        <stagingDir>${project.build.directory}/staging</stagingDir>
+    </properties>
+</project>
