@@ -77,6 +77,7 @@ echo ""
 # Execute the JVM in the foreground
 "$JAVA" $JAVA_OPTS \
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
+        -Dinstall.root=$OPENESB_HOME
         -jar "$OPENESB_BOOT_CLASSPATH" \
         "$@"
 OPENESB_STATUS=$?
