@@ -44,9 +44,9 @@ export JAVA_OPTS="$JAVA_OPTS"
 # Setup the JVM
 if [ "x$JAVA" = "x" ]; then
     if [ "x$JAVA_HOME" != "x" ]; then
-	JAVA="$JAVA_HOME/bin/java"
+    JAVA="$JAVA_HOME/bin/java"
     else
-	JAVA="java"
+    JAVA="java"
     fi
 fi
 
@@ -76,6 +76,7 @@ echo ""
 
 # Execute the JVM in the foreground
 "$JAVA" $JAVA_OPTS \
+        -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
         -jar "$OPENESB_BOOT_CLASSPATH" \
         "$@"
 OPENESB_STATUS=$?
