@@ -101,7 +101,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <unzip src="${stagingDir}/openesb-core-distribution.zip" dest="${project.build.outputDirectory}"/>
+                                <unzip src="${stagingDir}/openesb-core-distribution.zip" dest="${project.build.directory}/${project.build.finalName}"/>
                             </target>
                         </configuration>
                     </execution>
@@ -114,7 +114,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy todir="${project.build.outputDirectory}/lib">
+                                <copy todir="${project.build.directory}/${project.build.finalName}/lib">
                                     <fileset dir="${stagingDir}">
                                         <include name="*.jar"/>
                                     </fileset>
@@ -131,7 +131,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy todir="${project.build.outputDirectory}/lib/ext">
+                                <copy todir="${project.build.directory}/${project.build.finalName}/lib/ext">
                                     <fileset dir="${stagingDir}/ext">
                                         <include name="*.jar"/>
                                     </fileset>
@@ -148,7 +148,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy todir="${project.build.outputDirectory}">
+                                <copy todir="${project.build.directory}/${project.build.finalName}">
                                     <fileset dir="${basedir}/src/main/resources">
                                         <include name="**/*"/>
                                     </fileset>
@@ -166,10 +166,12 @@
                         
                         <configuration>
                             <target>
-                                <mkdir dir="${project.build.outputDirectory}/logs"/>
                                 <delete file="${project.build.directory}/${project.build.finalName}.zip" />
+
+                                <mkdir dir="${project.build.directory}/${project.build.finalName}/logs"/>
+
                                 <zip destfile="${project.build.directory}/${project.build.finalName}.zip"
-                                     basedir="${project.build.outputDirectory}"
+                                     basedir="${project.build.directory}" includes="${project.build.finalName}/**" 
                                  />
                             </target>
                         </configuration>
