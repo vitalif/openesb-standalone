@@ -164,7 +164,7 @@ public class JSEJBIFramework
      *  have been destroyed.
      *  @throws javax.jbi.JBIException failed to unload JBI framework
      */
-    public synchronized void unload()
+    public void unload()
         throws Exception
     {
         if (!mLoaded)
