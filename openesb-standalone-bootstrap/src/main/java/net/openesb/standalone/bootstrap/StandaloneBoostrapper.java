@@ -270,8 +270,8 @@ public class StandaloneBoostrapper
         
         try
         {
-            createExtensionClassLoader();
             createFrameworkClassLoader();
+            createExtensionClassLoader();
             
             // Set the thread context classloader to the extension classloader
             Thread.currentThread().setContextClassLoader(mExtensionClassLoader);
@@ -318,7 +318,7 @@ public class StandaloneBoostrapper
         
         cpURLs = cpList.toArray(cpURLs);
         mFrameworkClassLoader = new URLClassLoader(
-                cpURLs, mExtensionClassLoader);
+                cpURLs, getClass().getClassLoader());
     }
     
     /** Creates a separate extension classloader for the component classloading
@@ -352,7 +352,7 @@ public class StandaloneBoostrapper
 
         cpURLs = cpList.toArray(cpURLs);
         mExtensionClassLoader = new URLClassLoader(
-                cpURLs, getClass().getClassLoader());
+                cpURLs, mFrameworkClassLoader);
     }
     
     /** Utility method to invoke a method using reflection.  This is kind of
