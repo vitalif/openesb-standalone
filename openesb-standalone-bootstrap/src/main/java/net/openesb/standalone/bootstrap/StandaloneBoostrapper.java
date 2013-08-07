@@ -270,11 +270,11 @@ public class StandaloneBoostrapper
         
         try
         {
-            createFrameworkClassLoader();
             createExtensionClassLoader();
+            createFrameworkClassLoader();
             
             // Set the thread context classloader to the extension classloader
-            Thread.currentThread().setContextClassLoader(mExtensionClassLoader);
+            Thread.currentThread().setContextClassLoader(mFrameworkClassLoader);
             
             fwClass = mFrameworkClassLoader.loadClass(JBI_FRAMEWORK_CLASS_NAME);
             fwCtor = fwClass.getDeclaredConstructor(Properties.class);
@@ -308,6 +308,7 @@ public class StandaloneBoostrapper
                     continue;
                 }
                 
+                mLog.log(Level.FINEST, "Framework classloader : loading library {0}", lib.getName());
                 cpList.add(lib.toURI().toURL());
             }
             catch (java.net.MalformedURLException urlEx)
@@ -318,7 +319,7 @@ public class StandaloneBoostrapper
         
         cpURLs = cpList.toArray(cpURLs);
         mFrameworkClassLoader = new URLClassLoader(
-                cpURLs, getClass().getClassLoader());
+                cpURLs, mExtensionClassLoader);
     }
     
     /** Creates a separate extension classloader for the component classloading
@@ -341,6 +342,7 @@ public class StandaloneBoostrapper
                 // Everything in the lib/ext directory goes into the classpath
                 for (File lib : libDir.listFiles())
                 {
+                    mLog.log(Level.FINEST, "Extension classloader : loading library {0}", lib.getName());
                     cpList.add(lib.toURI().toURL());
                 }
             }
@@ -352,7 +354,7 @@ public class StandaloneBoostrapper
 
         cpURLs = cpList.toArray(cpURLs);
         mExtensionClassLoader = new URLClassLoader(
-                cpURLs, mFrameworkClassLoader);
+                cpURLs, getClass().getClassLoader());
     }
     
     /** Utility method to invoke a method using reflection.  This is kind of
