@@ -111,7 +111,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext
      */
     public boolean isAdminServer()
     {
-        return true;
+        return false;
     }
     
     /**
