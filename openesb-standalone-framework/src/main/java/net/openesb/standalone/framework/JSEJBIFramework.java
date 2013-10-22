@@ -64,10 +64,9 @@ public class JSEJBIFramework
     public static final String CONNECTOR_PORT = "connector.port";
     
     /** Configuration defaults. */
-    private static final String DEFAULT_INSTALL_ROOT =
-            System.getProperty("user.dir");
-    private static final String DEFAULT_INSTANCE_NAME = 
-            "server";
+    private static final String DEFAULT_INSTALL_ROOT = System.getProperty("user.dir");
+    private static final String DEFAULT_INSTANCE_NAME = "server";
+    private static final String DEFAULT_CONNECTOR_PORT = "8699";
     
     private JSEPlatformContext  mPlatformContext;
     private boolean             mLoaded;
@@ -86,7 +85,8 @@ public class JSEJBIFramework
         mEnvironment = environment;
         mPlatformContext = new JSEPlatformContext(
                 mEnvironment.getProperty(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
-                mEnvironment.getProperty(INSTALL_ROOT, DEFAULT_INSTALL_ROOT));
+                mEnvironment.getProperty(INSTALL_ROOT, DEFAULT_INSTALL_ROOT),
+                mEnvironment.getProperty(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
     }
     
     /** Load the JBI framework with the specified environment.  When this method

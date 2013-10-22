@@ -15,7 +15,7 @@
     
     <dependencies>
         <dependency>
-            <groupId>open-esb</groupId>
+            <groupId>net.open-esb</groupId>
             <artifactId>framework-core</artifactId>
         </dependency>
         <dependency>

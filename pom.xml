@@ -46,7 +46,7 @@
         <dependencies>
             <!-- OpenESB Core -->
             <dependency>
-                <groupId>open-esb</groupId>
+                <groupId>net.open-esb</groupId>
                 <artifactId>framework-core</artifactId>
                 <version>${openesb.version}</version>
                 <exclusions>
@@ -58,28 +58,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- This part should be in the parent POM -->
-    <repositories>
-        <repository>
-            <id>openesb-snapshot</id>
-            <url>http://openesb-dev.org:8081/nexus/content/repositories/openesb-snapshot/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>openesb-release</id>
-            <url>http://openesb-dev.org:8081/nexus/content/repositories/openesb-release/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>

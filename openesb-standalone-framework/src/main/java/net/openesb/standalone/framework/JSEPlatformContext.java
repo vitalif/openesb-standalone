@@ -51,14 +51,16 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext
     private String          mInstanceName;
     private String          mInstanceRoot;
     private String          mInstallRoot;
+    private String          mConnectorPort;
     private InitialContext  mNamingContext;
     private Logger          mLog = Logger.getLogger(getClass().getPackage().getName());
     
-    public JSEPlatformContext(String instanceName, String installRoot)
+    public JSEPlatformContext(String instanceName, String installRoot, String connectorPort)
     {
         mInstanceName = instanceName;
         mInstallRoot  = installRoot;
         mInstanceRoot = installRoot + File.separator + instanceName;
+        mConnectorPort = connectorPort;
         
         try
         {
@@ -111,7 +113,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext
      */
     public boolean isAdminServer()
     {
-        return false;
+        return true;
     }
     
     /**
@@ -261,7 +263,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext
      */
     public String getJmxRmiPort()
     {
-        return null;
+        return mConnectorPort;
     }
     
     /**
