@@ -100,6 +100,12 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${stagingDir}/ext</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.geronimo.ext.openejb</groupId>
+                                    <artifactId>javaee-api</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${stagingDir}/ext</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -233,6 +239,13 @@
             <groupId>com.atomikos</groupId>
             <artifactId>atomikos-util</artifactId>
             <version>${atomikos.version}</version>
+        </dependency>
+        
+        <!-- JavaEE API -->
+        <dependency>
+            <groupId>org.apache.geronimo.ext.openejb</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>5.0.3</version>
         </dependency>
     </dependencies>
     
