@@ -201,9 +201,11 @@ public class JSEJBIFramework
     private void createJMXConnectorServer(int port)
     {
         HashMap<String, String> map = new HashMap<String, String>();
+        
+        /*
         map.put("java.naming.factory.initial", 
                 RegistryContextFactory.class.getName());
-        
+        */
         try
         {   
             // Create the service URL
