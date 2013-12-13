@@ -51,7 +51,7 @@ if [ "x$JAVA" = "x" ]; then
 fi
 
 # Setup the classpath
-runjar="$OPENESB_HOME/lib/openesb-standalone-bootstrap.jar"
+runjar=`find $OPENESB_HOME -name "openesb-standalone-bootstrap*.jar"`
 if [ ! -f "$runjar" ]; then
     die "Missing required file: $runjar"
 fi

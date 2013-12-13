@@ -50,7 +50,6 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <stripVersion>true</stripVersion>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>net.open-esb</groupId>
@@ -61,6 +60,24 @@
                                 <artifactItem>
                                     <groupId>net.open-esb</groupId>
                                     <artifactId>openesb-standalone-bootstrap</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${stagingDir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>${project.artifactId}-fetch-openesb-admin-rest</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.open-esb</groupId>
+                                    <artifactId>openesb-admin-rest</artifactId>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${stagingDir}</outputDirectory>
                                 </artifactItem>
@@ -212,7 +229,6 @@
             <artifactId>openesb-standalone-bootstrap</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
             <groupId>net.open-esb</groupId>
             <artifactId>openesb-standalone-framework</artifactId>
@@ -246,6 +262,13 @@
             <groupId>org.apache.geronimo.ext.openejb</groupId>
             <artifactId>javaee-api</artifactId>
             <version>5.0.3</version>
+        </dependency>
+        
+        <!-- REST API & Web Console -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-admin-rest</artifactId>
+            <version>${openesb-admin.rest.version}</version>
         </dependency>
     </dependencies>
     
