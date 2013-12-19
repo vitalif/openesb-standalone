@@ -63,7 +63,7 @@ echo OPENESB_HOME is set with the value: %OPENESB_HOME%
 cd %OPENESB_HOME% 
 
 :: Start OpenESB in a new Dos window
-START /MIN "OpenESB SE"  %JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit  -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=9009,suspend=n -Djmx.invoke.getters=true -Dinstall.root=%OPENESB_HOME% -jar %OPENESB_HOME%\lib\openesb-standalone-bootstrap.jar
+START /MIN "OpenESB SE"  %JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.OpenESBLogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit  -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=9009,suspend=n -Djmx.invoke.getters=true -Dinstall.root=%OPENESB_HOME% -jar %OPENESB_HOME%\lib\openesb-standalone-bootstrap.jar
 
 echo.
 echo.
