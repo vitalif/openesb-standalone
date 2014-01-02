@@ -282,6 +282,7 @@ public class StandaloneBoostrapper
         }
         catch (Exception ex)
         {
+            ex.printStackTrace();
             throw new Exception("Failed to create JBI framework: " + ex.getMessage());
         }
     }

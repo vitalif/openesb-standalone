@@ -14,10 +14,20 @@
     <description>OpenESB runtime in standalone mode - Framework</description>
     
     <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-standalone-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <!-- OpenESB Core dependencies -->
         <dependency>
             <groupId>net.open-esb</groupId>
             <artifactId>framework-core</artifactId>
         </dependency>
+        
+        <!-- Transaction management -->
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>transactions-jta</artifactId>

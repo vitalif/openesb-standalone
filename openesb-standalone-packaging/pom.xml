@@ -52,6 +52,11 @@
             <artifactId>openesb-standalone-framework</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-standalone-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!-- Atomikos -->
         <dependency>

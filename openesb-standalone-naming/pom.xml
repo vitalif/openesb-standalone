@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.open-esb</groupId>
+        <artifactId>openesb-standalone</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>openesb-standalone-naming</artifactId>
+    <packaging>jar</packaging>
+    
+    <name>OpenESB - Standalone - Naming (JNDI)</name>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaFiles>OEContext.xsd</schemaFiles>                   
+                    <schemaDirectory>${project.basedir}/src/main/resources/net/openesb/standalone/naming/utils</schemaDirectory>
+                    <packageName>net.openesb.standalone.oecontext.binding</packageName>
+                </configuration>
+            </plugin>         
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!--
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>10.7.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>catalina</artifactId>
+            <version>6.0.37</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.26</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>7.0.47</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>javaee</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>5</version>
+        </dependency>
+        -->
+        <!--
+        <dependency>
+	<groupId>postgresql</groupId>
+	<artifactId>postgresql</artifactId>
+	<version>9.1-901.jdbc4</version>
+        </dependency>
+-->
+    </dependencies>
+</project>

@@ -98,6 +98,7 @@
             <includes>
                 <include>net.open-esb:openesb-standalone-framework</include>
                 <include>net.open-esb:openesb-standalone-bootstrap</include>
+                <include>net.open-esb:openesb-standalone-naming</include>
             </includes>
             <binaries>
                 <includeDependencies>false</includeDependencies>

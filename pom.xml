@@ -19,6 +19,7 @@
     <modules>
         <module>openesb-standalone-framework</module>
         <module>openesb-standalone-bootstrap</module>
+        <module>openesb-standalone-naming</module>
         <module>openesb-standalone-packaging</module>
     </modules>
     
