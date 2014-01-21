@@ -28,6 +28,7 @@
         <openesb-rest-api.version>1.0.0-SNAPSHOT</openesb-rest-api.version>
         <openesb-web-console.version>1.0.0-SNAPSHOT</openesb-web-console.version>
         <atomikos.version>3.8.0</atomikos.version>
+        <tomcat.version>7.0.47</tomcat.version>
     </properties>
     
     <build>

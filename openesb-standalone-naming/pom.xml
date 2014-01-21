@@ -37,42 +37,10 @@
     </build>
 
     <dependencies>
-        <!--
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbyclient</artifactId>
-            <version>10.7.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>catalina</artifactId>
-            <version>6.0.37</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.26</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>7.0.47</version>
+            <version>${tomcat.version}</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>javaee</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>5</version>
-        </dependency>
-        -->
-        <!--
-        <dependency>
-	<groupId>postgresql</groupId>
-	<artifactId>postgresql</artifactId>
-	<version>9.1-901.jdbc4</version>
-        </dependency>
--->
     </dependencies>
 </project>

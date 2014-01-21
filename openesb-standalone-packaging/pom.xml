@@ -80,6 +80,13 @@
             <version>${atomikos.version}</version>
         </dependency>
         
+        <!-- Tomcat JDBC -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        
         <!-- JavaEE API -->
         <dependency>
             <groupId>org.apache.geronimo.ext.openejb</groupId>

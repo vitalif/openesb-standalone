@@ -87,6 +87,8 @@
                 <include>com.atomikos:transactions-api</include>
                 <include>com.atomikos:atomikos-util</include>
                 <include>org.apache.geronimo.ext.openejb:javaee-api</include>
+                <include>org.apache.geronimo.ext.openejb:javaee-api</include>
+                <include>org.apache.tomcat:tomcat-jdbc</include>
             </includes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
