@@ -82,6 +82,13 @@
         </dependencySet>
         <dependencySet>
             <includes>
+                <include>net.open-esb:openesb-oeadmin</include>
+            </includes>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
+        <dependencySet>
+            <includes>
                 <include>com.atomikos:transactions-jta</include>
                 <include>com.atomikos:transactions</include>
                 <include>com.atomikos:transactions-api</include>

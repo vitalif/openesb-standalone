@@ -109,6 +109,13 @@
             <version>${openesb-web-console.version}</version>
         </dependency>
         
+        <!-- OpenESB oeadmin-->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-oeadmin</artifactId>
+            <version>${openesb-oeadmin.version}</version>
+        </dependency>
+        
         <!-- OpenESB Core Distribution -->
         <dependency>
             <groupId>open-esb</groupId>
