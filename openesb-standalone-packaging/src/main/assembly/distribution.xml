@@ -52,36 +52,34 @@
                 <include>net.open-esb:openesb-rest-api:zip:distribution</include>
             </includes>
             <unpack>true</unpack>
-            <unpackOptions>
-                <includes>
-                    <include>openesb-rest-api*.jar</include>
-                </includes>
-            </unpackOptions>
-            <outputDirectory>lib</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-        </dependencySet>
-        <dependencySet>
-            <includes>
-                <include>net.open-esb:openesb-rest-api:zip:distribution</include>
-            </includes>
-            <unpack>true</unpack>
-            <unpackOptions>
-                <excludes>
-                    <exclude>openesb-rest-api*.jar</exclude>
-                </excludes>
-            </unpackOptions>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
+        <!--
         <dependencySet>
             <includes>
-                <include>net.open-esb:openesb-web-console</include>
+                <include>open-jbi-components:httpbc-full-installer</include>
+                <include>open-jbi-components:bpelse-installer</include>
+                <include>open-jbi-components:filebc-installer</include>
             </includes>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>components</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
         <dependencySet>
             <includes>
+                <include>open-jbi-components:encoderlib-installer</include>
+                <include>open-jbi-components:wsdlextlib-installer</include>
+                <include>open-esb:wsdlsl</include>
+            </includes>
+            <outputDirectory>shared-libraries</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
+        -->
+        <dependencySet>
+            <includes>
+                <include>net.open-esb:openesb-rest-api:jar</include>
+                <include>net.open-esb:openesb-web-console</include>
+                <include>net.open-esb:openesb-model-api</include>
                 <include>net.open-esb:openesb-oeadmin</include>
             </includes>
             <outputDirectory>lib</outputDirectory>

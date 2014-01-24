@@ -105,6 +105,12 @@
         
         <dependency>
             <groupId>net.open-esb</groupId>
+            <artifactId>openesb-rest-api</artifactId>
+            <version>${openesb-rest-api.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.open-esb</groupId>
             <artifactId>openesb-web-console</artifactId>
             <version>${openesb-web-console.version}</version>
         </dependency>
@@ -116,6 +122,13 @@
             <version>${openesb-oeadmin.version}</version>
         </dependency>
         
+        <!-- OpenESB Model API -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-model-api</artifactId>
+            <version>${openesb-model-api.version}</version>
+        </dependency>
+        
         <!-- OpenESB Core Distribution -->
         <dependency>
             <groupId>open-esb</groupId>
@@ -124,6 +137,51 @@
             <classifier>distribution</classifier>
             <type>zip</type>
         </dependency>
+        
+        <!-- OpenESB Components -->
+        <!--
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>httpbc-full-installer</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>bpelse-installer</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>filebc-installer</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>encoderlib-installer</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>wsdlextlib-installer</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>open-esb</groupId>
+            <artifactId>wsdlsl</artifactId>
+            <version>${openesb-components.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        -->
     </dependencies>
     
     <properties>
