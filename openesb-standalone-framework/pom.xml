@@ -25,6 +25,12 @@
         <dependency>
             <groupId>net.open-esb</groupId>
             <artifactId>framework-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>appserv-ext</artifactId>
+                    <groupId>glassfish</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Transaction management -->

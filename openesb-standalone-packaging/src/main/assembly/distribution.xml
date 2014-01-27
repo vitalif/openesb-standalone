@@ -32,7 +32,7 @@
     <dependencySets>
         <dependencySet>
             <includes>
-                <include>open-esb:core-top:zip:distribution</include>
+                <include>net.open-esb:core-distribution:zip</include>
             </includes>
             <unpack>true</unpack>
             <unpackOptions>

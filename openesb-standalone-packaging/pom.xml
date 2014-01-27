@@ -131,11 +131,20 @@
         
         <!-- OpenESB Core Distribution -->
         <dependency>
-            <groupId>open-esb</groupId>
-            <artifactId>core-top</artifactId>
+            <groupId>net.open-esb</groupId>
+            <artifactId>core-distribution</artifactId>
             <version>${openesb.version}</version>
-            <classifier>distribution</classifier>
             <type>zip</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>appserv-ext</artifactId>
+                    <groupId>glassfish</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jta</groupId>
+                    <artifactId>jta-1_1-classes</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- OpenESB Components -->
