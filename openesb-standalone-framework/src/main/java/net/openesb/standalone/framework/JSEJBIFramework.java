@@ -107,12 +107,13 @@ public class JSEJBIFramework
             configFile = installRoot + File.separatorChar + "config/openesb.yaml";
         }
 
-        mLog.log(Level.INFO, "Loading configuration from {0}", configFile);
+        mLog.log(Level.FINE, "Trying to load configuration from {0}", configFile);
 
         try {
             Yaml yaml = new Yaml();
             InputStream input = new FileInputStream(new File(configFile));
             settings = new ImmutableSettings((Map) yaml.load(input));
+            mLog.log(Level.FINE, "Configuration loaded from {0}", configFile);
         } catch (FileNotFoundException fnfe) {
             mLog.log(Level.WARNING, "Unable to load configuration file {0}. Default configuration will be used.", configFile);
             settings = new ImmutableSettings(null);
