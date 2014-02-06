@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 import javax.xml.bind.JAXBElement;
@@ -51,15 +53,37 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
      */
     public DataSource getDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
         PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
-        return new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
+        org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
+        ds.setName(dspProperties.getDbConnectorName());
+        registerMBean(ds);
+
+        return ds;
     }
 
     @Override
     public XADataSource getXADataSource(DataSourcePoolPropertiesComplexType dspProperties) {
         PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
-        return new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
+        org.apache.tomcat.jdbc.pool.XADataSource ds = new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
+        ds.setName(dspProperties.getDbConnectorName());
+        registerMBean(ds);
+
+        return ds;
     }
-    
+
+    private void registerMBean(org.apache.tomcat.jdbc.pool.DataSource ds) {
+        try {
+            ds.createPool();
+            ds.setJmxEnabled(true);
+
+            MBeanServer mBeanServer = java.lang.management.ManagementFactory.getPlatformMBeanServer();
+            
+            mBeanServer.registerMBean(ds.getPool().getJmxPool(), new ObjectName("net.open-esb.standalone",
+                    "datasources", ds.getName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private PoolProperties createNativeDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
         String methodName = "createNativeDataSource";
 
@@ -158,7 +182,7 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
                 }
             }
         }
-        
+
         /* Datasouce fields are set with data proterties found in the context 
          * Now let's set the pool with the pool proterties found in the context
          * get the properties for the pool */
@@ -233,7 +257,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         }
         // set the pool and get a Poolled Datasource       
         poolProperties.setDataSource(nativeDS);
-        
+        poolProperties.setJmxEnabled(true);
+
         return poolProperties;
     }
 

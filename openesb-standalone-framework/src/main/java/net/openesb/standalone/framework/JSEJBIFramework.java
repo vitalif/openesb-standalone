@@ -153,7 +153,7 @@ public class JSEJBIFramework
         this.init();
 
         // Register a management MBean for this framework instance
-        ObjectName fwMBeanName = new ObjectName("com.sun.jbi.jse",
+        ObjectName fwMBeanName = new ObjectName("net.open-esb.standalone",
                 "instance", mPlatformContext.getInstanceName());
         MBeanServer mbs = mPlatformContext.getMBeanServer();
         if (mbs.isRegistered(fwMBeanName)) {
