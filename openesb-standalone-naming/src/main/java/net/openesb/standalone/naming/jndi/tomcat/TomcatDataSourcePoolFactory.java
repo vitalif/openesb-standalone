@@ -77,8 +77,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
 
             MBeanServer mBeanServer = java.lang.management.ManagementFactory.getPlatformMBeanServer();
             
-            mBeanServer.registerMBean(ds.getPool().getJmxPool(), new ObjectName("net.open-esb.standalone",
-                    "datasources", ds.getName()));
+            String mBeanName = "net.open-esb.standalone:type=DataSources,name=" + ds.getName();
+            mBeanServer.registerMBean(ds.getPool().getJmxPool(), new ObjectName(mBeanName));
         } catch (Exception e) {
             e.printStackTrace();
         }
