@@ -28,8 +28,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
  * @author OpenESB Community
  */
 public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
-   
-    
+
     private final ResourceBundle mResourceBundle;
     private String mMessage;
     private final String mClassName = "DataSourcePoolFactoryimpl";
@@ -39,7 +38,7 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
         I18NBundle nBundle = new I18NBundle("net.openesb.standalone.naming.utils");
         mResourceBundle = nBundle.getBundle();
     }
-    
+
     @Override
     /* GetDatasource method is used to create dynamically and set up a pooled datasource. Information and parameters
      * are provided by dspProperties. The first part of the method create dynamically a native datasource. 
@@ -221,16 +220,16 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
                     sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
                 }
             }
-            // set the pool and get a Poolled Datasource       
-            poolProperties.setDataSource(nativeDS);
-            outputDataSource = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);           
         }
-         return outputDataSource;
+        // set the pool and get a Poolled Datasource       
+        poolProperties.setDataSource(nativeDS);
+        outputDataSource = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
+        return outputDataSource;
     }
 
     @Override
     public XADataSource getXADataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-       return  (XADataSource) this.getDataSource(dspProperties);
+        return (XADataSource) this.getDataSource(dspProperties);
     }
 
     /* List to Map is an internal methode used to convert a List<PropertyComplexType> to a Map.
@@ -278,5 +277,5 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
             mapFields.put(fieldName, field);
         }
         return mapFields;
-    }   
+    }
 }

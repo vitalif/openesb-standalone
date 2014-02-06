@@ -58,9 +58,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Map<String, DataSource> datasourceMap = new HashMap<String, DataSource>();
         String methodName = "getInitialContext";
-    //    /* Contect initialisation Just set the system properties and  use the class InitialContext*/
-    //    System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
-    //    System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
+        /*Context initialisation Just set the system properties and  use the class InitialContext*/
+        System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
+        System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
         Context initialContext = new InitialContext();
         mMessage = mResourceBundle.getString("context.created");
         sLogger.logp(Level.FINE, mClassName, methodName, mMessage);
@@ -183,7 +183,11 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                 /* Check if datasource is not null then put in the context since exception are catch */
                 if (null != dataSource) {
                     datasourceMap.put(dbConnectorName, dataSource);
-                    initialContext.rebind(jndiName, dataSource);
+                    try {
+                        initialContext.rebind(jndiName, dataSource);
+                    } catch (NamingException ex) {
+                        initialContext.bind(jndiName, dataSource);
+                    }                    
                     mMessage = mResourceBundle.getString("datasource.processed.bind.success");
                     sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
                 }
