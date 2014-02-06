@@ -1,0 +1,86 @@
+:toc2:
+:icons: font
+:homepage: http://open-esb.net
+
+= OpenESB Standalone - Reference Documentation
+David Brassely <brasseld@gmail.com>; Paul Perez <paul.perez@pymma.com>
+
+[[openesb-standalone-introduction]]
+= Overview of OpenESB Standalone
+
+[partintro]
+--
+OpenESB Standalone or OpenESB SE (for Standalone Edition) is a complete distribution 
+of OpenESB that runs in a simple JVM. Not any container is required to run OpenESB SE.
+OpenESB has been developed to be a very light but reliable and powerful version 
+of OpenESB. In this context, OpenESB Core (OpenESB bus and management framework) 
+require less than 100 Mb and starts in less than 5 seconds. OpenESB share its 
+source code with the other versions of OpenESB. So you can develop and deploy your 
+projects on OpenESB SE in the same way than you do on the other platforms.
+
+OpenESB SE has been designed mainly to make easier its deployment on the cloud 
+and on VM farm. Launching OpenESB SE is as easy as starting a simple JVM. 
+Production teams will find in OpenESB SE a way to simplify OpenESB deployment 
+in a multi-instances mode.
+
+This document is a reference guide to OpenESB Standalone tools and features. If 
+you have any requests, comments, or questions on this document, please post them
+on the user mailing list or on the support forums at http://openesb-community-forum.794670.n2.nabble.com/[Nabble].
+--
+
+[[overview-getting-started-with-openesb-standalone]]
+== Getting Started With OpenESB Standalone
+=== Requirements
+You need http://java.com/[Java SDK v1.6] or higher to run OpenESB SE (there are 
+even some issues with the 1.7.0_25 build of openjdk, so stick to earlier builds 
+or use 1.6 for preference). You should check your current Java installation before 
+you begin:
+[source,bash,indent=0]
+[subs="verbatim,quotes"]
+----
+$ java -version
+----
+
+=== Installation Guide
+We want to keep things as simple as possible, so you just have to unzip the 
+OpenESB SE distribution in a convenient directory. 
+
+[IMPORTANT]
+====
+Please be aware that the directory's path should not contain whitespace characters.
+====
+
+[NOTE]
+====
+For the rest of this documentation, we admit that `OPENESB_HOME` refers to the 
+directory containing the OpenESB installation.
+====
+
+=== Windows
+
+=== Unix systems
+From the bin folder, run: 
+[source,shell,indent=0]
+[subs="verbatim,quotes"]
+----
+$ ./openesb.sh
+----
+
+=== Configure OpenESB instance
+
+[source,yaml,indent=0]
+[subs="verbatim,quotes"]
+----
+#################################### Instance #####################################
+instance.name: server
+instance.port: 8699
+
+##################################### HTTP ########################################
+# Set a custom port to listen for HTTP traffic:
+#
+http.port: 4848
+
+# Disable HTTP completely:
+#
+http.enabled: false
+----

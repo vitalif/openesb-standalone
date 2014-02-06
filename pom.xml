@@ -34,6 +34,7 @@
         <tomcat.version>7.0.50</tomcat.version>
         <snakeyaml.version>1.13</snakeyaml.version>
         <!--jgroups.version>3.4.2.Final</jgroups.version-->
+        <asciidoctor.version>0.1.4</asciidoctor.version>
     </properties>
     
     <build>
@@ -49,6 +50,30 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.version}</version>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>src/asciidoc</sourceDirectory>
+                            <sourceHighlighter>prettify</sourceHighlighter>
+                            <headerFooter>true</headerFooter>
+                            <backend>html5</backend>
+                            <doctype>book</doctype>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     
     <dependencyManagement>
