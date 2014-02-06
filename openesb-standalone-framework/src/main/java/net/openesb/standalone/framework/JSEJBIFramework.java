@@ -51,7 +51,11 @@ import javax.management.remote.JMXServiceURL;
 //import net.openesb.standalone.node.NodeBuilder;
 import net.openesb.standalone.settings.ImmutableSettings;
 import net.openesb.standalone.settings.Settings;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
+import org.yaml.snakeyaml.resolver.Resolver;
 
 /**
  * JBI framework wrapper for Java SE platform.
@@ -110,7 +114,13 @@ public class JSEJBIFramework
         mLog.log(Level.FINE, "Trying to load configuration from {0}", configFile);
 
         try {
-            Yaml yaml = new Yaml();
+            Yaml yaml = new Yaml(new Constructor(), new Representer(), new DumperOptions(),
+                    new Resolver() {
+                @Override
+                protected void addImplicitResolvers() {
+                    //super.addImplicitResolvers(); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
             InputStream input = new FileInputStream(new File(configFile));
             settings = new ImmutableSettings((Map) yaml.load(input));
             mLog.log(Level.FINE, "Configuration loaded from {0}", configFile);
@@ -118,11 +128,11 @@ public class JSEJBIFramework
             mLog.log(Level.WARNING, "Unable to load configuration file {0}. Default configuration will be used.", configFile);
             settings = new ImmutableSettings(null);
         }
-        
+
         mPlatformContext = new JSEPlatformContext(
-                    installRoot,
-                    settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
-                    settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
+                installRoot,
+                settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
+                settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
     }
 
     /**
@@ -174,20 +184,20 @@ public class JSEJBIFramework
 
         // --------------------------------------------
         // TODO: removing this part asap
-        System.setProperty("http.port", 
+        System.setProperty("http.port",
                 settings.get("http.port", "4848"));
-        System.setProperty("http.enabled", 
+        System.setProperty("http.enabled",
                 settings.get("http.enabled", "true"));
         // --------------------------------------------
-        
+
         init(mPlatformContext, mEnvironment);
         startup(mPlatformContext.getNamingContext(), "");
         prepare();
         ready(true);
 
-    //    instanceNode = NodeBuilder.nodeBuilder(settings).build();
+        //    instanceNode = NodeBuilder.nodeBuilder(settings).build();
 
-    //    instanceNode.start();
+        //    instanceNode.start();
 
         // JBI framework has been loaded
         mLoaded = true;
@@ -217,7 +227,7 @@ public class JSEJBIFramework
             return;
         }
 
-    //    instanceNode.stop();
+        //    instanceNode.stop();
 
         shutdown();
         terminate();
