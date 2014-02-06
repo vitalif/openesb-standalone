@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     
-    <groupId>net.open-esb</groupId>
+    <groupId>net.open-esb.runtime.standalone</groupId>
     <artifactId>openesb-standalone</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>

@@ -3,13 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.open-esb</groupId>
+        <groupId>net.open-esb.runtime.standalone</groupId>
         <artifactId>openesb-standalone</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
     <artifactId>openesb-standalone-naming</artifactId>
-    <packaging>jar</packaging>
     
     <name>OpenESB - Standalone - Naming (JNDI)</name>
     
