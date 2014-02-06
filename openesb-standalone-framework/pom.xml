@@ -39,5 +39,20 @@
             <artifactId>transactions-jta</artifactId>
             <version>${atomikos.version}</version>
         </dependency>
+        
+        <!-- Cluster support
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+            <version>${jgroups.version}</version>
+        </dependency>
+         -->
+         
+        <!-- Config support -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
     </dependencies>
 </project>

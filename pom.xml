@@ -32,6 +32,8 @@
         <openesb-oeadmin.version>1.0.0-SNAPSHOT</openesb-oeadmin.version>
         <atomikos.version>3.8.0</atomikos.version>
         <tomcat.version>7.0.47</tomcat.version>
+        <snakeyaml.version>1.13</snakeyaml.version>
+        <!--jgroups.version>3.4.2.Final</jgroups.version-->
     </properties>
     
     <build>
