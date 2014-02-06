@@ -50,9 +50,19 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
      * Then we create an Apache datasource with the pool as parameter
      */
     public DataSource getDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-        String methodName = "getDataSource";
-        DataSource outputDataSource;
-        outputDataSource = null;
+        PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+        return new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
+    }
+
+    @Override
+    public XADataSource getXADataSource(DataSourcePoolPropertiesComplexType dspProperties) {
+        PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+        return new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
+    }
+    
+    private PoolProperties createNativeDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
+        String methodName = "createNativeDataSource";
+
         /* get the properties for the native Datasource. it is not created yet*/
         DataSourcePropertiesComplexType dataSourceProperties = dspProperties.getDataSourceProperties();
         Map<String, String> datasourceMap = this.listToMap(dataSourceProperties.getProperty());
@@ -81,9 +91,9 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
          * to the caller
          */
 
-        Object myObject;
+        Object nativeDS;
         try {
-            myObject = dsClass.newInstance();
+            nativeDS = dsClass.newInstance();
         } catch (InstantiationException ex) {
             mMessage = mResourceBundle.getString("impossible.instanciate.datasource");
             sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, new Object[]{dsName});
@@ -112,23 +122,23 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
                 String fieldValue = datasourceMap.get(fieldName);
                 try {
                     if (field.getType().equals(byte.class)) {
-                        field.set(myObject, Byte.parseByte(fieldValue));
+                        field.set(nativeDS, Byte.parseByte(fieldValue));
                     } else if (field.getType().equals(boolean.class)) {
-                        field.set(myObject, Boolean.parseBoolean(fieldValue));
+                        field.set(nativeDS, Boolean.parseBoolean(fieldValue));
                     } else if (field.getType().equals(char.class)) {
-                        field.set(myObject, fieldValue.charAt(0));
+                        field.set(nativeDS, fieldValue.charAt(0));
                     } else if (field.getType().equals(short.class)) {
-                        field.set(myObject, Short.parseShort(fieldValue));
+                        field.set(nativeDS, Short.parseShort(fieldValue));
                     } else if (field.getType().equals(int.class)) {
-                        field.set(myObject, Integer.parseInt(fieldValue));
+                        field.set(nativeDS, Integer.parseInt(fieldValue));
                     } else if (field.getType().equals(long.class)) {
-                        field.set(myObject, Long.parseLong(fieldValue));
+                        field.set(nativeDS, Long.parseLong(fieldValue));
                     } else if (field.getType().equals(float.class)) {
-                        field.set(myObject, Float.parseFloat(fieldValue));
+                        field.set(nativeDS, Float.parseFloat(fieldValue));
                     } else if (field.getType().equals(double.class)) {
-                        field.set(myObject, Double.parseDouble(fieldValue));
+                        field.set(nativeDS, Double.parseDouble(fieldValue));
                     } else if (field.getType().equals(String.class)) {
-                        field.set(myObject, fieldValue);
+                        field.set(nativeDS, fieldValue);
                     } else {
                         mMessage = mResourceBundle.getString("field.not.set");
                         sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
@@ -148,7 +158,7 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
                 }
             }
         }
-        DataSource nativeDS = (DataSource) myObject;
+        
         /* Datasouce fields are set with data proterties found in the context 
          * Now let's set the pool with the pool proterties found in the context
          * get the properties for the pool */
@@ -223,13 +233,8 @@ public class DataSourcePoolFactoryimpl implements DataSourcePoolFactory {
         }
         // set the pool and get a Poolled Datasource       
         poolProperties.setDataSource(nativeDS);
-        outputDataSource = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
-        return outputDataSource;
-    }
-
-    @Override
-    public XADataSource getXADataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-        return (XADataSource) this.getDataSource(dspProperties);
+        
+        return poolProperties;
     }
 
     /* List to Map is an internal methode used to convert a List<PropertyComplexType> to a Map.

@@ -33,7 +33,8 @@ import net.openesb.standalone.oecontext.binding.OeContextComplexType;
  */
 public class InitialContexFactoryImpl implements InitialContextFactory {
 
-    public static final String RESOURCE_TYPE = "Datasource";
+    public static final String DATASOURCE_TYPE = "Datasource";
+    public static final String XADATASOURCE_TYPE = "XADatasource";
     private static final Logger sLogger = Logger.getLogger("net.openesb.standalone.naming");
     private final Map<String, DataSourcePoolPropertiesComplexType> mDSPMap = new HashMap<String, DataSourcePoolPropertiesComplexType>();
     private final DataSourcePoolFactory mDSPFactory = new DataSourcePoolFactoryimpl();
@@ -176,7 +177,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
             // Retrieve DataSourcePoolPropertie
             DataSourcePoolPropertiesComplexType dspProperties = mDSPMap.get(dbConnectorName);
             // Check if Datasourse or XA Datasource            
-            if (dspProperties.getResourceType().equals(InitialContexFactoryImpl.RESOURCE_TYPE)) {
+            if (dspProperties.getResourceType().equals(InitialContexFactoryImpl.DATASOURCE_TYPE)) {
                 mMessage = mResourceBundle.getString("datasource.in.process");
                 sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
                 DataSource dataSource = mDSPFactory.getDataSource(dspProperties);
@@ -193,7 +194,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                 }
 
             } else if (dspProperties.getResourceType()
-                    .equals(InitialContexFactoryImpl.RESOURCE_TYPE)) {
+                    .equals(InitialContexFactoryImpl.XADATASOURCE_TYPE)) {
                 mMessage = mResourceBundle.getString("xadatasource.in.process");
                 sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
                 XADataSource xaDataSource = mDSPFactory.getXADataSource(dspProperties);
