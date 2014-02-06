@@ -172,6 +172,14 @@ public class JSEJBIFramework
         mEnvironment.setProperty("com.sun.jbi.home",
                 mPlatformContext.getInstallRoot());
 
+        // --------------------------------------------
+        // TODO: removing this part asap
+        System.setProperty("http.port", 
+                settings.get("http.port", "4848"));
+        System.setProperty("http.enabled", 
+                settings.get("http.enabled", "true"));
+        // --------------------------------------------
+        
         init(mPlatformContext, mEnvironment);
         startup(mPlatformContext.getNamingContext(), "");
         prepare();

@@ -1,5 +1,6 @@
 package net.openesb.standalone.naming.jndi.impl;
 
+import net.openesb.standalone.naming.jndi.tomcat.TomcatDataSourcePoolFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
     public static final String XADATASOURCE_TYPE = "XADatasource";
     private static final Logger sLogger = Logger.getLogger("net.openesb.standalone.naming");
     private final Map<String, DataSourcePoolPropertiesComplexType> mDSPMap = new HashMap<String, DataSourcePoolPropertiesComplexType>();
-    private final DataSourcePoolFactory mDSPFactory = new DataSourcePoolFactoryimpl();
+    private final DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
     private final String mClassName = "InitialContexFactoryImpl";    
     private final ResourceBundle mResourceBundle;
     private String mMessage;
