@@ -56,13 +56,13 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
     private String mInstanceName;
     private String mInstanceRoot;
     private String mInstallRoot;
-    private String mConnectorPort;
+    private int mConnectorPort;
     private InitialContext mNamingContext;
     private Logger mLog = Logger.getLogger(getClass().getPackage().getName());
 
-    public JSEPlatformContext(String instanceName, String installRoot, String connectorPort) {
-        mInstanceName = instanceName;
+    public JSEPlatformContext(String installRoot, String instanceName, int connectorPort) {
         mInstallRoot = installRoot;
+        mInstanceName = instanceName;
         mInstanceRoot = installRoot + File.separator + instanceName;
         mConnectorPort = connectorPort;
 
@@ -273,7 +273,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return the JMX RMI connector port as a <CODE>String</CODE>.
      */
     public String getJmxRmiPort() {
-        return mConnectorPort;
+        return Integer.toString(mConnectorPort);
     }
 
     /**

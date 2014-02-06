@@ -92,8 +92,10 @@
                 <include>com.atomikos:transactions-api</include>
                 <include>com.atomikos:atomikos-util</include>
                 <include>org.apache.geronimo.ext.openejb:javaee-api</include>
-                <include>org.apache.geronimo.ext.openejb:javaee-api</include>
                 <include>org.apache.tomcat:tomcat-jdbc</include>
+                <include>org.apache.tomcat:tomcat-juli</include>
+                <include>org.apache.tomcat:tomcat-catalina</include>
+                <include>org.yaml:snakeyaml</include>
             </includes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
@@ -103,9 +105,9 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>net.open-esb:openesb-standalone-framework</include>
-                <include>net.open-esb:openesb-standalone-bootstrap</include>
-                <include>net.open-esb:openesb-standalone-naming</include>
+                <include>net.open-esb.runtime.standalone:openesb-standalone-framework</include>
+                <include>net.open-esb.runtime.standalone:openesb-standalone-bootstrap</include>
+                <include>net.open-esb.runtime.standalone:openesb-standalone-naming</include>
             </includes>
             <binaries>
                 <includeDependencies>false</includeDependencies>

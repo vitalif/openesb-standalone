@@ -1,0 +1,19 @@
+
+#################################### Instance #####################################
+# instance.name: server
+# instance.port: 8699
+
+################################### Cluster #######################################
+# Cluster name identifies your cluster for auto-discovery. If you're running
+# multiple clusters on the same network, make sure you're using unique names.
+#
+# cluster.name: openesb
+
+##################################### HTTP ########################################
+# Set a custom port to listen for HTTP traffic:
+#
+# http.port: 4848
+
+# Disable HTTP completely:
+#
+# http.enabled: false

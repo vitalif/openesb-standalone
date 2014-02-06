@@ -3,13 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.open-esb</groupId>
+        <groupId>net.open-esb.runtime.standalone</groupId>
         <artifactId>openesb-standalone</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
     <artifactId>openesb-standalone-naming</artifactId>
-    <packaging>jar</packaging>
     
     <name>OpenESB - Standalone - Naming (JNDI)</name>
     
@@ -41,6 +40,12 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
             <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

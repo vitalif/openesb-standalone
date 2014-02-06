@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     
-    <groupId>net.open-esb</groupId>
+    <groupId>net.open-esb.runtime.standalone</groupId>
     <artifactId>openesb-standalone</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -31,7 +31,9 @@
         <openesb-model-api.version>1.0.0-SNAPSHOT</openesb-model-api.version>
         <openesb-oeadmin.version>1.0.0-SNAPSHOT</openesb-oeadmin.version>
         <atomikos.version>3.8.0</atomikos.version>
-        <tomcat.version>7.0.47</tomcat.version>
+        <tomcat.version>7.0.50</tomcat.version>
+        <snakeyaml.version>1.13</snakeyaml.version>
+        <!--jgroups.version>3.4.2.Final</jgroups.version-->
     </properties>
     
     <build>

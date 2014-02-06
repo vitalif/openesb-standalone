@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>net.open-esb</groupId>
+        <groupId>net.open-esb.runtime.standalone</groupId>
         <artifactId>openesb-standalone</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -16,7 +16,7 @@
     <dependencies>
         <!-- Internal dependencies -->
         <dependency>
-            <groupId>net.open-esb</groupId>
+            <groupId>net.open-esb.runtime.standalone</groupId>
             <artifactId>openesb-standalone-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -38,6 +38,21 @@
             <groupId>com.atomikos</groupId>
             <artifactId>transactions-jta</artifactId>
             <version>${atomikos.version}</version>
+        </dependency>
+        
+        <!-- Cluster support
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+            <version>${jgroups.version}</version>
+        </dependency>
+         -->
+         
+        <!-- Config support -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
     </dependencies>
 </project>
