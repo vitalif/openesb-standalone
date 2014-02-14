@@ -3,7 +3,8 @@
 :homepage: http://open-esb.net
 
 = OpenESB Standalone - Reference Documentation
-David Brassely <brasseld@gmail.com>; Paul Perez <paul.perez@pymma.com>
+David Brassely <brasseld@gmail.com>
+:description: OpenESB Standalone reference guide
 
 [[openesb-standalone-introduction]]
 = Overview of OpenESB Standalone
@@ -28,46 +29,96 @@ you have any requests, comments, or questions on this document, please post them
 on the user mailing list or on the support forums at http://openesb-community-forum.794670.n2.nabble.com/[Nabble].
 --
 
-[[overview-getting-started-with-openesb-standalone]]
-== Getting Started With OpenESB Standalone
+[[openesb-standalone-setup-guide]]
+== Setup Guide
+This section includes information on how to setup an OpenESB Standalone instance and get it running. 
+If you haven’t already, http://build2.open-esb.net:8080/jenkins/view/openesb-runtime/job/openesb-standalone/lastSuccessfulBuild/artifact/openesb-standalone-packaging/target/openesb-standalone-0.0.1-SNAPSHOT.zip[download] it, and then check the <<openesb-standalone-installation,installation>> docs.
+
+We want to keep things as simple as possible, so you just have to unzip the 
+OpenESB SE distribution in a convenient directory. 
+
+[IMPORTANT]
+====
+Please be aware that the installation's path should not contain whitespace characters.
+====
+
+[NOTE]
+====
+For the rest of this documentation, we admit that +OPENESB_HOME+ refers to the 
+directory containing the OpenESB installation.
+====
+
 === Requirements
-You need http://java.com/[Java SDK v1.6] or higher to run OpenESB SE (there are 
-even some issues with the 1.7.0_25 build of openjdk, so stick to earlier builds 
-or use 1.6 for preference). You should check your current Java installation before 
-you begin:
+OpenESB Standalone is build using Java, and requires at least http://java.com/[Java 6] in order to run. 
+The version of Java that will be sued can be set by setting the +JAVA_HOME+ environment variable.
+
+You should check your current Java installation before you begin:
 [source,bash,indent=0]
 [subs="verbatim,quotes"]
 ----
 $ java -version
 ----
 
-=== Installation Guide
-We want to keep things as simple as possible, so you just have to unzip the 
-OpenESB SE distribution in a convenient directory. 
+[[openesb-standalone-installation]]
+=== Installation
+After http://build2.open-esb.net:8080/jenkins/view/openesb-runtime/job/openesb-standalone/lastSuccessfulBuild/artifact/openesb-standalone-packaging/target/openesb-standalone-0.0.1-SNAPSHOT.zip[downloading] the latest release and extracting it, you can start to play with OpenESB Standalone.
 
-[IMPORTANT]
-====
-Please be aware that the directory's path should not contain whitespace characters.
-====
-
+=== Start an instance
+==== Windows
 [NOTE]
 ====
-For the rest of this documentation, we admit that `OPENESB_HOME` refers to the 
-directory containing the OpenESB installation.
+Section Pending
 ====
 
-=== Windows
-
-=== Unix systems
-From the bin folder, run: 
-[source,shell,indent=0]
+==== Unix systems
+From the +OPENESB_HOME+ folder, run: 
+[source,bash,indent=0]
 [subs="verbatim,quotes"]
 ----
-$ ./openesb.sh
+$ bin/openesb.sh
 ----
 
-=== Configure OpenESB instance
+==== Example
+When you're launching OpenESB Standalone for the first time, you should obtain something like the following content:
+[source,bash,indent=0]
+[subs="verbatim,quotes"]
+---
+Feb 14, 2014 12:22:16 PM net.openesb.standalone.framework.JSEJBIFramework createJMXConnectorServer
+INFO: remote JMX connector available at service:jmx:rmi:///jndi/rmi://localhost:8699/jmxrmi
+Feb 14, 2014 12:22:16 PM net.openesb.rest.extension.RestServiceLifecycle getHttpPort
+INFO: User defined HTTP port for Rest services : 4848
+Feb 14, 2014 12:22:16 PM com.sun.jbi.framework.JBIFramework startup
+INFO: JBIFW0010: JBI framework ready to accept requests.
+Feb 14, 2014 12:22:17 PM org.glassfish.jersey.server.ApplicationHandler initialize
+INFO: Initiating Jersey application, version Jersey: 2.4.1 2013-11-08 12:08:47...
+Feb 14, 2014 12:22:17 PM org.glassfish.grizzly.http.server.NetworkListener start
+INFO: Started listener bound to [localhost:4848]
+Feb 14, 2014 12:22:17 PM org.glassfish.grizzly.http.server.HttpServer start
+INFO: [HttpServer] Started.
+Feb 14, 2014 12:22:17 PM net.openesb.rest.extension.RestServiceLifecycle startService
+INFO: REST API started with WADL available at : http://localhost:4848/application.wadl
+Feb 14, 2014 12:22:17 PM com.sun.jbi.framework.JBIFramework ready
+INFO: JBIFW0012: JBI framework startup complete.
+---
 
+=== Stop an instance
+==== Windows
+[NOTE]
+====
+Section Pending
+====
+==== Unix systems
+[NOTE]
+====
+Section Pending
+====
+
+== User Guide
+
+=== Configure an instance
+The configuration file is available under +OPENESB_HOME/config/openesb.yaml+.
+
+By default, the content of this configuration file is as follow: 
 [source,yaml,indent=0]
 [subs="verbatim,quotes"]
 ----
@@ -75,12 +126,41 @@ $ ./openesb.sh
 instance.name: server
 instance.port: 8699
 
-##################################### HTTP ########################################
-# Set a custom port to listen for HTTP traffic:
-#
-http.port: 4848
 
-# Disable HTTP completely:
-#
+##################################### HTTP ########################################
+http.port: 4848
 http.enabled: false
 ----
+
+[cols="2*", options="header"]
+|===
+|Property
+|Description
+
+|instance.name
+|The name of the OpenESB instance.
+This will typically create a folder under +OPENESB_HOME/{instance.name}+
+
+|instance.port
+|The port used to communicate over JMX which the instance
+
+|http.port
+|The HTTP port used to access rest API or web console
+
+|http.enabled
+|Flag to enable / disable HTTP components as rest API or web console
+|===
+
+=== Rest API
+The new rest API to manage your single OpenESB instance is reachable at http://localhost:4848/api
+
+=== Web Console
+By default, you can access the web console using your preferred browser at http://localhost:4848/webui/index.html
+[IMPORTANT]
+====
+At this time, the latest part of the url (_/index.html_) is mandatory. Trying to access http://localhost:4848/webui does not work.
+So please use the full url if you want to access the web console.
+====
+
+=== Command-Line (ie. oeadmin)
+If you have already used OpenESB v2 with Glassfish under-the-hood, you should well-knowing the +asadmin+ command.
