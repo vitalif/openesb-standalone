@@ -159,7 +159,7 @@ By default, you can access the web console using your preferred browser at http:
 [IMPORTANT]
 ====
 At this time, the latest part of the url (_/index.html_) is mandatory. Trying to access http://localhost:4848/webui does not work.
-So please use the full url if you want to access the web console.
+So please use the complete url if you want to access the web console.
 ====
 
 === Command-Line (ie. oeadmin)
