@@ -232,8 +232,8 @@ public class StandaloneBoostrapper
             
             JMXConnector jmxConn = JMXConnectorFactory.connect(serviceURL);
             MBeanServerConnection mbsConn = jmxConn.getMBeanServerConnection();
-            ObjectName fwMBeanName = new ObjectName("com.sun.jbi.jse", "instance", 
-                    mEnvironment.getProperty(INSTANCE_NAME, DEFAULT_INSTANCE_NAME));
+            ObjectName fwMBeanName = new ObjectName("net.open-esb.standalone",
+                "instance", mEnvironment.getProperty(INSTANCE_NAME, DEFAULT_INSTANCE_NAME));
             mbsConn.invoke(fwMBeanName, "unload", new Object[0], new String[0]);
             
         }    
