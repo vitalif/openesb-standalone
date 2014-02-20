@@ -242,7 +242,10 @@ public class JSEJBIFramework
         mLoaded = false;
     }
 
-    private JMXServiceURL getServiceURL(int port)
+    /*
+     * This method should be public because invoked by an other class (StandaloneBootstrap).
+     */
+    public JMXServiceURL getServiceURL(int port)
             throws java.net.MalformedURLException {
         return new JMXServiceURL(
                 "service:jmx:rmi:///jndi/rmi://localhost:" + port + "/jmxrmi");
