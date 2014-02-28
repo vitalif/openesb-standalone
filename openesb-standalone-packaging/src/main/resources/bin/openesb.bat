@@ -60,8 +60,16 @@ IF "%JAVA_HOME%"=="" GOTO nojavahome
 :: change to OpenESB home directory
 cd %OPENESB_HOME% 
 
+:: the pattern is used to support OE SE Versionning
+set BOOSTRAP_PATTERN=openesb-standalone-bootstrap*.jar
+SET FILENAME=""
+
+for /r %%x in (%BOOSTRAP_PATTERN%) do (SET filename=%%x)
+
+if %filename%=="" Goto notfind
+
 :: Start OpenESB in a new Dos window
-START "OpenESB SE"  %JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.OpenESBLogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true -Dinstall.root=%OPENESB_HOME% -jar %OPENESB_HOME%\lib\openesb-standalone-bootstrap.jar
+START "OpenESB SE"  %JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.OpenESBLogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true -Dinstall.root=%OPENESB_HOME% -jar %filename%
 
 echo.
 echo.
@@ -85,6 +93,18 @@ echo *
 echo * WARNING ...
 echo * JAVA_HOME must be set before starting OpenESB 
 echo * Please check Java documentation to do it 
+echo *
+echo **************************************************
+GOTO endbatch
+
+:notfind
+echo.
+echo **************************************************
+echo *
+echo * WARNING ...
+echo * Unable to find to start OpenESB standalone Edition 
+echo * Bootstrap jar file is misssinf
+echo * Please check your installation  
 echo *
 echo **************************************************
 GOTO endbatch
