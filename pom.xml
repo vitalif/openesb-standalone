@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
@@ -21,6 +21,7 @@
         <module>openesb-standalone-bootstrap</module>
         <module>openesb-standalone-naming</module>
         <module>openesb-standalone-packaging</module>
+        <module>openesb-standalone-security</module>
     </modules>
     
     <properties>
@@ -35,6 +36,8 @@
         <snakeyaml.version>1.13</snakeyaml.version>
         <!--jgroups.version>3.4.2.Final</jgroups.version-->
         <asciidoctor.version>0.1.4</asciidoctor.version>
+        <shiro.version>1.2.2</shiro.version>
+        <junit.version>4.11</junit.version>
     </properties>
     
     <build>
@@ -104,6 +107,19 @@
                         <artifactId>jbi_compileconf</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            
+            <dependency>
+                <groupId>net.open-esb</groupId>
+                <artifactId>base</artifactId>
+                <version>${openesb.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

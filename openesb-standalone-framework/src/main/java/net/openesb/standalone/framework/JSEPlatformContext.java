@@ -44,7 +44,9 @@ import javax.management.MBeanServerConnection;
 import javax.management.MBeanServer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
+import net.openesb.standalone.security.SecurityProviderImpl;
 
 /**
  * Implementation of PlatformContext for Java SE.
@@ -92,6 +94,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @throws Exception if a <CODE>TransactionManager</CODE> cannot be
      * obtained.
      */
+    @Override
     public javax.transaction.TransactionManager getTransactionManager()
             throws Exception {
         return new com.atomikos.icatch.jta.UserTransactionManager();
@@ -103,6 +106,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return the <CODE>MBeanServerConnection</CODE> for the specified
      * instance.
      */
+    @Override
     public MBeanServerConnection getMBeanServerConnection(String instanceName)
             throws Exception {
         return java.lang.management.ManagementFactory.getPlatformMBeanServer();
@@ -115,6 +119,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return instance name of the administration server
      */
+    @Override
     public String getAdminServerName() {
         return mInstanceName;
     }
@@ -125,6 +130,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if this instance is the administration server,
      * <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isAdminServer() {
         return true;
     }
@@ -134,6 +140,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return the name of this server instance.
      */
+    @Override
     public String getInstanceName() {
         return mInstanceName;
     }
@@ -143,6 +150,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return true if the instance is up and running, false otherwise
      */
+    @Override
     public boolean isInstanceUp(String instanceName) {
         return mInstanceName.equals(instanceName);
     }
@@ -153,6 +161,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return true if multiple servers are permitted.
      */
+    @Override
     public boolean supportsMultipleServers() {
         return false;
     }
@@ -164,6 +173,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return the target name.
      */
+    @Override
     public String getTargetName() {
         return mInstanceName;
     }
@@ -175,6 +185,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return the target name.
      */
+    @Override
     public String getTargetName(String instanceName) {
         return instanceName;
     }
@@ -184,6 +195,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return a set of names of standalone servers in the domain.
      */
+    @Override
     public Set<String> getStandaloneServerNames() {
         HashSet<String> names = new HashSet<String>();
         names.add(mInstanceName);
@@ -195,6 +207,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return a set of names of clustered servers in the domain.
      */
+    @Override
     public Set<String> getClusteredServerNames() {
         return new HashSet<String>();
     }
@@ -204,6 +217,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return a set of names of clusters in the domain.
      */
+    @Override
     public Set<String> getClusterNames() {
         return new HashSet<String>();
     }
@@ -213,6 +227,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return a set of names of servers in the cluster.
      */
+    @Override
     public Set<String> getServersInCluster(String clusterName) {
         return new HashSet<String>();
     }
@@ -223,6 +238,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if <CODE>targetName</CODE> is a valid
      * standalone server name or cluster name, <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isValidTarget(String targetName) {
         return mInstanceName.equals(targetName);
     }
@@ -233,6 +249,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if <CODE>targetName</CODE> is a cluster,
      * <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isCluster(String targetName) {
         return false;
     }
@@ -243,6 +260,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if <CODE>targetName</CODE> is a standalone
      * server, <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isStandaloneServer(String targetName) {
         return mInstanceName.equals(targetName);
     }
@@ -253,6 +271,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if <CODE>targetName</CODE> is a clustered
      * server, <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isClusteredServer(String targetName) {
         return false;
     }
@@ -263,6 +282,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return <CODE>true</CODE> if the instance is clustered,
      * <CODE>false</CODE> if not.
      */
+    @Override
     public boolean isInstanceClustered(String instanceName) {
         return false;
     }
@@ -272,6 +292,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return the JMX RMI connector port as a <CODE>String</CODE>.
      */
+    @Override
     public String getJmxRmiPort() {
         return Integer.toString(mConnectorPort);
     }
@@ -281,6 +302,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return platform MBean server.
      */
+    @Override
     public MBeanServer getMBeanServer() {
         return java.lang.management.ManagementFactory.getPlatformMBeanServer();
     }
@@ -290,6 +312,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return platform instance root
      */
+    @Override
     public String getInstanceRoot() {
         return mInstanceRoot;
     }
@@ -299,6 +322,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return platform install root
      */
+    @Override
     public String getInstallRoot() {
         return mInstallRoot;
     }
@@ -308,6 +332,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return enum value corresponding to this platform implementation.
      */
+    @Override
     public JBIProvider getProvider() {
         return JBIProvider.JSE;
     }
@@ -318,6 +343,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @return a KeyStoreUtil
      * @exception UnsupportedOperationException
      */
+    @Override
     public KeyStoreUtil getKeyStoreUtil() {
         return null;
     }
@@ -328,6 +354,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @return naming context
      */
+    @Override
     public InitialContext getNamingContext() {
         return mNamingContext;
     }
@@ -341,6 +368,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * from a JBI runtime perspective.
      * @throws SecurityException if access to the class loader is denied.
      */
+    @Override
     public ClassLoader getSystemClassLoader()
             throws SecurityException {
         return this.getClass().getClassLoader().getParent();
@@ -351,6 +379,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @param listener listener implementation
      */
+    @Override
     public void addListener(PlatformEventListener listener) {
         // NOP
     }
@@ -360,6 +389,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      *
      * @param listener listener implementation
      */
+    @Override
     public void removeListener(PlatformEventListener listener) {
         // NOP
     }
@@ -370,6 +400,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @param target - target name
      * @return the default platform log level
      */
+    @Override
     public java.util.logging.Level getJbiLogLevel(String target) {
         Level jbiLoggerLevel =
                 Logger.getLogger(JBI_LOGGER_NAME).getLevel();
@@ -387,7 +418,13 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
      * @param target = target name
      * @param level the default platform log level
      */
+    @Override
     public void setJbiLogLevel(String target, java.util.logging.Level level) {
         Logger.getLogger(JBI_LOGGER_NAME).setLevel(level);
+    }
+
+    @Override
+    public SecurityProvider getSecurityProvider() {
+        return new SecurityProviderImpl();
     }
 }

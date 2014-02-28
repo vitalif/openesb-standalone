@@ -20,6 +20,11 @@
             <artifactId>openesb-standalone-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.open-esb.runtime.standalone</groupId>
+            <artifactId>openesb-standalone-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!-- OpenESB Core dependencies -->
         <dependency>
@@ -41,18 +46,23 @@
         </dependency>
         
         <!-- Cluster support
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-            <version>${jgroups.version}</version>
-        </dependency>
-         -->
+       <dependency>
+           <groupId>org.jgroups</groupId>
+           <artifactId>jgroups</artifactId>
+           <version>${jgroups.version}</version>
+       </dependency>
+        -->
          
         <!-- Config support -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>net.open-esb.runtime.standalone</groupId>
+        <artifactId>openesb-standalone</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>openesb-standalone-security</artifactId>
+    
+    <name>OpenESB - Standalone - Security</name>
+    <description>This module is providing security management (administration and
+    users authentication / authorization)</description>
+    
+    <dependencies>
+        <!-- OpenESB Core dependencies -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>base</artifactId>
+        </dependency>
+        
+        <!-- Security support -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+</project>

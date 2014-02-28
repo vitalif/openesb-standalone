@@ -47,6 +47,7 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
+import net.openesb.standalone.security.auth.login.CustomJMXAuthenticator;
 //import net.openesb.standalone.node.Node;
 //import net.openesb.standalone.node.NodeBuilder;
 import net.openesb.standalone.settings.ImmutableSettings;
@@ -133,6 +134,9 @@ public class JSEJBIFramework
                 installRoot,
                 settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
                 settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
+        
+        // Do it in the main thread, not during an RMI connection
+        // SecurityProvider.getSecurityProvider();
     }
 
     /**
@@ -257,25 +261,26 @@ public class JSEJBIFramework
      * @param port port for the JMX connector server.
      */
     private void createJMXConnectorServer(int port) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, Object> map = new HashMap<String, Object>();
 
-        /*
-         map.put("java.naming.factory.initial", 
-         RegistryContextFactory.class.getName());
-         */
         try {
             // Create the service URL
             JMXServiceURL serviceURL = getServiceURL(port);
 
             // Create an RMI registry instance to hold the JMX connector server
             mRegistry = LocateRegistry.createRegistry(port);
-
+            
+            map.put(JMXConnectorServer.AUTHENTICATOR, new CustomJMXAuthenticator(
+                    mPlatformContext.getSecurityProvider()));
+            map.put("java.naming.factory.initial", RegistryContextFactory.class.getName());
+            map.put("com.sun.management.jmxremote.authenticate", Boolean.TRUE.toString());
+            
             // Create and start the connector server
             mJMXServer = JMXConnectorServerFactory.newJMXConnectorServer(
                     serviceURL, map, mPlatformContext.getMBeanServer());
             mJMXServer.start();
 
-            mLog.log(Level.INFO, "remote JMX connector available at {0}", mJMXServer.getAddress());
+            mLog.log(Level.INFO, "Remote JMX connector available at {0}", mJMXServer.getAddress());
         } catch (Exception ex) {
             mLog.log(Level.SEVERE, "Failed to create remote JMX connector: {0}", ex.toString());
         }
