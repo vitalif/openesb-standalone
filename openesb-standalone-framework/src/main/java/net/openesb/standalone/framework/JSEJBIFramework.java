@@ -47,7 +47,9 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
-import net.openesb.standalone.security.auth.login.CustomJMXAuthenticator;
+import javax.naming.Context;
+import net.openesb.standalone.security.SecurityProviderImpl;
+import net.openesb.standalone.security.auth.login.JMXauthenticator;
 //import net.openesb.standalone.node.Node;
 //import net.openesb.standalone.node.NodeBuilder;
 import net.openesb.standalone.settings.ImmutableSettings;
@@ -114,16 +116,19 @@ public class JSEJBIFramework
 
         mLog.log(Level.FINE, "Trying to load configuration from {0}", configFile);
 
+        Map configurations = null;
+        
         try {
             Yaml yaml = new Yaml(new Constructor(), new Representer(), new DumperOptions(),
                     new Resolver() {
                 @Override
                 protected void addImplicitResolvers() {
-                    //super.addImplicitResolvers(); //To change body of generated methods, choose Tools | Templates.
                 }
             });
             InputStream input = new FileInputStream(new File(configFile));
-            settings = new ImmutableSettings((Map) yaml.load(input));
+            configurations = (Map) yaml.load(input);
+            
+            settings = new ImmutableSettings(configurations);
             mLog.log(Level.FINE, "Configuration loaded from {0}", configFile);
         } catch (FileNotFoundException fnfe) {
             mLog.log(Level.WARNING, "Unable to load configuration file {0}. Default configuration will be used.", configFile);
@@ -135,8 +140,9 @@ public class JSEJBIFramework
                 settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
                 settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
         
-        // Do it in the main thread, not during an RMI connection
-        // SecurityProvider.getSecurityProvider();
+        mPlatformContext.setSecurityProvider(
+                new SecurityProviderImpl(
+                (Map<String,Map<String,String>>) configurations.get("realm")));
     }
 
     /**
@@ -270,9 +276,9 @@ public class JSEJBIFramework
             // Create an RMI registry instance to hold the JMX connector server
             mRegistry = LocateRegistry.createRegistry(port);
             
-            map.put(JMXConnectorServer.AUTHENTICATOR, new CustomJMXAuthenticator(
+            map.put(JMXConnectorServer.AUTHENTICATOR, new JMXauthenticator(
                     mPlatformContext.getSecurityProvider()));
-            map.put("java.naming.factory.initial", RegistryContextFactory.class.getName());
+            map.put(Context.INITIAL_CONTEXT_FACTORY, RegistryContextFactory.class.getName());
             map.put("com.sun.management.jmxremote.authenticate", Boolean.TRUE.toString());
             
             // Create and start the connector server

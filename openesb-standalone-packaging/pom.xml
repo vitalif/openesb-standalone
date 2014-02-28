@@ -57,6 +57,11 @@
             <artifactId>openesb-standalone-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.open-esb.runtime.standalone</groupId>
+            <artifactId>openesb-standalone-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!-- Atomikos -->
         <dependency>
@@ -99,6 +104,13 @@
             <groupId>org.apache.geronimo.ext.openejb</groupId>
             <artifactId>javaee-api</artifactId>
             <version>5.0.3</version>
+        </dependency>
+        
+        <!-- Apache Shiro -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
         </dependency>
         
         <!-- OpenESB REST API & Web Console -->

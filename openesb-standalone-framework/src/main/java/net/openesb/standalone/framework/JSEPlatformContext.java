@@ -423,8 +423,14 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
         Logger.getLogger(JBI_LOGGER_NAME).setLevel(level);
     }
 
+    private SecurityProvider securityProvider;
+    
+    public void setSecurityProvider(SecurityProvider securityProvider) {
+        this.securityProvider = securityProvider;
+    }
+    
     @Override
     public SecurityProvider getSecurityProvider() {
-        return new SecurityProviderImpl();
+        return securityProvider;
     }
 }

@@ -10,9 +10,9 @@ import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
 import net.openesb.security.AuthenticationToken;
 import net.openesb.security.SecurityProvider;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.realm.text.PropertiesRealm;
+import net.openesb.standalone.security.realm.Realm;
+import net.openesb.standalone.security.realm.RealmBuilder;
+import net.openesb.standalone.security.realm.shiro.ShiroAuthenticator;
 
 /**
  *
@@ -21,59 +21,67 @@ import org.apache.shiro.realm.text.PropertiesRealm;
  */
 public class SecurityProviderImpl implements SecurityProvider {
 
-    private Logger mLog =
+    private final Logger mLog =
             Logger.getLogger(this.getClass().getPackage().getName());
     
-    private final Map <String, org.apache.shiro.mgt.SecurityManager> securityManagers = 
-            new HashMap<String, org.apache.shiro.mgt.SecurityManager>();
+    private final Map<String, Realm> realms = new HashMap<String, Realm>();
+    private final ShiroAuthenticator authenticator = new ShiroAuthenticator();
+    private String adminRealmName = null;
     
-    public SecurityProviderImpl() {
-        this.init();
+    public SecurityProviderImpl(Map<String, Map<String, String>> realmsConfiguration) {
+        this.init(realmsConfiguration);
+        this.validate();
     }
     
-    private void init() {
-        mLog.log(Level.INFO, "Loading Realms from configuration.");
+    private void init(Map<String, Map<String, String>> realmsConfiguration) {
+        if (realmsConfiguration != null) {
+            mLog.log(Level.INFO, "Loading realms from configuration file.");
         
-        PropertiesRealm propertiesRealm = new PropertiesRealm();
-        propertiesRealm.setResourcePath("/Users/david/test.properties");
-        propertiesRealm.init();
-        
-        securityManagers.put("admin-realm", new DefaultSecurityManager(propertiesRealm));
+            for(Map.Entry<String, Map<String, String>> realmConfig : realmsConfiguration.entrySet()) {
+                Realm realm = RealmBuilder.
+                        realmBuilder().
+                        build(realmConfig.getKey(), realmConfig.getValue());
+                
+                realms.put(realmConfig.getKey(), realm);
+            }
+        } else {
+            mLog.log(Level.WARNING, "No realm defined !");
+        }
+    }
+    
+    private void validate() {
+        for(Realm realm : realms.values()) {
+            authenticator.loadRealm(realm);
+            
+            if (realm.isAdmin()) {
+                if (adminRealmName == null) {
+                    adminRealmName = realm.getName();
+                } else {
+                    throw new IllegalStateException(
+                            "Admin realm already defined: " + adminRealmName);
+                }
+            }
+        }
     }
     
     @Override
     public Collection<String> getRealms() {
         return Collections.unmodifiableSet(
-                securityManagers.keySet());
+                realms.keySet());
     }
 
     @Override
     public String getAdminRealm() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return adminRealmName;
     }
 
     @Override
     public boolean isAvailable(String realmName) {
-        return securityManagers.containsKey(realmName);
+        return realms.containsKey(realmName);
     }
 
     @Override
     public Subject login(String realmName, AuthenticationToken authenticationToken) throws AuthenticationException {
-        org.apache.shiro.mgt.SecurityManager securityManager = securityManagers.get(realmName);
-        org.apache.shiro.subject.Subject currentUser = 
-                new org.apache.shiro.subject.Subject.Builder(securityManager).buildSubject();
-        
-        UsernamePasswordToken token = new UsernamePasswordToken(
-                (String) authenticationToken.getPrincipal(), 
-                (char []) authenticationToken.getCredentials());
-        
-        try {
-            currentUser.login(token);
-            
-            Subject subject = new Subject();
-            return subject;
-        } catch (org.apache.shiro.authc.AuthenticationException ae) {
-            throw new AuthenticationException(ae.getMessage());
-        }
+        return authenticator.authenticate(realmName, authenticationToken);
     }
 }

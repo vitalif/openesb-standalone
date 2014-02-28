@@ -11,11 +11,11 @@ import net.openesb.security.UsernamePasswordToken;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class CustomJMXAuthenticator implements JMXAuthenticator {
+public class JMXauthenticator implements JMXAuthenticator {
 
     private final SecurityProvider securityProvider;
     
-    public CustomJMXAuthenticator(final SecurityProvider securityProvider) {
+    public JMXauthenticator(final SecurityProvider securityProvider) {
         this.securityProvider = securityProvider;
     }
     
