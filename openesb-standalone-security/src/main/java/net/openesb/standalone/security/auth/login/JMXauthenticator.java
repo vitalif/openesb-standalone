@@ -26,8 +26,9 @@ public class JMXauthenticator implements JMXAuthenticator {
         String password = credentials[1];
         
         try {
-            return securityProvider.login("admin-realm", 
-                new UsernamePasswordToken(username, password));
+            return securityProvider.login(
+                    securityProvider.getAdminRealm(), 
+                    new UsernamePasswordToken(username, password));
         } catch (AuthenticationException ae) {
             throw new SecurityException(ae.getMessage());
         }
