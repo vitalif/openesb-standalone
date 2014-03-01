@@ -1,1 +1,1 @@
-net.openesb.standalone.security.realm.shiro.PropertiesRealmHandler
+net.openesb.standalone.security.realm.impl.PropertiesRealmHandler
