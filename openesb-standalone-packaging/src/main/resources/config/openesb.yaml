@@ -17,3 +17,8 @@
 # Disable HTTP completely:
 #
 # http.enabled: false
+
+realm:
+   admin:
+      type: properties
+      file: ${install.root}/config/mgmt-users.properties

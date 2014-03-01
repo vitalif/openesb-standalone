@@ -97,6 +97,7 @@
                 <include>org.apache.tomcat:tomcat-catalina</include>
                 <include>org.yaml:snakeyaml</include>
                 <include>org.apache.shiro:shiro-core</include>
+                <include>org.slf4j:slf4j-api</include>
             </includes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>

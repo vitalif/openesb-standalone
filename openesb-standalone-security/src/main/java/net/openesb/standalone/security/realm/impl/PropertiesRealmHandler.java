@@ -4,14 +4,13 @@ import java.io.File;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.openesb.standalone.security.realm.RealmHandler;
 
 /**
  *
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class PropertiesRealmHandler implements RealmHandler<PropertiesRealm> {
+public class PropertiesRealmHandler extends AbstractRealmHandler<PropertiesRealm> {
     
     private final Logger mLog =
             Logger.getLogger(this.getClass().getPackage().getName());
@@ -30,6 +29,8 @@ public class PropertiesRealmHandler implements RealmHandler<PropertiesRealm> {
     @Override
     public PropertiesRealm create(Map<String, String> properties) {
         String file = properties.get(PROPERTY_PATH);
+        file = replace(file);
+        
         mLog.log(Level.INFO, "Creating properties realm using file: {0}", file);
         
         File propertyFile = new File(file);

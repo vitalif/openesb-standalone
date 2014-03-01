@@ -10,6 +10,8 @@ import java.util.ServiceLoader;
  */
 public final class RealmBuilder {
     
+    private final static String REALM_TYPE = "type";
+    
     public static RealmBuilder realmBuilder() {
         return new RealmBuilder();
     }
@@ -17,7 +19,8 @@ public final class RealmBuilder {
     public Realm build(String realmName, Map<String, String> properties) {
         ServiceLoader<RealmHandler> handlers = ServiceLoader.load(RealmHandler.class);
         for(RealmHandler handler : handlers) {
-            if (handler.canHandle(realmName)) {
+            String type = properties.get(REALM_TYPE);
+            if (handler.canHandle(type)) {
                 Realm realm = handler.create(properties);
                 realm.setName(realmName);
                 

@@ -113,6 +113,12 @@
             <version>${shiro.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+        
         <!-- OpenESB REST API & Web Console -->
         <dependency>
             <groupId>net.open-esb</groupId>
