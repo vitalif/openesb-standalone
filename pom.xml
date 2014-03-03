@@ -52,45 +52,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        
-        <plugins>
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>${asciidoctor.version}</version>
-                <executions>
-                    <execution>
-                        <id>output-single-html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <doctype>book</doctype>
-                            <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/htmlsingle/</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>output-docbook</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>docbook</backend>
-                            <doctype>book</doctype>
-                            <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/docbook/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sourceDirectory>src/asciidoc</sourceDirectory>
-                    <headerFooter>true</headerFooter>
-                    <sourceHighlighter>prettify</sourceHighlighter>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
     
     <dependencyManagement>
@@ -122,4 +83,55 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>docs</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>${asciidoctor.version}</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>output-single-html</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <doctype>book</doctype>
+                                    <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/htmlsingle/</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>output-docbook</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>docbook</backend>
+                                    <doctype>book</doctype>
+                                    <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/docbook/</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sourceDirectory>src/asciidoc</sourceDirectory>
+                            <headerFooter>true</headerFooter>
+                            <sourceHighlighter>prettify</sourceHighlighter>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
