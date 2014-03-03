@@ -27,7 +27,7 @@ public class PropertiesRealmHandler extends AbstractRealmHandler<PropertiesRealm
     }
 
     @Override
-    public PropertiesRealm create(Map<String, String> properties) {
+    public PropertiesRealm instantiate(String realmName, Map<String, String> properties) {
         String file = properties.get(PROPERTY_PATH);
         file = replace(file);
         
@@ -37,12 +37,13 @@ public class PropertiesRealmHandler extends AbstractRealmHandler<PropertiesRealm
         if (! propertyFile.exists()) {
             mLog.log(Level.SEVERE, "Properties realm, invalid path: {0}", 
                     propertyFile.getAbsolutePath());
+            
             throw new IllegalStateException("Properties realm, invalid path: " +
                     propertyFile.getAbsolutePath());
         }
         
         boolean reload = Boolean.parseBoolean(properties.get(PROPERTY_RELOAD_ENABLE));
-        PropertiesRealm propertiesRealm = new PropertiesRealm();
+        PropertiesRealm propertiesRealm = new PropertiesRealm(realmName);
         propertiesRealm.setPath(propertyFile.getAbsolutePath());
         
         if (reload) {

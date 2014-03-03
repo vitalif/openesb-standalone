@@ -11,5 +11,5 @@ public interface RealmHandler<T extends Realm> {
 
     boolean canHandle(String type);
     
-    T create(Map<String, String> properties);
+    T create(String realmName, Map<String, String> properties);
 }

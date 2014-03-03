@@ -21,8 +21,7 @@ public final class RealmBuilder {
         for(RealmHandler handler : handlers) {
             String type = properties.get(REALM_TYPE);
             if (handler.canHandle(type)) {
-                Realm realm = handler.create(properties);
-                realm.setName(realmName);
+                Realm realm = handler.create(realmName, properties);
                 
                 return realm;
             }

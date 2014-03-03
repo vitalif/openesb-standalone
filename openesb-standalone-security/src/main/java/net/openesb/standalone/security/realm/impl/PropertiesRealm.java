@@ -18,6 +18,10 @@ public class PropertiesRealm extends AbstractRealm {
      */
     private int reloadInterval;
 
+    public PropertiesRealm(String realmName) {
+        super(realmName);
+    }
+
     public String getPath() {
         return path;
     }

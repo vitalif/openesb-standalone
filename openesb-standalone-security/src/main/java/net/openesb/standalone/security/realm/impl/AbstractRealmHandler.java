@@ -1,5 +1,6 @@
 package net.openesb.standalone.security.realm.impl;
 
+import java.util.Map;
 import net.openesb.standalone.security.realm.Realm;
 import net.openesb.standalone.security.realm.RealmHandler;
 
@@ -10,6 +11,13 @@ import net.openesb.standalone.security.realm.RealmHandler;
  */
 public abstract class AbstractRealmHandler<T extends Realm> implements RealmHandler<T> {
 
+    @Override
+    public T create(String realmName, Map<String, String> properties) {
+        return instantiate(realmName, properties);
+    }
+    
+    abstract T instantiate(String realmName, Map<String, String> properties);
+    
     /**
      * System property replacement in the given string.
      *

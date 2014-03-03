@@ -7,11 +7,5 @@ package net.openesb.standalone.security.realm;
  */
 public interface Realm {
     
-    void setName(String name);
-    
     String getName();
-    
-    boolean isAdmin();
-    
-    void setAdmin(boolean isAdmin);
 }

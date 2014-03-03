@@ -3,8 +3,8 @@ package net.openesb.standalone.security.auth.login;
 import javax.management.remote.JMXAuthenticator;
 import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
+import net.openesb.security.AuthenticationToken;
 import net.openesb.security.SecurityProvider;
-import net.openesb.security.UsernamePasswordToken;
 
 /**
  *
@@ -21,17 +21,22 @@ public class JMXauthenticator implements JMXAuthenticator {
     
     @Override
     public Subject authenticate(Object credentialsObj) {
-        String [] credentials = (String []) credentialsObj;
-        String username = credentials[0];
-        String password = credentials[1];
+        final String [] credentials = (String []) credentialsObj;
         
         try {
-            return securityProvider.login(
-                    securityProvider.getAdminRealm(), 
-                    new UsernamePasswordToken(username, password));
+            return securityProvider.login(new AuthenticationToken() {
+                @Override
+                public Object getPrincipal() {
+                    return credentials[0];
+                }
+
+                @Override
+                public Object getCredentials() {
+                    return credentials[1];
+                }
+            });
         } catch (AuthenticationException ae) {
             throw new SecurityException(ae.getMessage());
         }
     }
-    
 }

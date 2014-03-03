@@ -24,43 +24,38 @@ public class SecurityProviderImpl implements SecurityProvider {
     private final Logger mLog =
             Logger.getLogger(this.getClass().getPackage().getName());
     
+    private final static String MANAGEMENT_REALM = "admin";
+    
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
     private final ShiroAuthenticator authenticator = new ShiroAuthenticator();
-    private String adminRealmName = null;
+    private boolean adminRealFound;
     
     public SecurityProviderImpl(Map<String, Map<String, String>> realmsConfiguration) {
         this.init(realmsConfiguration);
-        this.validate();
     }
     
     private void init(Map<String, Map<String, String>> realmsConfiguration) {
         if (realmsConfiguration != null) {
-            mLog.log(Level.INFO, "Loading realms from configuration file.");
+            mLog.log(Level.INFO, "Loading security realms from configuration.");
         
             for(Map.Entry<String, Map<String, String>> realmConfig : realmsConfiguration.entrySet()) {
-                Realm realm = RealmBuilder.
+                if (! realms.containsKey(realmConfig.getKey())) {
+                    Realm realm = RealmBuilder.
                         realmBuilder().
                         build(realmConfig.getKey(), realmConfig.getValue());
-                
-                realms.put(realmConfig.getKey(), realm);
-            }
-        } else {
-            mLog.log(Level.WARNING, "No realm defined !");
-        }
-    }
-    
-    private void validate() {
-        for(Realm realm : realms.values()) {
-            authenticator.loadRealm(realm);
-            
-            if (realm.isAdmin()) {
-                if (adminRealmName == null) {
-                    adminRealmName = realm.getName();
+                    
+                    authenticator.loadRealm(realm);
+                    realms.put(realmConfig.getKey(), realm);
+                    mLog.log(Level.INFO, "Realm {0} has been correctly configured.",
+                            realmConfig.getKey());
                 } else {
-                    throw new IllegalStateException(
-                            "Admin realm already defined: " + adminRealmName);
+                    mLog.log(Level.INFO, "Realm {0} is already defined, skipping...",
+                            realmConfig.getKey());
                 }
             }
+        } else {
+            mLog.log(Level.WARNING, "No realm defined. Please have a look to "
+                    + " the configuration !");
         }
     }
     
@@ -71,17 +66,12 @@ public class SecurityProviderImpl implements SecurityProvider {
     }
 
     @Override
-    public String getAdminRealm() {
-        return adminRealmName;
-    }
-
-    @Override
-    public boolean isAvailable(String realmName) {
-        return realms.containsKey(realmName);
-    }
-
-    @Override
     public Subject login(String realmName, AuthenticationToken authenticationToken) throws AuthenticationException {
         return authenticator.authenticate(realmName, authenticationToken);
+    }
+    
+    @Override
+    public Subject login(AuthenticationToken authenticationToken) throws AuthenticationException {
+        return login(MANAGEMENT_REALM, authenticationToken);
     }
 }

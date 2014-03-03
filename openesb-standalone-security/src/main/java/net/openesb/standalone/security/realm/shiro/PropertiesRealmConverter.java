@@ -20,6 +20,9 @@ public class PropertiesRealmConverter implements
             cRealm.setReloadIntervalSeconds(realm.getReloadInterval());
         }
         
+        // Initialize the realm
+        cRealm.onInit();
+        
         return cRealm;
     }
 

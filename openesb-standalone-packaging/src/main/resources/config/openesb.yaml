@@ -18,7 +18,11 @@
 #
 # http.enabled: false
 
+################################### Security ######################################
+# Set the security realms which have to be used for management purpose or components
+# security concerns.
 realm:
+   # The realm "admin" is the realm used for management (JMX / Rest API)
    admin:
       type: properties
       file: ${install.root}/config/mgmt-users.properties
