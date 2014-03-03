@@ -10,4 +10,6 @@ import net.openesb.standalone.security.realm.Realm;
 public interface RealmConverter<T extends Realm, S extends org.apache.shiro.realm.Realm> {
     
     S convert(T realm);
+    
+    boolean canHandle(Class<? extends Realm> realm);
 }

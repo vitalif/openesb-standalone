@@ -28,7 +28,6 @@ public class SecurityProviderImpl implements SecurityProvider {
     
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
     private final ShiroAuthenticator authenticator = new ShiroAuthenticator();
-    private boolean adminRealFound;
     
     public SecurityProviderImpl(Map<String, Map<String, String>> realmsConfiguration) {
         this.init(realmsConfiguration);
@@ -46,12 +45,12 @@ public class SecurityProviderImpl implements SecurityProvider {
                     
                     authenticator.loadRealm(realm);
                     realms.put(realmConfig.getKey(), realm);
-                    mLog.log(Level.INFO, "Realm {0} has been correctly configured.",
-                            realmConfig.getKey());
                     
                     if (realm.getName().equals(MANAGEMENT_REALM)) {
-                        adminRealFound = true;
                         mLog.log(Level.INFO, "Management Realm ({0}) has been correctly configured.",
+                            realmConfig.getKey());
+                    } else {
+                        mLog.log(Level.INFO, "Realm {0} has been correctly configured.",
                             realmConfig.getKey());
                     }
                 } else {

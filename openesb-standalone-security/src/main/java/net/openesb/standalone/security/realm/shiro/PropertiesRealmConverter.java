@@ -1,5 +1,6 @@
 package net.openesb.standalone.security.realm.shiro;
 
+import net.openesb.standalone.security.realm.Realm;
 import org.apache.shiro.realm.text.PropertiesRealm;
 
 
@@ -24,6 +25,11 @@ public class PropertiesRealmConverter implements
         cRealm.onInit();
         
         return cRealm;
+    }
+
+    @Override
+    public boolean canHandle(Class<? extends Realm> realm) {
+        return realm.equals(net.openesb.standalone.security.realm.impl.PropertiesRealm.class);
     }
 
 }

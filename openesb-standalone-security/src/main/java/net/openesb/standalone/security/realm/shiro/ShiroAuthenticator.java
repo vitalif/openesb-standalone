@@ -2,11 +2,13 @@ package net.openesb.standalone.security.realm.shiro;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
 import net.openesb.security.AuthenticationToken;
 import net.openesb.standalone.security.realm.Realm;
+import net.openesb.standalone.security.realm.RealmHandler;
 import net.openesb.standalone.security.realm.impl.PropertiesRealm;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -25,11 +27,14 @@ public class ShiroAuthenticator {
             new HashMap<String, org.apache.shiro.mgt.SecurityManager>();
     
     public void loadRealm(Realm realm) {
-        //TODO: find a way to automate the convertion
-        org.apache.shiro.realm.Realm sRealm = new PropertiesRealmConverter().convert((PropertiesRealm)realm);
-        
-        DefaultSecurityManager manager = new DefaultSecurityManager(sRealm);
-        securityManagers.put(realm.getName(), manager);
+        ServiceLoader<RealmConverter> converters = ServiceLoader.load(RealmConverter.class);
+        for (RealmConverter converter : converters) {
+            if (converter.canHandle(realm.getClass())) {
+                org.apache.shiro.realm.Realm sRealm = converter.convert((PropertiesRealm)realm);
+                DefaultSecurityManager manager = new DefaultSecurityManager(sRealm);
+                securityManagers.put(realm.getName(), manager);
+            }
+        }
     }
 
     public Subject authenticate(String realmName, AuthenticationToken authenticationToken) 
