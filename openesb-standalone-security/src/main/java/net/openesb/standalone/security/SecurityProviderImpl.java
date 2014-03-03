@@ -48,6 +48,12 @@ public class SecurityProviderImpl implements SecurityProvider {
                     realms.put(realmConfig.getKey(), realm);
                     mLog.log(Level.INFO, "Realm {0} has been correctly configured.",
                             realmConfig.getKey());
+                    
+                    if (realm.getName().equals(MANAGEMENT_REALM)) {
+                        adminRealFound = true;
+                        mLog.log(Level.INFO, "Management Realm ({0}) has been correctly configured.",
+                            realmConfig.getKey());
+                    }
                 } else {
                     mLog.log(Level.INFO, "Realm {0} is already defined, skipping...",
                             realmConfig.getKey());
