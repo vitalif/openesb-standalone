@@ -17,11 +17,9 @@
     <description>OpenESB runtime in standalone mode</description>
     
     <modules>
-        <module>openesb-standalone-framework</module>
+        <module>openesb-standalone-container</module>
         <module>openesb-standalone-bootstrap</module>
-        <module>openesb-standalone-naming</module>
         <module>openesb-standalone-packaging</module>
-        <module>openesb-standalone-security</module>
     </modules>
     
     <properties>

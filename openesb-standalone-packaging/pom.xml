@@ -49,17 +49,7 @@
         </dependency>
         <dependency>
             <groupId>net.open-esb.runtime.standalone</groupId>
-            <artifactId>openesb-standalone-framework</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.open-esb.runtime.standalone</groupId>
-            <artifactId>openesb-standalone-naming</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.open-esb.runtime.standalone</groupId>
-            <artifactId>openesb-standalone-security</artifactId>
+            <artifactId>openesb-standalone-container</artifactId>
             <version>${project.version}</version>
         </dependency>
         
