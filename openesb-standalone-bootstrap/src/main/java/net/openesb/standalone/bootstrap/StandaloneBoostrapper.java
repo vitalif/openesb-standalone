@@ -56,7 +56,7 @@ public class StandaloneBoostrapper
     
     /** Name of the top-level class of the JBI runtime framework. */
     private static final String JBI_FRAMEWORK_CLASS_NAME =
-        "net.openesb.standalone.framework.JSEJBIFramework";
+        "net.openesb.standalone.framework.StandaloneContainer";
         
     /** Runtime life cycle commands. */
     private static final String START = "start";
@@ -67,9 +67,9 @@ public class StandaloneBoostrapper
     /** Environment property used for instance name. */
     public static final String INSTANCE_NAME = "instance.name";
     /** Environment property used for JMX connector port setting. */
-    private static final String CONNECTOR_PORT = "connector.port";
+    //private static final String CONNECTOR_PORT = "connector.port";
     /** Default connector port. */
-    private static final String DEFAULT_CONNECTOR_PORT = "8699";
+    //private static final String DEFAULT_CONNECTOR_PORT = "8699";
     /** Default instance name. */
     private static final String DEFAULT_INSTANCE_NAME = "server";
     
@@ -141,10 +141,10 @@ public class StandaloneBoostrapper
         mBlacklistJars.add(JBI_EXT_JAR_NAME);
         
         // If connector port is not specified, set a 'smart' value
-        if (mEnvironment.getProperty(CONNECTOR_PORT) == null)
-        {
-            mEnvironment.setProperty(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT);
-        }
+        //if (mEnvironment.getProperty(CONNECTOR_PORT) == null)
+        //{
+        //    mEnvironment.setProperty(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT);
+        //}
         
         // If install root is not set, default to current working directory
         String installPath = mEnvironment.getProperty(INSTALL_ROOT);
@@ -219,16 +219,15 @@ public class StandaloneBoostrapper
     {
         String          errMsg = null;
         JMXServiceURL   serviceURL;
-        int             jmxConnectorPort;
+        //int             jmxConnectorPort;
         
         try
         {
             // Which port is the connector server running on?
-            jmxConnectorPort = Integer.parseInt(mEnvironment.getProperty(
-                        CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
+            //jmxConnectorPort = Integer.parseInt(mEnvironment.getProperty(
+            //            CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
             
-            serviceURL = (JMXServiceURL)invoke(mJbiFramework, "getServiceURL", 
-                    new Integer(jmxConnectorPort));
+            serviceURL = (JMXServiceURL)invoke(mJbiFramework, "getServiceURL");
             
             JMXConnector jmxConn = JMXConnectorFactory.connect(serviceURL);
             MBeanServerConnection mbsConn = jmxConn.getMBeanServerConnection();

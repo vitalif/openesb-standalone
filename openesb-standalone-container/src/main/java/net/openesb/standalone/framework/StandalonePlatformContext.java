@@ -1,31 +1,3 @@
-/*
- * BEGIN_HEADER - DO NOT EDIT
- *
- * The contents of this file are subject to the terms
- * of the Common Development and Distribution License
- * (the "License").  You may not use this file except
- * in compliance with the License.
- *
- * You can obtain a copy of the license at
- * https://open-esb.dev.java.net/public/CDDLv1.0.html.
- * See the License for the specific language governing
- * permissions and limitations under the License.
- *
- * When distributing Covered Code, include this CDDL
- * HEADER in each file and include the License file at
- * https://open-esb.dev.java.net/public/CDDLv1.0.html.
- * If applicable add the following below this CDDL HEADER,
- * with the fields enclosed by brackets "[]" replaced with
- * your own identifying information: Portions Copyright
- * [year] [name of copyright owner]
- */
-
-/*
- * @(#)JSEPlatformContext.java
- * Copyright 2004-2007 Sun Microsystems, Inc. All Rights Reserved.
- *
- * END_HEADER - DO NOT EDIT
- */
 package net.openesb.standalone.framework;
 
 import com.sun.jbi.JBIProvider;
@@ -46,14 +18,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
-import net.openesb.standalone.security.SecurityProviderImpl;
 
 /**
- * Implementation of PlatformContext for Java SE.
+ * Implementation of PlatformContext for OpenESB Standalone.
  *
- * @author Sun Microsystems Inc.
+ * @author David BRASSELY (brasseld at gmail.com)
+ * @author OpenESB Community
  */
-public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext {
+public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformContext {
 
     private String mInstanceName;
     private String mInstanceRoot;
@@ -62,7 +34,7 @@ public class JSEPlatformContext implements com.sun.jbi.platform.PlatformContext 
     private InitialContext mNamingContext;
     private Logger mLog = Logger.getLogger(getClass().getPackage().getName());
 
-    public JSEPlatformContext(String installRoot, String instanceName, int connectorPort) {
+    public StandalonePlatformContext(String installRoot, String instanceName, int connectorPort) {
         mInstallRoot = installRoot;
         mInstanceName = instanceName;
         mInstanceRoot = installRoot + File.separator + instanceName;

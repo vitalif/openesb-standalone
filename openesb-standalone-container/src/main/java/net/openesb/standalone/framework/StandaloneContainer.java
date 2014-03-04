@@ -1,42 +1,9 @@
-/*
- * BEGIN_HEADER - DO NOT EDIT
- *
- * The contents of this file are subject to the terms
- * of the Common Development and Distribution License
- * (the "License").  You may not use this file except
- * in compliance with the License.
- *
- * You can obtain a copy of the license at
- * https://open-esb.dev.java.net/public/CDDLv1.0.html.
- * See the License for the specific language governing
- * permissions and limitations under the License.
- *
- * When distributing Covered Code, include this CDDL
- * HEADER in each file and include the License file at
- * https://open-esb.dev.java.net/public/CDDLv1.0.html.
- * If applicable add the following below this CDDL HEADER,
- * with the fields enclosed by brackets "[]" replaced with
- * your own identifying information: Portions Copyright
- * [year] [name of copyright owner]
- */
-
-/*
- * @(#)JSEJBIFramework.java
- * Copyright 2004-2007 Sun Microsystems, Inc. All Rights Reserved.
- *
- * END_HEADER - DO NOT EDIT
- */
 package net.openesb.standalone.framework;
 
-import com.sun.jndi.rmi.registry.RegistryContextFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,12 +11,8 @@ import java.util.logging.Logger;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.remote.JMXConnectorServer;
-import javax.management.remote.JMXConnectorServerFactory;
-import javax.management.remote.JMXServiceURL;
-import javax.naming.Context;
+import net.openesb.standalone.jmx.MBServerConnectorFactory;
 import net.openesb.standalone.security.SecurityProviderImpl;
-import net.openesb.standalone.security.auth.login.JMXauthenticator;
 //import net.openesb.standalone.node.Node;
 //import net.openesb.standalone.node.NodeBuilder;
 import net.openesb.standalone.settings.ImmutableSettings;
@@ -61,8 +24,8 @@ import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.resolver.Resolver;
 
 /**
- * JBI framework wrapper for Java SE platform.
- * <br><br>
+ * JBI framework wrapper for OpenESB Standalone platform.
+ * <br>
  * A JSEJBIFramework instance cannot be loaded multiple times in the same VM. If
  * multiple instances of the framework are required in a VM, instantiate
  * multiple instances of JSEJBIFramework and load each one independently. There
@@ -70,11 +33,12 @@ import org.yaml.snakeyaml.resolver.Resolver;
  * same VM. A specific JSEJBIFramework instance can be loaded and unloaded
  * multiple times in a VM.
  *
- * @author Sun Microsystems, Inc.
+ * @author David BRASSELY (brasseld at gmail.com)
+ * @author OpenESB Community
  */
-public class JSEJBIFramework
+public class StandaloneContainer
         extends com.sun.jbi.framework.JBIFramework
-        implements JSEJBIFrameworkMBean {
+        implements StandaloneContainerMBean {
 
     public static final String CONFIG_FILE = "openesb.config";
     public static final String INSTALL_ROOT = "install.root";
@@ -86,29 +50,27 @@ public class JSEJBIFramework
     private static final String DEFAULT_INSTALL_ROOT = System.getProperty("user.dir");
     private static final String DEFAULT_INSTANCE_NAME = "server";
     private static final int DEFAULT_CONNECTOR_PORT = 8699;
-    private JSEPlatformContext mPlatformContext;
+    private StandalonePlatformContext mPlatformContext;
     private boolean mLoaded;
-    private Properties mEnvironment;
-    private JMXConnectorServer mJMXServer;
-    private Registry mRegistry;
-    private Logger mLog =
-            Logger.getLogger(this.getClass().getPackage().getName());
+    private final Properties systemEnv;
+    
+    private static final Logger mLog =
+            Logger.getLogger(StandaloneContainer.class.getPackage().getName());
 //    private Node instanceNode;
     private Settings settings;
 
     /**
      * Creates a new instance of the JBI framework.
      */
-    public JSEJBIFramework(Properties environment) {
+    public StandaloneContainer(Properties environment) {
         super();
-
-        mEnvironment = environment;
+        systemEnv = environment;
     }
 
     private void init() throws Exception {
-        String installRoot = mEnvironment.getProperty(INSTALL_ROOT, DEFAULT_INSTALL_ROOT);
+        String installRoot = systemEnv.getProperty(INSTALL_ROOT, DEFAULT_INSTALL_ROOT);
 
-        String configFile = mEnvironment.getProperty(CONFIG_FILE);
+        String configFile = systemEnv.getProperty(CONFIG_FILE);
 
         if (configFile == null) {
             configFile = installRoot + File.separatorChar + "config/openesb.yaml";
@@ -135,7 +97,7 @@ public class JSEJBIFramework
             settings = new ImmutableSettings(null);
         }
 
-        mPlatformContext = new JSEPlatformContext(
+        mPlatformContext = new StandalonePlatformContext(
                 installRoot,
                 settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME),
                 settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT));
@@ -183,13 +145,17 @@ public class JSEJBIFramework
 
         try {
             port = settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT);
-            createJMXConnectorServer(port);
+            MBServerConnectorFactory.getInstance().setPort(port);
+            MBServerConnectorFactory.getInstance().setMBeanServer(
+                    mPlatformContext.getMBeanServer());
+            
+            MBServerConnectorFactory.getInstance().createConnector();
         } catch (NumberFormatException nfEx) {
             mLog.log(Level.WARNING, "Invalid connector server port: {0}. Remote JMX connector will not be created.", port);
         }
 
         // For stand-alone JBI, JBI_HOME = platform install root
-        mEnvironment.setProperty("com.sun.jbi.home",
+        systemEnv.setProperty("com.sun.jbi.home",
                 mPlatformContext.getInstallRoot());
 
         // --------------------------------------------
@@ -200,7 +166,7 @@ public class JSEJBIFramework
                 settings.get("http.enabled", "true"));
         // --------------------------------------------
 
-        init(mPlatformContext, mEnvironment);
+        init(mPlatformContext, systemEnv);
         startup(mPlatformContext.getNamingContext(), "");
         prepare();
         ready(true);
@@ -211,6 +177,10 @@ public class JSEJBIFramework
 
         // JBI framework has been loaded
         mLoaded = true;
+    }
+    
+    public String getServiceUrl() {
+        return MBServerConnectorFactory.getInstance().getServiceUrl();
     }
 
     /**
@@ -243,52 +213,11 @@ public class JSEJBIFramework
         terminate();
 
         try {
-            mJMXServer.stop();
-            UnicastRemoteObject.unexportObject(mRegistry, true);
+            MBServerConnectorFactory.getInstance().destroy();
         } catch (Exception ex) {
             mLog.log(Level.SEVERE, "Error during framework shutdown: {0}", ex.toString());
         }
 
         mLoaded = false;
-    }
-
-    /*
-     * This method should be public because invoked by an other class (StandaloneBootstrap).
-     */
-    public JMXServiceURL getServiceURL(int port)
-            throws java.net.MalformedURLException {
-        return new JMXServiceURL(
-                "service:jmx:rmi:///jndi/rmi://localhost:" + port + "/jmxrmi");
-    }
-
-    /**
-     * Creates a JMX connector server at the specified port.
-     *
-     * @param port port for the JMX connector server.
-     */
-    private void createJMXConnectorServer(int port) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            // Create the service URL
-            JMXServiceURL serviceURL = getServiceURL(port);
-
-            // Create an RMI registry instance to hold the JMX connector server
-            mRegistry = LocateRegistry.createRegistry(port);
-            
-            map.put(JMXConnectorServer.AUTHENTICATOR, new JMXauthenticator(
-                    mPlatformContext.getSecurityProvider()));
-            map.put(Context.INITIAL_CONTEXT_FACTORY, RegistryContextFactory.class.getName());
-            map.put("com.sun.management.jmxremote.authenticate", Boolean.TRUE.toString());
-            
-            // Create and start the connector server
-            mJMXServer = JMXConnectorServerFactory.newJMXConnectorServer(
-                    serviceURL, map, mPlatformContext.getMBeanServer());
-            mJMXServer.start();
-
-            mLog.log(Level.INFO, "Remote JMX connector available at {0}", mJMXServer.getAddress());
-        } catch (Exception ex) {
-            mLog.log(Level.SEVERE, "Failed to create remote JMX connector: {0}", ex.toString());
-        }
     }
 }
