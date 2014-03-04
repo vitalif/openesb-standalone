@@ -29,7 +29,7 @@ public class JMXAuthenticator implements javax.management.remote.JMXAuthenticato
 
                 @Override
                 public Object getCredentials() {
-                    return credentials[1];
+                    return credentials[1].toCharArray();
                 }
             });
         } catch (AuthenticationException ae) {

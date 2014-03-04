@@ -33,7 +33,6 @@ public class MBServerConnectorFactory {
     private MBeanServer server;
     private boolean threaded;
     private boolean daemon;
-    private int port;
     private String serviceUrl;
     private JMXConnectorServer connectorServer;
 
@@ -76,69 +75,64 @@ public class MBServerConnectorFactory {
             server = MBeanServerHolder.INSTANCE;
         }
 
-        try {
-            port = settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT);
-            serviceUrl = String.format(DEFAULT_SERVICE_URL, port);
+        serviceUrl = String.format(DEFAULT_SERVICE_URL, getPort());
 
-            // Create the JMX service URL.
-            JMXServiceURL url = new JMXServiceURL(serviceUrl);
+        // Create the JMX service URL.
+        JMXServiceURL url = new JMXServiceURL(serviceUrl);
 
-            // if the URL is localhost, start up an Registry
-            if (serviceUrl.indexOf("localhost") > -1
-                    && url.getProtocol().compareToIgnoreCase("rmi") == 0) {
+        // if the URL is localhost, start up an Registry
+        if (serviceUrl.indexOf("localhost") > -1
+                && url.getProtocol().compareToIgnoreCase("rmi") == 0) {
+            try {
+                int registryPort = getURLLocalHostPort(serviceUrl);
                 try {
-                    int registryPort = getURLLocalHostPort(serviceUrl);
-                    try {
-                        LocateRegistry.createRegistry(registryPort);
-                    } catch (Exception ex) {
-                        // the registry may had been created
-                        LocateRegistry.getRegistry(registryPort);
-                    }
+                    LocateRegistry.createRegistry(registryPort);
                 } catch (Exception ex) {
-                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.CONNECTOR_CREATE_REGISTRY_FAILURE), ex);
+                    // the registry may had been created
+                    LocateRegistry.getRegistry(registryPort);
                 }
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.CONNECTOR_CREATE_REGISTRY_FAILURE), ex);
             }
-
-            HashMap<String, Object> environment = new HashMap<String, Object>();
-            environment.put(JMXConnectorServer.AUTHENTICATOR, authenticator);
-            environment.put("com.sun.management.jmxremote.authenticate", Boolean.TRUE.toString());
-
-            // Create the connector server now.
-            connectorServer =
-                    JMXConnectorServerFactory.newJMXConnectorServer(url, environment, server);
-
-            if (threaded) {
-                // Start the connector server asynchronously (in a separate thread).
-                Thread connectorThread = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            connectorServer.start();
-                        } catch (IOException ex) {
-                            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                                    LocalStringKeys.CONNECTOR_START_CONNECTOR_FAILURE, serviceUrl), ex);
-                        }
-                    }
-                };
-
-                connectorThread.setName("JMX Connector Thread [" + connectorServer.getAddress() + "]");
-                connectorThread.setDaemon(daemon);
-                connectorThread.start();
-            } else {
-                // Start the connector server in the same thread.
-                connectorServer.start();
-            }
-
-            if (LOG.isLoggable(Level.INFO)) {
-                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                        LocalStringKeys.CONNECTOR_START_CONNECTOR_STARTED,
-                        connectorServer.getAddress()));
-            }
-        } catch (NumberFormatException nfEx) {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                        LocalStringKeys.CONNECTOR_SERVER_INVALID_PORT), nfEx);
         }
+
+        HashMap<String, Object> environment = new HashMap<String, Object>();
+        environment.put(JMXConnectorServer.AUTHENTICATOR, authenticator);
+        environment.put("com.sun.management.jmxremote.authenticate", Boolean.TRUE.toString());
+
+        // Create the connector server now.
+        connectorServer =
+                JMXConnectorServerFactory.newJMXConnectorServer(url, environment, server);
+
+        if (threaded) {
+            // Start the connector server asynchronously (in a separate thread).
+            Thread connectorThread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        connectorServer.start();
+                    } catch (IOException ex) {
+                        LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                                LocalStringKeys.CONNECTOR_START_CONNECTOR_FAILURE, serviceUrl), ex);
+                    }
+                }
+            };
+
+            connectorThread.setName("JMX Connector Thread [" + connectorServer.getAddress() + "]");
+            connectorThread.setDaemon(daemon);
+            connectorThread.start();
+        } else {
+            // Start the connector server in the same thread.
+            connectorServer.start();
+        }
+
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.CONNECTOR_START_CONNECTOR_STARTED,
+                    connectorServer.getAddress()));
+        }
+
     }
 
     public void destroy() throws IOException {
@@ -157,6 +151,13 @@ public class MBServerConnectorFactory {
     }
 
     public int getPort() {
-        return port;
+        try {
+            return settings.getAsInt(CONNECTOR_PORT, DEFAULT_CONNECTOR_PORT);
+        } catch (NumberFormatException nfEx) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.CONNECTOR_SERVER_INVALID_PORT, DEFAULT_CONNECTOR_PORT), nfEx);
+
+            return DEFAULT_CONNECTOR_PORT;
+        }
     }
 }
