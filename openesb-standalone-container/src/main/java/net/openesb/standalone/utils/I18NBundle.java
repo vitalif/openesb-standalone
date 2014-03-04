@@ -17,27 +17,40 @@ import java.util.logging.Logger;
  */
 public class I18NBundle {
 
-    private final Logger sLogger = Logger.getLogger("net.openesb.standalone.utils");
+    private static final Logger sLogger = 
+            Logger.getLogger(I18NBundle.class.getName());
+    
     /**
      * package name
      */
     private String mBundlePackageName = null;
+    
     /**
      * resource bundle
      */
     private ResourceBundle mBundle = null;
 
+    private static I18NBundle instance;
+    
     /**
      * constructor
      *
      * @param packageName packe name ( e.g. com.sun.mypackage ) in which to look
      * for Bundle.properties file
      */
-    public I18NBundle(String packageName) {
+    private I18NBundle(String packageName) {
         this.mBundlePackageName = packageName;
         this.mBundle = null;
     }
 
+    public static I18NBundle getBundle() {
+        if (instance == null) {
+            instance = new I18NBundle("net.openesb.standalone");
+        }
+        
+        return instance;
+    }
+    
     /**
      * loads the bundle
      *
@@ -70,7 +83,7 @@ public class I18NBundle {
      *
      * @return resource bundle
      */
-    public ResourceBundle getBundle() {
+    private ResourceBundle getResourceBundle() {
         // lazzy init
         if (this.mBundle == null) {
             loadBundle(this.mBundlePackageName, "Bundle");
@@ -89,15 +102,9 @@ public class I18NBundle {
      * @param aArgs Object[]
      * @return formated i18n string.
      */
-    public static String getFormattedMessage(
+    private static String getFormattedMessage(
             String aI18NMsg, Object[] aArgs) {
-        String formattedI18NMsg = aI18NMsg;
-        try {
-            MessageFormat mf = new MessageFormat(aI18NMsg);
-            formattedI18NMsg = mf.format(aArgs);
-        } catch (Exception ex) {
-        }
-        return formattedI18NMsg;
+        return MessageFormat.format(aI18NMsg, aArgs);
     }
 
     /**
@@ -108,7 +115,7 @@ public class I18NBundle {
      * @return formatted i18n string
      */
     public String getMessage(String aI18NKey, Object[] anArgsArray) {
-        String i18nMessage = getBundle().getString(aI18NKey);
+        String i18nMessage = getResourceBundle().getString(aI18NKey);
         if (anArgsArray != null) {
             return getFormattedMessage(i18nMessage, anArgsArray);
         } else {

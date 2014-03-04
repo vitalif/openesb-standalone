@@ -31,15 +31,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
  */
 public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
 
-    private final ResourceBundle mResourceBundle;
-    private String mMessage;
-    private final String mClassName = "DataSourcePoolFactoryimpl";
-    private static final Logger sLogger = Logger.getLogger("net.openesb.standalone.naming");
-
-    public TomcatDataSourcePoolFactory() {
-        I18NBundle nBundle = new I18NBundle("net.openesb.standalone.naming.utils");
-        mResourceBundle = nBundle.getBundle();
-    }
+    private static final Logger LOG = Logger.getLogger(TomcatDataSourcePoolFactory.class.getName());
 
     @Override
     /* GetDatasource method is used to create dynamically and set up a pooled datasource. Information and parameters
@@ -76,7 +68,7 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             ds.setJmxEnabled(true);
 
             MBeanServer mBeanServer = java.lang.management.ManagementFactory.getPlatformMBeanServer();
-            
+
             String mBeanName = "net.open-esb.standalone:type=DataSources,name=" + ds.getName();
             mBeanServer.registerMBean(ds.getPool().getJmxPool(), new ObjectName(mBeanName));
         } catch (Exception e) {
@@ -95,16 +87,18 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
          * so the class must be present in the classpath. DS Instance not created yet
          */
         String dsName = dspProperties.getDatasourceClassname();
-        mMessage = mResourceBundle.getString("start.instanciate.datasource");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{dsName});
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("start.instanciate.datasource",
+                dsName));
+
         Class<?> dsClass;
         try {
             dsClass = Class.forName(dsName);
         } catch (ClassNotFoundException ex) {
-            mMessage = mResourceBundle.getString("datasource.class.not.found");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, new Object[]{dsName});
-            mMessage = mResourceBundle.getString("catch.exception");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("datasource.class.not.found",
+                    dsName));
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"),
+                    ex);
+
             /* An exception don't stop JNDI context process so we return a null Datasource. */
             return null;
         }
@@ -119,14 +113,14 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         try {
             nativeDS = dsClass.newInstance();
         } catch (InstantiationException ex) {
-            mMessage = mResourceBundle.getString("impossible.instanciate.datasource");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, new Object[]{dsName});
-            mMessage = mResourceBundle.getString("catch.exception");
-            sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    "impossible.instanciate.datasource", dsName), ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    "catch.exception"), ex);
             return null;
         } catch (IllegalAccessException ex) {
-            mMessage = mResourceBundle.getString("catch.exception");
-            sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    "catch.exception"), ex);
             return null;
         }
 
@@ -137,8 +131,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             String fieldName = keys.next();
             Field field = dsFields.get(fieldName);
             if (null == field) {
-                mMessage = mResourceBundle.getString("invalid.field.name");
-                sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName, dsName});
+                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                        "invalid.field.name", fieldName, dsName));
             } else {
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
@@ -164,21 +158,21 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
                     } else if (field.getType().equals(String.class)) {
                         field.set(nativeDS, fieldValue);
                     } else {
-                        mMessage = mResourceBundle.getString("field.not.set");
-                        sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                        mMessage = mResourceBundle.getString("field.type.not.process");
-                        sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName, dsName, field.getType()});
+                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                                "field.not.set", fieldName));
+                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                                "field.type.not.process", fieldName, dsName, field.getType()));
                     }
                 } catch (IllegalArgumentException ex) {
-                    mMessage = mResourceBundle.getString("field.not.set");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                    mMessage = mResourceBundle.getString("catch.exception");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                            "field.not.set", fieldName));
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            "catch.exception"), ex);
                 } catch (IllegalAccessException ex) {
-                    mMessage = mResourceBundle.getString("field.not.set");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                    mMessage = mResourceBundle.getString("catch.exception");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                            "field.not.set", fieldName));
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            "catch.exception"), ex);
                 }
             }
         }
@@ -186,14 +180,15 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         /* Datasouce fields are set with data proterties found in the context 
          * Now let's set the pool with the pool proterties found in the context
          * get the properties for the pool */
-        mMessage = mResourceBundle.getString("native.datasource.set.succesfully");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{dsName});
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
+                "native.datasource.set.succesfully", dsName));
 
         /**
          * ** Set up Pool
          */
-        mMessage = mResourceBundle.getString("start.pool.configuration");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage);
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
+                "start.pool.configuration"));
+
         PoolPropertiesComplexType contextPoolProperties = dspProperties.getPoolProperties();
         Map<String, String> poolMap = this.listToMap(contextPoolProperties.getProperty());
         // Create pool configuration
@@ -210,8 +205,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             String fieldName = keys.next();
             Field field = poolPropertiesFields.get(fieldName);
             if (null == field) {
-                mMessage = mResourceBundle.getString("invalid.field.name");
-                sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName, poolPropertiesClass});
+                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                        "invalid.field.name", fieldName, poolPropertiesClass));
             } else {
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
@@ -237,21 +232,21 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
                     } else if (field.getType().equals(String.class)) {
                         field.set(poolProperties, fieldValue);
                     } else {
-                        mMessage = mResourceBundle.getString("field.not.set");
-                        sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                        mMessage = mResourceBundle.getString("field.type.not.process");
-                        sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName, poolPropertiesClass, field.getType()});
+                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                                "field.not.set", fieldName));
+                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                                "field.type.not.process", fieldName, poolPropertiesClass, field.getType()));
                     }
                 } catch (IllegalArgumentException ex) {
-                    mMessage = mResourceBundle.getString("field.not.set");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                    mMessage = mResourceBundle.getString("catch.exception");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                            "field.not.set", fieldName));
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            "catch.exception"), ex);
                 } catch (IllegalAccessException ex) {
-                    mMessage = mResourceBundle.getString("field.not.set");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, new Object[]{fieldName});
-                    mMessage = mResourceBundle.getString("catch.exception");
-                    sLogger.logp(Level.INFO, mClassName, methodName, mMessage, ex);
+                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                            "field.not.set", fieldName));
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            "catch.exception"), ex);
                 }
             }
         }

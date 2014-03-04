@@ -29,7 +29,7 @@
                 </executions>
                 <configuration>
                     <schemaFiles>OEContext.xsd</schemaFiles>                   
-                    <schemaDirectory>${project.basedir}/src/main/resources/net/openesb/standalone/naming/utils</schemaDirectory>
+                    <schemaDirectory>${project.basedir}/src/main/xsd</schemaDirectory>
                     <packageName>net.openesb.standalone.naming.jaxb</packageName>
                 </configuration>
             </plugin>

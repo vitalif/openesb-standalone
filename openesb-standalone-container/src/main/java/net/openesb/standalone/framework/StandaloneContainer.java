@@ -7,9 +7,11 @@ import java.util.logging.Logger;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.inject.Injector;
 import net.openesb.standalone.jmx.MBServerConnectorFactory;
 import net.openesb.standalone.settings.Settings;
+import net.openesb.standalone.utils.I18NBundle;
 
 /**
  * JBI framework wrapper for OpenESB Standalone platform.
@@ -141,7 +143,8 @@ public class StandaloneContainer
                 Injector.getInstance().getInjector().getInstance(MBServerConnectorFactory.class);
             connectorFactory.destroy();
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error during framework shutdown: {0}", ex.toString());
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            LocalStringKeys.CONTAINER_SHUTDOWN_ERROR), ex);
         }
 
         mLoaded = false;

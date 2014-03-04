@@ -34,21 +34,13 @@ import net.openesb.standalone.utils.I18NBundle;
  */
 public class InitialContexFactoryImpl implements InitialContextFactory {
 
+    private static final Logger LOG = Logger.getLogger(InitialContexFactoryImpl.class.getName());
     public static final String DATASOURCE_TYPE = "Datasource";
     public static final String XADATASOURCE_TYPE = "XADatasource";
-    private static final Logger sLogger = Logger.getLogger("net.openesb.standalone.naming");
     private final Map<String, DataSourcePoolPropertiesComplexType> mDSPMap = new HashMap<String, DataSourcePoolPropertiesComplexType>();
     private final DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
-    private final String mClassName = "InitialContexFactoryImpl";    
-    private final ResourceBundle mResourceBundle;
-    private String mMessage;
+    private final String mClassName = "InitialContexFactoryImpl";
 
-    // Constructor
-    public InitialContexFactoryImpl() {
-
-        I18NBundle nBundle = new I18NBundle("net.openesb.standalone.naming.utils");
-        mResourceBundle = nBundle.getBundle();
-    }
 
     /* Regarding the exception management, If the context file if not correct, 
      * I choosed to return an initial context in any case even empty. So if input data 
@@ -64,8 +56,8 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
         Context initialContext = new InitialContext();
-        mMessage = mResourceBundle.getString("context.created");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage);
+
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.created"));
 
         /* Second step read the XML file  URL where context configuration is described
          * The URL can be file:// http:// ... 
@@ -74,38 +66,32 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         String urlValue = null;
         if (environment.containsKey(Context.PROVIDER_URL)) {
             urlValue = (String) environment.get(Context.PROVIDER_URL);
-            mMessage = mResourceBundle.getString("context.url.read");
-            sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{urlValue});
+            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.url.read", urlValue));
         } else {
-            mMessage = mResourceBundle.getString("context.url.not.provided") + " " + mResourceBundle.getString("context.url.not.provided.ID");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("context.url.not.provided"));
         }
 
         /* Read the context from the URL */
-        @SuppressWarnings("UnusedAssignment") JAXBElement<OeContextComplexType> root = null;
+        @SuppressWarnings("UnusedAssignment")
+        JAXBElement<OeContextComplexType> root = null;
         try {
             JAXBContext jc = JAXBContext.newInstance("net.openesb.standalone.naming.jaxb");
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             root = (JAXBElement<OeContextComplexType>) unmarshaller.unmarshal(new URL(urlValue));
         } catch (MalformedURLException ex) {
-            mMessage = mResourceBundle.getString("url.context.name.malformed") ;
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, new Object[] {urlValue}); 
-            mMessage = mResourceBundle.getString("catch.exception");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, ex);
-            return initialContext ;
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("url.context.name.malformed", urlValue));
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"), ex);
+            return initialContext;
         } catch (JAXBException ex) {
-            mMessage = mResourceBundle.getString("jaxb.unmarshalling.failed");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, new Object[] {urlValue});
-            mMessage = mResourceBundle.getString("catch.exception");
-            sLogger.logp(Level.SEVERE, mClassName, methodName, mMessage, ex);
-            return initialContext ;
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("jaxb.unmarshalling.failed", urlValue));
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"), ex);
+            return initialContext;
         }
 
         // This must be made with the xml file has an element root
         // Log level Fine Unmarshalling ok       
         OeContextComplexType oeContext = root.getValue();
-        mMessage = mResourceBundle.getString("context.binding.ok");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage);
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.binding.ok"));
 
         /* OeContext contains the complete context */
         /* I create a map with the datasourcePool Name as key and datasourcePool as Value
@@ -113,22 +99,22 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
          */
         List<DataSourcePoolPropertiesComplexType> dataSourcePoolList = oeContext.getDataSourcePoolProperties();
         int listSize = dataSourcePoolList.size();
-        mMessage = mResourceBundle.getString("number.dataSourcePoolProperties.found");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{listSize});
-
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("number.dataSourcePoolProperties.found",
+                listSize));
 
         //Loop on dataSourcePoolList iterator
         for (DataSourcePoolPropertiesComplexType dspComplexType : dataSourcePoolList) {
             mDSPMap.put(dspComplexType.getDbConnectorName(), dspComplexType);
-            mMessage = mResourceBundle.getString("datasourcepoolproperties.found.in.context");
-            sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{dspComplexType.getDbConnectorName()});
+            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasourcepoolproperties.found.in.context",
+                    dspComplexType.getDbConnectorName()));
         }
 
         // Now Let's read JdbcResource
         List<JdbcResourceComplexType> jdbcResourceList = oeContext.getJdbcResources();
         listSize = jdbcResourceList.size();
-        mMessage = mResourceBundle.getString("number.jdbcResource.declaration.found");
-        sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{listSize});
+        
+        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("number.jdbcResource.declaration.found",
+                listSize));
 
         //Loop on JDBCResourceList iterator
         for (JdbcResourceComplexType jdbcResource : jdbcResourceList) {
@@ -141,8 +127,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
 
             // Get JNDI Name 
             String jndiName = jdbcResource.getJndiName();
-            mMessage = jndiName + " " + mResourceBundle.getString("in.process");
-            sLogger.logp(Level.FINE, mClassName, methodName, mMessage);
+            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("in.process"));
 
 
             /* Check if this JNDI name is already in the context. In that case the 
@@ -150,8 +135,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
              */
             try {
                 initialContext.lookup(jndiName);
-                mMessage = mResourceBundle.getString("jndi.value.already.defined");
-                sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
+                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("jndi.value.already.defined", jndiName));
                 continue;
             } catch (NamingException ex) {
                 // Nothing else to do. Having an exception is the normal process
@@ -179,8 +163,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
             DataSourcePoolPropertiesComplexType dspProperties = mDSPMap.get(dbConnectorName);
             // Check if Datasourse or XA Datasource            
             if (dspProperties.getResourceType().equals(InitialContexFactoryImpl.DATASOURCE_TYPE)) {
-                mMessage = mResourceBundle.getString("datasource.in.process");
-                sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
+                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasource.in.process", jndiName));
                 DataSource dataSource = mDSPFactory.getDataSource(dspProperties);
                 /* Check if datasource is not null then put in the context since exception are catch */
                 if (null != dataSource) {
@@ -189,27 +172,23 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                         initialContext.rebind(jndiName, dataSource);
                     } catch (NamingException ex) {
                         initialContext.bind(jndiName, dataSource);
-                    }                    
-                    mMessage = mResourceBundle.getString("datasource.processed.bind.success");
-                    sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
+                    }
+                    LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasource.processed.bind.success", jndiName));
                 }
 
             } else if (dspProperties.getResourceType()
                     .equals(InitialContexFactoryImpl.XADATASOURCE_TYPE)) {
-                mMessage = mResourceBundle.getString("xadatasource.in.process");
-                sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
+                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("xadatasource.in.process", jndiName));
                 XADataSource xaDataSource = mDSPFactory.getXADataSource(dspProperties);
                 if (null != xaDataSource) {
                     /* Store the XAdatasource in a map for reusing purpose see above */
                     datasourceMap.put(dbConnectorName, (DataSource) xaDataSource);
                     initialContext.rebind(jndiName, xaDataSource);
-                    mMessage = mResourceBundle.getString("xadatasource.processed.bind.success");
-                    sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{jndiName});
+                    LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("xadatasource.processed.bind.success", jndiName));
                 }
             } else {
-                mMessage = mResourceBundle.getString("bad.resource.type");
-                sLogger.logp(Level.FINE, mClassName, methodName, mMessage, new Object[]{dspProperties.getResourceType(), dspProperties.getDatabaseName()});
-
+                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("bad.resource.type", 
+                        dspProperties.getResourceType(), dspProperties.getDatabaseName()));
             }
         }
 

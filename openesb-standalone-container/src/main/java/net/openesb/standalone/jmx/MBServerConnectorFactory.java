@@ -11,7 +11,9 @@ import javax.management.remote.JMXAuthenticator;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
+import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.settings.Settings;
+import net.openesb.standalone.utils.I18NBundle;
 
 /**
  *
@@ -24,13 +26,10 @@ public class MBServerConnectorFactory {
     private static final Logger LOG = Logger.getLogger(MBServerConnectorFactory.class.getName());
     private static final int DEFAULT_CONNECTOR_PORT = 8699;
     private static final String CONNECTOR_PORT = "instance.port";
-    
     @Inject
     private Settings settings;
-    
     @Inject
     private JMXAuthenticator authenticator;
-    
     private MBeanServer server;
     private boolean threaded;
     private boolean daemon;
@@ -96,7 +95,8 @@ public class MBServerConnectorFactory {
                         LocateRegistry.getRegistry(registryPort);
                     }
                 } catch (Exception ex) {
-                    LOG.log(Level.SEVERE, "Create RMI registry failure: {0}", ex);
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            LocalStringKeys.CONNECTOR_CREATE_REGISTRY_FAILURE), ex);
                 }
             }
 
@@ -116,7 +116,8 @@ public class MBServerConnectorFactory {
                         try {
                             connectorServer.start();
                         } catch (IOException ex) {
-                            LOG.log(Level.SEVERE, "Start connector failure: {0}", ex);
+                            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                                    LocalStringKeys.CONNECTOR_START_CONNECTOR_FAILURE, serviceUrl), ex);
                         }
                     }
                 };
@@ -130,10 +131,13 @@ public class MBServerConnectorFactory {
             }
 
             if (LOG.isLoggable(Level.INFO)) {
-                LOG.log(Level.INFO, "JMX connector server started: {0}", connectorServer.getAddress());
+                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.CONNECTOR_START_CONNECTOR_STARTED,
+                        connectorServer.getAddress()));
             }
         } catch (NumberFormatException nfEx) {
-            LOG.log(Level.WARNING, "Invalid connector server port. JMX connector will not be created.");
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.CONNECTOR_SERVER_INVALID_PORT), nfEx);
         }
     }
 
@@ -141,15 +145,17 @@ public class MBServerConnectorFactory {
         if (connectorServer != null) {
             connectorServer.stop();
             if (LOG.isLoggable(Level.INFO)) {
-                LOG.log(Level.INFO, "JMX connector server stopped: {0}", connectorServer);
+                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.CONNECTOR_SERVER_CONNECTOR_STOPPED,
+                        connectorServer));
             }
         }
     }
-    
+
     public MBeanServer getMBeanServer() {
         return MBeanServerHolder.INSTANCE;
     }
-    
+
     public int getPort() {
         return port;
     }

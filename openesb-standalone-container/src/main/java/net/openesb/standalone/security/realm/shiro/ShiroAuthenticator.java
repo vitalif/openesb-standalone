@@ -8,7 +8,6 @@ import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
 import net.openesb.security.AuthenticationToken;
 import net.openesb.standalone.security.realm.Realm;
-import net.openesb.standalone.security.realm.RealmHandler;
 import net.openesb.standalone.security.realm.impl.PropertiesRealm;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -20,8 +19,8 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
  */
 public class ShiroAuthenticator {
     
-    private final Logger mLog =
-            Logger.getLogger(this.getClass().getPackage().getName());
+    private final static Logger LOG =
+            Logger.getLogger(ShiroAuthenticator.class.getName());
     
     private final Map <String, org.apache.shiro.mgt.SecurityManager> securityManagers = 
             new HashMap<String, org.apache.shiro.mgt.SecurityManager>();

@@ -16,6 +16,7 @@ public abstract class AbstractRealm implements Realm {
         this.realmName = realmName;
     }
 
+    @Override
     public String getName() {
         return realmName;
     }
