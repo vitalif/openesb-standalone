@@ -115,6 +115,18 @@
             <version>${slf4j.version}</version>
         </dependency>
         
+        <!-- Injection support -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
         <!-- OpenESB REST API & Web Console -->
         <dependency>
             <groupId>net.open-esb</groupId>

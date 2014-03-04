@@ -69,4 +69,9 @@ public class ImmutableSettings implements Settings {
         }
         return !(value.equals("false") || value.equals("0") || value.equals("off") || value.equals("no"));
     }
+
+    @Override
+    public Object getAsObject(String setting) throws SettingsException {
+        return settings.get(setting);
+    }
 }

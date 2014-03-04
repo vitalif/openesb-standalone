@@ -32,4 +32,6 @@ public interface Settings {
      * returns the default value provided.
      */
     Boolean getAsBoolean(String setting, Boolean defaultValue) throws SettingsException;
+    
+    Object getAsObject(String setting) throws SettingsException;
 }

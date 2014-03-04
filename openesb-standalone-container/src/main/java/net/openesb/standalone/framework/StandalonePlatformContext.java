@@ -5,19 +5,20 @@ import com.sun.jbi.platform.PlatformEventListener;
 import com.sun.jbi.security.KeyStoreUtil;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServer;
-import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.transaction.TransactionManager;
 import net.openesb.security.SecurityProvider;
-import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
+import net.openesb.standalone.jmx.MBServerConnectorFactory;
+import net.openesb.standalone.settings.Settings;
 
 /**
  * Implementation of PlatformContext for OpenESB Standalone.
@@ -27,33 +28,20 @@ import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
  */
 public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformContext {
 
-    private String mInstanceName;
-    private String mInstanceRoot;
-    private String mInstallRoot;
-    private int mConnectorPort;
-    private InitialContext mNamingContext;
-    private Logger mLog = Logger.getLogger(getClass().getPackage().getName());
+    private static final String DEFAULT_INSTANCE_NAME = "server";
+    private static final String INSTANCE_NAME = "instance.name";
+    
+    private final String mInstanceName;
 
-    public StandalonePlatformContext(String installRoot, String instanceName, int connectorPort) {
-        mInstallRoot = installRoot;
-        mInstanceName = instanceName;
-        mInstanceRoot = installRoot + File.separator + instanceName;
-        mConnectorPort = connectorPort;
-
-        try {
-            Hashtable env = new Hashtable();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, 
-                    InitialContexFactoryImpl.class.getName());
-            
-            File context = new File(mInstallRoot + "/config/context.xml");
-            env.put(Context.PROVIDER_URL, context.toURI().toURL().toString());
-            
-            mNamingContext = new InitialContext(env);
-        } catch (javax.naming.NamingException nmEx) {
-            mLog.warning(nmEx.toString());
-        } catch (MalformedURLException nmEx) {
-            mLog.warning(nmEx.toString());
-        }
+    @Inject private MBServerConnectorFactory jmxConnector;
+    @Inject private SecurityProvider securityProvider;
+    @Inject private TransactionManager transactionManager;
+    @Inject private InitialContext namingContext;
+    @Inject @Named("install.root") private String mInstallRoot;
+    
+    @Inject
+    public StandalonePlatformContext(Settings settings) {
+        mInstanceName = settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME);
     }
 
     /**
@@ -69,7 +57,7 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
     @Override
     public javax.transaction.TransactionManager getTransactionManager()
             throws Exception {
-        return new com.atomikos.icatch.jta.UserTransactionManager();
+        return transactionManager;
     }
 
     /**
@@ -266,7 +254,7 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
      */
     @Override
     public String getJmxRmiPort() {
-        return Integer.toString(mConnectorPort);
+        return Integer.toString(jmxConnector.getPort());
     }
 
     /**
@@ -276,7 +264,7 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
      */
     @Override
     public MBeanServer getMBeanServer() {
-        return java.lang.management.ManagementFactory.getPlatformMBeanServer();
+        return jmxConnector.getMBeanServer();
     }
 
     /**
@@ -286,7 +274,7 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
      */
     @Override
     public String getInstanceRoot() {
-        return mInstanceRoot;
+        return mInstallRoot + File.separator + mInstanceName;
     }
 
     /**
@@ -328,7 +316,7 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
      */
     @Override
     public InitialContext getNamingContext() {
-        return mNamingContext;
+        return namingContext;
     }
 
     /**
@@ -393,12 +381,6 @@ public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformC
     @Override
     public void setJbiLogLevel(String target, java.util.logging.Level level) {
         Logger.getLogger(JBI_LOGGER_NAME).setLevel(level);
-    }
-
-    private SecurityProvider securityProvider;
-    
-    public void setSecurityProvider(SecurityProvider securityProvider) {
-        this.securityProvider = securityProvider;
     }
     
     @Override

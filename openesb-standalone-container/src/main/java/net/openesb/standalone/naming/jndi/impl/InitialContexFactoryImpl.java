@@ -25,7 +25,7 @@ import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
 import net.openesb.standalone.naming.jaxb.JdbcResourceComplexType;
 import net.openesb.standalone.naming.jaxb.OeContextComplexType;
 import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
-import net.openesb.standalone.naming.utils.I18NBundle;
+import net.openesb.standalone.utils.I18NBundle;
 
 /**
  *

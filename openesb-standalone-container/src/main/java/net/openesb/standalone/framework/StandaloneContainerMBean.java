@@ -1,7 +1,7 @@
 package net.openesb.standalone.framework;
 
 /**
- *  Management interface for OpenESB Standalone Container.
+ * Management interface for OpenESB Standalone Container.
  *
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community

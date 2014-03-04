@@ -1,4 +1,4 @@
-package net.openesb.standalone.naming.utils;
+package net.openesb.standalone.utils;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class I18NBundle {
 
-    private final Logger sLogger = Logger.getLogger("net.openesb.standalone.naming");
+    private final Logger sLogger = Logger.getLogger("net.openesb.standalone.utils");
     /**
      * package name
      */
@@ -26,8 +26,6 @@ public class I18NBundle {
      * resource bundle
      */
     private ResourceBundle mBundle = null;
-
-
 
     /**
      * constructor
@@ -165,20 +163,5 @@ public class I18NBundle {
     public String getMessage(String aI18NKey, Object arg1, Object arg2, Object arg3) {
         Object[] args = {arg1, arg2, arg3};
         return getMessage(aI18NKey, args);
-    }
-
-    /**
-     * main
-     *
-     * @param args string array.
-     */
-    public static void main(String[] args) {
-        Locale l = new Locale("");
-        System.out.println("Locale : " + l);
-        System.out.println("Default Locale : " + Locale.getDefault());
-        I18NBundle bundle = new I18NBundle("net.openesb.standalone.naming.utils");
-        bundle.loadBundle("net.openesb.standalone.naming.utils","toto");
-        System.out.println(
-                bundle.getMessage("jbi.ui.ant.jmx.msg.jmxmp.connected", new String[]{"xyz"}));
     }
 }

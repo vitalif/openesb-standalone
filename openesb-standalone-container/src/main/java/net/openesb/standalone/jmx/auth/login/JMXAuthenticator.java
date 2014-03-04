@@ -1,6 +1,6 @@
-package net.openesb.standalone.security.auth.login;
+package net.openesb.standalone.jmx.auth.login;
 
-import javax.management.remote.JMXAuthenticator;
+import javax.inject.Inject;
 import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
 import net.openesb.security.AuthenticationToken;
@@ -11,13 +11,10 @@ import net.openesb.security.SecurityProvider;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class JMXauthenticator implements JMXAuthenticator {
+public class JMXAuthenticator implements javax.management.remote.JMXAuthenticator {
 
-    private final SecurityProvider securityProvider;
-    
-    public JMXauthenticator(final SecurityProvider securityProvider) {
-        this.securityProvider = securityProvider;
-    }
+    @Inject
+    private SecurityProvider securityProvider;
     
     @Override
     public Subject authenticate(Object credentialsObj) {
