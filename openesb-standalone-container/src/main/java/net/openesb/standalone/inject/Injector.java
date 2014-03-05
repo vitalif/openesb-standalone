@@ -1,7 +1,8 @@
 package net.openesb.standalone.inject;
 
 import com.google.inject.Guice;
-import net.openesb.standalone.module.StandaloneModule;
+import net.openesb.standalone.StandaloneModule;
+import net.openesb.standalone.naming.NamingModule;
 
 /**
  *
@@ -14,7 +15,9 @@ public class Injector {
     private com.google.inject.Injector injector;
     
     private Injector() {
-        injector = Guice.createInjector(new StandaloneModule());
+        injector = Guice.createInjector(
+                new StandaloneModule(),
+                new NamingModule());
     }
     
     public static Injector getInstance() {

@@ -18,6 +18,10 @@
 #
 # http.enabled: false
 
+##################################### JNDI ########################################
+# Specify the context file to used for JNDI
+# jndi.context: ${install.root}/config/context.xml
+
 ################################### Security ######################################
 # Set the security realms which have to be used for management purpose or components
 # security concerns.

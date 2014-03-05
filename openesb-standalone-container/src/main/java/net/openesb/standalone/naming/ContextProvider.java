@@ -7,11 +7,13 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
-import net.openesb.standalone.settings.yaml.YamlSettingsProvider;
+import net.openesb.standalone.settings.Settings;
+import net.openesb.standalone.utils.I18NBundle;
+import net.openesb.standalone.utils.StringUtils;
 
 /**
  *
@@ -23,11 +25,21 @@ public class ContextProvider implements Provider<InitialContext> {
     private static final Logger LOG =
             Logger.getLogger(ContextProvider.class.getPackage().getName());
     
-    @Inject @Named("install.root")
-    private String installRoot;
+    private static final String DEFAULT_CONTEXT_XML = "${install.root}/config/context.xml";
+    private static final String CONTEXT_PATH = "jndi.context";
+    
+    @Inject
+    private Settings settings;
     
     @Override
     public InitialContext get() {
+        String context = getContext();
+        
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_PATH, context));
+        }
+        
         InitialContext mNamingContext = null;
         
         try {
@@ -35,8 +47,16 @@ public class ContextProvider implements Provider<InitialContext> {
             env.put(Context.INITIAL_CONTEXT_FACTORY, 
                     InitialContexFactoryImpl.class.getName());
             
-            File context = new File(installRoot + "/config/context.xml");
-            env.put(Context.PROVIDER_URL, context.toURI().toURL().toString());
+            File contextFile = new File(context);
+            if (! contextFile.exists()) {
+                String msg = I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_INVALID_PATH, contextFile.getAbsolutePath());
+               
+                LOG.log(Level.SEVERE, msg);
+                throw new IllegalStateException(msg);
+            }
+            
+            env.put(Context.PROVIDER_URL, contextFile.toURI().toURL().toString());
             
             mNamingContext = new InitialContext(env);
         } catch (javax.naming.NamingException nmEx) {
@@ -48,4 +68,10 @@ public class ContextProvider implements Provider<InitialContext> {
         return mNamingContext;
     }
     
+    private String getContext() {
+        String context = settings.get(CONTEXT_PATH, DEFAULT_CONTEXT_XML);
+        
+        // Replace ${} with system properties
+        return StringUtils.replace(context);
+    }
 }

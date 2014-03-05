@@ -1,15 +1,14 @@
 package net.openesb.standalone.naming.jndi.impl;
 
-import net.openesb.standalone.naming.jndi.tomcat.TomcatDataSourcePoolFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -21,10 +20,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
 import net.openesb.standalone.naming.jaxb.JdbcResourceComplexType;
 import net.openesb.standalone.naming.jaxb.OeContextComplexType;
 import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
+import net.openesb.standalone.naming.jndi.tomcat.TomcatDataSourcePoolFactory;
 import net.openesb.standalone.utils.I18NBundle;
 
 /**
@@ -38,8 +39,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
     public static final String DATASOURCE_TYPE = "Datasource";
     public static final String XADATASOURCE_TYPE = "XADatasource";
     private final Map<String, DataSourcePoolPropertiesComplexType> mDSPMap = new HashMap<String, DataSourcePoolPropertiesComplexType>();
-    private final DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
-    private final String mClassName = "InitialContexFactoryImpl";
+    
+    @Inject
+    private DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
 
 
     /* Regarding the exception management, If the context file if not correct, 
@@ -51,13 +53,10 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Map<String, DataSource> datasourceMap = new HashMap<String, DataSource>();
-        String methodName = "getInitialContext";
         /*Context initialisation Just set the system properties and  use the class InitialContext*/
         System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
         Context initialContext = new InitialContext();
-
-        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.created"));
 
         /* Second step read the XML file  URL where context configuration is described
          * The URL can be file:// http:// ... 
@@ -66,9 +65,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         String urlValue = null;
         if (environment.containsKey(Context.PROVIDER_URL)) {
             urlValue = (String) environment.get(Context.PROVIDER_URL);
-            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.url.read", urlValue));
         } else {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("context.url.not.provided"));
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_NO_CONTEXT_URL));
         }
 
         /* Read the context from the URL */
@@ -79,19 +78,24 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             root = (JAXBElement<OeContextComplexType>) unmarshaller.unmarshal(new URL(urlValue));
         } catch (MalformedURLException ex) {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("url.context.name.malformed", urlValue));
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"), ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, urlValue));
+
             return initialContext;
         } catch (JAXBException ex) {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("jaxb.unmarshalling.failed", urlValue));
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"), ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, urlValue), ex);
+
             return initialContext;
         }
 
-        // This must be made with the xml file has an element root
-        // Log level Fine Unmarshalling ok       
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_UNMARSHAL_SUCCESS));
+        }
+
+        // This must be made with the xml file has an element root    
         OeContextComplexType oeContext = root.getValue();
-        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("context.binding.ok"));
 
         /* OeContext contains the complete context */
         /* I create a map with the datasourcePool Name as key and datasourcePool as Value
@@ -112,7 +116,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         // Now Let's read JdbcResource
         List<JdbcResourceComplexType> jdbcResourceList = oeContext.getJdbcResources();
         listSize = jdbcResourceList.size();
-        
+
         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("number.jdbcResource.declaration.found",
                 listSize));
 
@@ -187,7 +191,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                     LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("xadatasource.processed.bind.success", jndiName));
                 }
             } else {
-                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("bad.resource.type", 
+                LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("bad.resource.type",
                         dspProperties.getResourceType(), dspProperties.getDatabaseName()));
             }
         }

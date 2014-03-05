@@ -1,4 +1,4 @@
-package net.openesb.standalone.module;
+package net.openesb.standalone;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -9,7 +9,6 @@ import javax.transaction.TransactionManager;
 import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.framework.StandaloneContainer;
 import net.openesb.standalone.framework.StandalonePlatformContext;
-import net.openesb.standalone.jmx.MBServerConnectorFactory;
 import net.openesb.standalone.jmx.auth.login.JMXAuthenticator;
 import net.openesb.standalone.jta.TransactionManagerProvider;
 import net.openesb.standalone.security.SecurityProviderImpl;

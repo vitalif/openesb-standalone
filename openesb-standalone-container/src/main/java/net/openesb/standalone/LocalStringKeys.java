@@ -36,7 +36,6 @@ public interface LocalStringKeys {
             "SETTINGS_CONFIGURATION_LOADED";
     static final String SETTINGS_CONFIGURATION_FAILURE =
             "SETTINGS_CONFIGURATION_FAILURE";
-    
     /**
      * Security Messages.
      */
@@ -56,4 +55,19 @@ public interface LocalStringKeys {
             "SECURITY_CREATE_PROPERTIES_REALM";
     static final String SECURITY_CREATE_PROPERTIES_REALM_INVALID_PATH =
             "SECURITY_CREATE_PROPERTIES_REALM_INVALID_PATH";
+    /**
+     * Naming Messages.
+     */
+    static final String NAMING_CONTEXT_PATH =
+            "NAMING_CONTEXT_PATH";
+    static final String NAMING_CONTEXT_INVALID_PATH =
+            "NAMING_CONTEXT_INVALID_PATH";
+    static final String NAMING_CONTEXT_NO_CONTEXT_URL =
+            "NAMING_CONTEXT_NO_CONTEXT_URL";
+    static final String NAMING_CONTEXT_CONTEXT_URL_INVALID =
+            "NAMING_CONTEXT_CONTEXT_URL_INVALID";
+    static final String NAMING_UNMARSHAL_FAILURE =
+            "NAMING_UNMARSHAL_FAILURE";
+    static final String NAMING_UNMARSHAL_SUCCESS =
+            "NAMING_UNMARSHAL_SUCCESS";
 }

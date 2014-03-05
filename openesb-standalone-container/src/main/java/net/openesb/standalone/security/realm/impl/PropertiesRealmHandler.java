@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.utils.I18NBundle;
+import net.openesb.standalone.utils.StringUtils;
 
 /**
  *
@@ -29,7 +30,7 @@ public class PropertiesRealmHandler extends AbstractRealmHandler<PropertiesRealm
     @Override
     public PropertiesRealm instantiate(String realmName, Map<String, String> properties) {
         String file = properties.get(PROPERTY_PATH);
-        file = replace(file);
+        file = StringUtils.replace(file);
 
         if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(

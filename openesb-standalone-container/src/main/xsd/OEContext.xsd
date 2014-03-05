@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://org.open-esb/standalone/OEContext"
-    xmlns:tns="http://org.open-esb/standalone/OEContext"
-    elementFormDefault="qualified">
+            targetNamespace="http://www.open-esb.net/standalone/jndi/"
+            xmlns:tns="http://www.open-esb.net/standalone/jndi/"
+            elementFormDefault="qualified">
     <xsd:complexType name="pool-propertiesComplexType">
         <xsd:sequence>
             <xsd:element name="property" type="tns:propertyComplexType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
@@ -55,6 +55,7 @@
             <xsd:element name="jdbc-resources" type="tns:jdbc-resourceComplexType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
+    
     <xsd:element name="context" type="tns:oeContextComplexType"></xsd:element>
     <xsd:complexType name="jdbc-resourceComplexType">
         <xsd:sequence>

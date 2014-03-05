@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +32,6 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
 
     private static final Logger LOG = Logger.getLogger(TomcatDataSourcePoolFactory.class.getName());
 
-    @Override
     /* GetDatasource method is used to create dynamically and set up a pooled datasource. Information and parameters
      * are provided by dspProperties. The first part of the method create dynamically a native datasource. 
      * Introspection is used to set up datasource properties. We setup just the properties declared in 
@@ -43,6 +41,7 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
      * related to the connection. 
      * Then we create an Apache datasource with the pool as parameter
      */
+    @Override
     public DataSource getDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
         PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
         org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
@@ -77,8 +76,6 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
     }
 
     private PoolProperties createNativeDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-        String methodName = "createNativeDataSource";
-
         /* get the properties for the native Datasource. it is not created yet*/
         DataSourcePropertiesComplexType dataSourceProperties = dspProperties.getDataSourceProperties();
         Map<String, String> datasourceMap = this.listToMap(dataSourceProperties.getProperty());
