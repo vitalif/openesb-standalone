@@ -20,6 +20,10 @@ public class JMXAuthenticator implements javax.management.remote.JMXAuthenticato
     public Subject authenticate(Object credentialsObj) {
         final String [] credentials = (String []) credentialsObj;
         
+        if (credentials == null || credentials.length != 2) {
+            throw new SecurityException("Bad credentials. Unable to authenticate user.");
+        }
+        
         try {
             return securityProvider.login(new AuthenticationToken() {
                 @Override

@@ -29,12 +29,12 @@
         <openesb-web-console.version>1.0.0-SNAPSHOT</openesb-web-console.version>
         <openesb-model-api.version>1.0.0-SNAPSHOT</openesb-model-api.version>
         <openesb-oeadmin.version>1.0.0-SNAPSHOT</openesb-oeadmin.version>
-        <atomikos.version>3.8.0</atomikos.version>
+        <atomikos.version>3.9.3</atomikos.version>
         <tomcat.version>7.0.50</tomcat.version>
         <snakeyaml.version>1.13</snakeyaml.version>
         <!--jgroups.version>3.4.2.Final</jgroups.version-->
         <asciidoctor.version>0.1.4</asciidoctor.version>
-        <shiro.version>1.2.2</shiro.version>
+        <shiro.version>1.2.3</shiro.version>
         <junit.version>4.11</junit.version>
         <slf4j.version>1.7.6</slf4j.version>
         <guice.version>3.0</guice.version>
