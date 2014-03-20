@@ -102,7 +102,7 @@ echo ""
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
         -Djava.util.logging.manager=net.openesb.standalone.logger.OpenESBLogManager \
         -Djmx.invoke.getters=true \
-        -Dinstall.root=$OPENESB_HOME \
+        -Dopenesb.home=$OPENESB_HOME \
         -jar "$OPENESB_BOOT_CLASSPATH" \
         "$@"
 OPENESB_STATUS=$?

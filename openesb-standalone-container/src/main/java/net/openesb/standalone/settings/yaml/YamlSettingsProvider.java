@@ -6,11 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
+import net.openesb.standalone.Constants;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.settings.ImmutableSettings;
 import net.openesb.standalone.settings.Settings;
@@ -31,15 +29,13 @@ public class YamlSettingsProvider implements Provider<Settings> {
     private static final Logger LOG =
             Logger.getLogger(YamlSettingsProvider.class.getPackage().getName());
     private static final String CONFIG_FILE = "openesb.config";
-    @Inject
-    @Named("install.root")
-    private String mInstallRoot;
-    @Inject
-    private Properties environment;
+
+    private final String mInstallRoot = System.getProperty(
+            Constants.OPENESB_HOME_PROP);
 
     @Override
     public Settings get() {
-        String configFile = environment.getProperty(CONFIG_FILE);
+        String configFile = System.getProperty(CONFIG_FILE);
 
         if (configFile == null) {
             configFile = mInstallRoot + File.separatorChar + "config/openesb.yaml";

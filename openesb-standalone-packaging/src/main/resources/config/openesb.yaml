@@ -20,7 +20,7 @@
 
 ##################################### JNDI ########################################
 # Specify the context file to used for JNDI
-# jndi.context: ${install.root}/config/context.xml
+# jndi.context: ${openesb.home}/config/context.xml
 
 ################################### Security ######################################
 # Set the security realms which have to be used for management purpose or components
@@ -29,4 +29,4 @@ realm:
    # The realm "admin" is the realm used for management (JMX / Rest API)
    admin:
       type: properties
-      file: ${install.root}/config/mgmt-users.properties
+      file: ${openesb.home}/config/mgmt-users.properties

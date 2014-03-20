@@ -5,8 +5,17 @@ package net.openesb.standalone.logger;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class OpenESBLogManager extends java.util.logging.LogManager {
+public class LogManager extends java.util.logging.LogManager {
 
+    @Override
+    public void reset() throws SecurityException {
+        //FIX when called from a runtime shutdown hook
+    }
+    
+    public void reset0() throws SecurityException {
+        super.reset();
+    }
+    
     @Override
     public String getProperty(String name) {
         String result = super.getProperty(name);

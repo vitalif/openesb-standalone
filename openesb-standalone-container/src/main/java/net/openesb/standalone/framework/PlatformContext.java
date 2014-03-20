@@ -10,14 +10,14 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 import net.openesb.security.SecurityProvider;
-import net.openesb.standalone.jmx.MBServerConnectorFactory;
+import net.openesb.standalone.Constants;
+import net.openesb.standalone.jmx.JMXService;
 import net.openesb.standalone.settings.Settings;
 
 /**
@@ -26,22 +26,23 @@ import net.openesb.standalone.settings.Settings;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class StandalonePlatformContext implements com.sun.jbi.platform.PlatformContext {
+public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
 
-    private static final String DEFAULT_INSTANCE_NAME = "server";
     private static final String INSTANCE_NAME = "instance.name";
     
     private final String mInstanceName;
 
-    @Inject private MBServerConnectorFactory jmxConnector;
+    @Inject private JMXService jmxConnector;
     @Inject private SecurityProvider securityProvider;
     @Inject private TransactionManager transactionManager;
     @Inject private InitialContext namingContext;
-    @Inject @Named("install.root") private String mInstallRoot;
+    private String mInstallRoot = System.getProperty(
+            Constants.OPENESB_HOME_PROP);
     
     @Inject
-    public StandalonePlatformContext(Settings settings) {
-        mInstanceName = settings.get(INSTANCE_NAME, DEFAULT_INSTANCE_NAME);
+    public PlatformContext(Settings settings) {
+        mInstanceName = settings.get(INSTANCE_NAME,
+                Constants.DEFAULT_INSTANCE_NAME);
     }
 
     /**
