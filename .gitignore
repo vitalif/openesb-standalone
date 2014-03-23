@@ -1,3 +1,5 @@
 !.gitignore
 
 target/
+src/asciidoc/build/
+src/asciidoc/index.html

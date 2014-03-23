@@ -49,12 +49,7 @@
         </dependency>
         <dependency>
             <groupId>net.open-esb.runtime.standalone</groupId>
-            <artifactId>openesb-standalone-framework</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.open-esb.runtime.standalone</groupId>
-            <artifactId>openesb-standalone-naming</artifactId>
+            <artifactId>openesb-standalone-container</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -99,6 +94,37 @@
             <groupId>org.apache.geronimo.ext.openejb</groupId>
             <artifactId>javaee-api</artifactId>
             <version>5.0.3</version>
+        </dependency>
+        
+        <!-- Apache Shiro -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        
+        <!-- SLF4J and JUL Bridge -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        
+        <!-- Injection support -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
         </dependency>
         
         <!-- OpenESB REST API & Web Console -->
@@ -199,8 +225,4 @@
         </dependency>
         -->
     </dependencies>
-    
-    <properties>
-        <stagingDir>${project.build.directory}/staging</stagingDir>
-    </properties>
 </project>

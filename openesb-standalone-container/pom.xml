@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>net.open-esb.runtime.standalone</groupId>
+        <artifactId>openesb-standalone</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>openesb-standalone-container</artifactId>
+    
+    <name>OpenESB - Standalone - Container</name>
+    <description>OpenESB runtime in standalone mode - Container</description>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaFiles>OEContext.xsd</schemaFiles>                   
+                    <schemaDirectory>${project.basedir}/src/main/xsd</schemaDirectory>
+                    <packageName>net.openesb.standalone.naming.jaxb</packageName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <!-- OpenESB Core dependencies -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>framework-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>appserv-ext</artifactId>
+                    <groupId>glassfish</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- Transaction management -->
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jta</artifactId>
+            <version>${atomikos.version}</version>
+        </dependency>
+        
+        <!-- Security support -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        
+        <!-- Cluster support
+       <dependency>
+           <groupId>org.jgroups</groupId>
+           <artifactId>jgroups</artifactId>
+           <version>${jgroups.version}</version>
+       </dependency>
+        -->
+         
+        <!-- Config support -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+        
+        <!-- JNDI support -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Injection support -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+</project>

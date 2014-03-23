@@ -1,0 +1,15 @@
+require 'asciidoctor'
+require 'erb'
+require 'fileutils'
+
+FileUtils.mkdir_p('build')
+
+guard 'shell' do
+  watch(/^.*\.adoc$/) {|m|
+    Asciidoctor.render_file(m[0], :to_dir => "build", :safe => Asciidoctor::SafeMode::UNSAFE, :attributes=> {'idprefix' => '', 'idseparator' => '-', 'copycss' => '', 'icons' => 'font', 'source-highlighter' => 'prettify', 'sectanchors' => '', 'doctype' => 'book','toc2' => '', 'spring-version' => '0.0.1-SNAPSHOT', 'revnumber' => '0.0.1-SNAPSHOT' })
+  }
+end
+
+guard 'livereload', grace_period: 0.5, override_url: true do
+  watch(%r{(.+\.html|css|js)$})
+end

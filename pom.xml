@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
@@ -17,9 +17,8 @@
     <description>OpenESB runtime in standalone mode</description>
     
     <modules>
-        <module>openesb-standalone-framework</module>
+        <module>openesb-standalone-container</module>
         <module>openesb-standalone-bootstrap</module>
-        <module>openesb-standalone-naming</module>
         <module>openesb-standalone-packaging</module>
     </modules>
     
@@ -30,10 +29,15 @@
         <openesb-web-console.version>1.0.0-SNAPSHOT</openesb-web-console.version>
         <openesb-model-api.version>1.0.0-SNAPSHOT</openesb-model-api.version>
         <openesb-oeadmin.version>1.0.0-SNAPSHOT</openesb-oeadmin.version>
-        <atomikos.version>3.8.0</atomikos.version>
+        <atomikos.version>3.9.3</atomikos.version>
         <tomcat.version>7.0.50</tomcat.version>
         <snakeyaml.version>1.13</snakeyaml.version>
         <!--jgroups.version>3.4.2.Final</jgroups.version-->
+        <asciidoctor.version>0.1.4</asciidoctor.version>
+        <shiro.version>1.2.3</shiro.version>
+        <junit.version>4.11</junit.version>
+        <slf4j.version>1.7.6</slf4j.version>
+        <guice.version>3.0</guice.version>
     </properties>
     
     <build>
@@ -65,6 +69,70 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            
+            <dependency>
+                <groupId>net.open-esb</groupId>
+                <artifactId>base</artifactId>
+                <version>${openesb.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>docs</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>${asciidoctor.version}</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>output-single-html</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <doctype>book</doctype>
+                                    <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/htmlsingle/</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>output-docbook</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>docbook</backend>
+                                    <doctype>book</doctype>
+                                    <outputDirectory>${project.build.directory}/generated-docs/${project.version}/reference/docbook/</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sourceDirectory>src/asciidoc</sourceDirectory>
+                            <headerFooter>true</headerFooter>
+                            <sourceHighlighter>prettify</sourceHighlighter>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -17,3 +17,16 @@
 # Disable HTTP completely:
 #
 # http.enabled: false
+
+##################################### JNDI ########################################
+# Specify the context file to used for JNDI
+# jndi.context: ${openesb.home}/config/context.xml
+
+################################### Security ######################################
+# Set the security realms which have to be used for management purpose or components
+# security concerns.
+realm:
+   # The realm "admin" is the realm used for management (JMX / Rest API)
+   admin:
+      type: properties
+      file: ${openesb.home}/config/mgmt-users.properties

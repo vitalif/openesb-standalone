@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.open-esb.net/standalone/jndi/"
+            xmlns:tns="http://www.open-esb.net/standalone/jndi/"
+            elementFormDefault="qualified">
+    <xsd:complexType name="pool-propertiesComplexType">
+        <xsd:sequence>
+            <xsd:element name="property" type="tns:propertyComplexType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="propertyComplexType">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="name" type="xsd:string"></xsd:element>
+            <xsd:element name="value" type="xsd:string"></xsd:element>
+            <xsd:element name="description" type="xsd:string" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dataSource-pool-propertiesComplexType">
+        <xsd:sequence>
+            <xsd:element name="dbConnector-name" type="xsd:string"></xsd:element>
+            <xsd:element name="datasource-classname" type="xsd:string"></xsd:element>
+            <xsd:element name="resource-type">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="Datasource">
+                            <xsd:annotation>
+                                <xsd:documentation>Datasource</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:enumeration>
+                        <xsd:enumeration value="XADatasource">
+                            <xsd:annotation>
+                                <xsd:documentation>XADatasource</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:enumeration>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="database-name" type="xsd:string"></xsd:element>
+            <xsd:element name="database-vendor" type="xsd:string"></xsd:element>
+            <xsd:element name="database-version" type="xsd:string"></xsd:element>
+            <xsd:element name="dbconnector-description" type="xsd:string" minOccurs="0"></xsd:element>
+            <xsd:element name="dataSource-properties" type="tns:dataSource-propertiesComplexType" minOccurs="1" maxOccurs="1"></xsd:element>
+            <xsd:element name="pool-properties" type="tns:pool-propertiesComplexType"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dataSource-propertiesComplexType">
+        <xsd:sequence>
+            <xsd:element name="property" type="tns:propertyComplexType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="oeContextComplexType">
+        <xsd:sequence>
+            <xsd:element name="dataSource-pool-properties" type="tns:dataSource-pool-propertiesComplexType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+            <xsd:element name="jdbc-resources" type="tns:jdbc-resourceComplexType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="context" type="tns:oeContextComplexType"></xsd:element>
+    <xsd:complexType name="jdbc-resourceComplexType">
+        <xsd:sequence>
+            <xsd:element name="dbConnector-name" type="xsd:string"></xsd:element>
+            <xsd:element name="jndi-name" type="xsd:string"></xsd:element>
+            <xsd:element name="description" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
