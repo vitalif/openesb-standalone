@@ -30,15 +30,6 @@
 :: ******************** END  Read me first *******************************************
 
 @echo off
-echo.
-echo **************************************************
-echo *
-echo * Welcome to OpenESB SE for Windows 
-echo * OpenESB set  your environment...
-echo * 
-echo * More detail on OpenESB Community: www.open-esb.net 
-echo **************************************************
-
 
 ::****************** set Java Home ***********************
 :: Set your java home.To set JAVA_HOME: To set this property on Windows
@@ -68,12 +59,13 @@ echo **************************************************
 GOTO set OEHome
 
 :javaHome
+
 echo.
-echo **************************************************
-echo *
-echo * JAVA_HOME is set with the value: %JAVA_HOME%
-echo *
-echo **************************************************
+echo JAVA_HOME: %JAVA_HOME%
+echo.
+echo JAVA_OPTS: %JAVA_OPTS%
+
+
 
 :OEHome
 ::****************** set OpenESB Home ***********************
@@ -100,10 +92,9 @@ for %%? in ("%~dp0..") do set OPENESB_HOME=%%~f?
 
 
 :displayOEHome
+
 echo.
-echo **************************************************
-echo *
-echo * OPENESB_HOME is set with the value %OPENESB_HOME% 
-echo *
-echo **************************************************
-echo.
+echo OPENESB_HOME: %OPENESB_HOME% 
+echo. 
+echo =========================================================================
+echo. 

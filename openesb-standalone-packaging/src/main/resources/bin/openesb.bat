@@ -29,16 +29,18 @@
 :: if it is not the case, please  modify the .bat file
 :: ******************** END  Read me first *******************************************
 
-::@echo off 
-
-echo **************************************************
-echo *
-echo * Welcome to OpenESB SE for Windows 
-echo * OpenESB starting in process ...
-echo *
-echo * OpenESB Community: www.open-esb.net 
-echo **************************************************
+@echo off 
 echo.
+echo =========================================================================
+echo.
+echo Welcome to OpenESB Standalone Edition for Windows
+echo.
+echo More detail on http://www.open-esb.net
+echo.
+echo ========================================================================= 
+
+
+
 
 ::****************** set configuration variables ***********************
 :: Call setenv.bat that MUST be in the same directory than openesb.bat
@@ -69,32 +71,19 @@ for /r %%x in (%BOOSTRAP_PATTERN%) do (SET filename=%%x)
 if %filename%=="" Goto notfind
 
 :: Start OpenESB in a new Dos window
-START "OpenESB SE"  %JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true -Dopenesb.home=%OPENESB_HOME% -jar %filename%
+%JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true -Dopenesb.home=%OPENESB_HOME% -jar %filename%
 
-echo.
-echo.
-echo **************************************************
-echo * 
-echo * OpenESB SE Windows is opening in a new console 
-echo * 
-echo * Please check the logs to get OpenESB JMX Port 
-echo *
-echo * Documentation and forum on www.open-esb.net
-echo * or contact@open-esb.net
-echo * 
-echo **************************************************
 GOTO endbatch
-
 
 :nojavahome
 echo.
-echo **************************************************
+echo =========================================================================
 echo *
 echo * WARNING ...
 echo * JAVA_HOME must be set before starting OpenESB 
 echo * Please check Java documentation to do it 
 echo *
-echo **************************************************
+echo =========================================================================
 GOTO endbatch
 
 :notfind
