@@ -268,11 +268,11 @@ public class FileHandler
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         
         // Retrieve configuration of logging file name
-        rotatable = Boolean.parseBoolean(getProperty(className + ".rotatable", "true"));
+        rotatable = Boolean.parseBoolean(getProperty(className + ".rotatable", "false"));
         if (directory == null)
             directory = getProperty(className + ".directory", "logs");
         if (prefix == null)
-            prefix = getProperty(className + ".prefix", "openesb.");
+            prefix = getProperty(className + ".prefix", "server.");
         if (suffix == null)
             suffix = getProperty(className + ".suffix", ".log");
         String sBufferSize = getProperty(className + ".bufferSize", String.valueOf(bufferSize));
