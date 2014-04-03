@@ -1,6 +1,7 @@
 package net.openesb.standalone.framework;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 
 /**
  *
@@ -13,6 +14,6 @@ public class FrameworkModule extends AbstractModule {
     protected void configure() {
         bind(com.sun.jbi.platform.PlatformContext.class)
                 .to(net.openesb.standalone.framework.PlatformContext.class)
-                .asEagerSingleton();
+                .in(Scopes.SINGLETON);
     }
 }

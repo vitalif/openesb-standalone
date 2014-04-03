@@ -2,7 +2,7 @@ package net.openesb.standalone.naming.jndi;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
-import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
+import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
 
 /**
  *
@@ -11,7 +11,7 @@ import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
  */
 public interface DataSourcePoolFactory {
     
-    public DataSource getDataSource (DataSourcePoolPropertiesComplexType dSPProperties) ;    
-    public XADataSource getXADataSource (DataSourcePoolPropertiesComplexType dSPProperties) ;
+    public DataSource getDataSource (DataSourcePoolProperties dSPProperties) ;    
+    public XADataSource getXADataSource (DataSourcePoolProperties dSPProperties) ;
                    
 }

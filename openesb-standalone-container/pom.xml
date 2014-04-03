@@ -18,7 +18,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <id>xjc</id>
@@ -47,6 +47,13 @@
                     <groupId>glassfish</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        
+        <!-- OpenESB Rest API-->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-rest-api</artifactId>
+            <version>${openesb-rest-api.version}</version>
         </dependency>
         
         <!-- Transaction management -->

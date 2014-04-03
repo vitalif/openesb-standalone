@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance">
+    <jaxb:bindings schemaLocation="../xsd/OEContext.xsd" node="/xs:schema"> 
+      
+        <jaxb:bindings node="//xs:complexType[@name='pool-propertiesComplexType']">
+            <jaxb:class name="PoolProperties" />
+        </jaxb:bindings>
+      
+        <jaxb:bindings node="//xs:complexType[@name='propertyComplexType']">
+            <jaxb:class name="Property" />
+        </jaxb:bindings>
+        
+        <jaxb:bindings node="//xs:complexType[@name='dataSource-pool-propertiesComplexType']">
+            <jaxb:class name="DataSourcePoolProperties" />
+        </jaxb:bindings>
+        
+        <jaxb:bindings node="//xs:complexType[@name='dataSource-propertiesComplexType']">
+            <jaxb:class name="DataSourceProperties" />
+        </jaxb:bindings>
+        
+        <jaxb:bindings node="//xs:complexType[@name='oeContextComplexType']">
+            <jaxb:class name="Context" />
+        </jaxb:bindings>
+        
+        <jaxb:bindings node="//xs:complexType[@name='jdbc-resourceComplexType']">
+            <jaxb:class name="JDBCResource" />
+        </jaxb:bindings>
+        
+    </jaxb:bindings>
+</jaxb:bindings>

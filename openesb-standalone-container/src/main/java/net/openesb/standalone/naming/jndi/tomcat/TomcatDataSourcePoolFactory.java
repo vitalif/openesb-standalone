@@ -15,13 +15,12 @@ import javax.management.ObjectName;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 import javax.xml.bind.JAXBElement;
-import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
-import net.openesb.standalone.naming.jaxb.DataSourcePropertiesComplexType;
-import net.openesb.standalone.naming.jaxb.PoolPropertiesComplexType;
-import net.openesb.standalone.naming.jaxb.PropertyComplexType;
+import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
+import net.openesb.standalone.naming.jaxb.DataSourceProperties;
+import net.openesb.standalone.naming.jaxb.PoolProperties;
+import net.openesb.standalone.naming.jaxb.Property;
 import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
 import net.openesb.standalone.utils.I18NBundle;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 /**
  *
@@ -42,8 +41,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
      * Then we create an Apache datasource with the pool as parameter
      */
     @Override
-    public DataSource getDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-        PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+    public DataSource getDataSource(DataSourcePoolProperties dspProperties) {
+        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
         org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
         ds.setName(dspProperties.getDbConnectorName());
         registerMBean(ds);
@@ -52,8 +51,8 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
     }
 
     @Override
-    public XADataSource getXADataSource(DataSourcePoolPropertiesComplexType dspProperties) {
-        PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+    public XADataSource getXADataSource(DataSourcePoolProperties dspProperties) {
+        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
         org.apache.tomcat.jdbc.pool.XADataSource ds = new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
         ds.setName(dspProperties.getDbConnectorName());
         registerMBean(ds);
@@ -75,9 +74,9 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         }
     }
 
-    private PoolProperties createNativeDataSource(DataSourcePoolPropertiesComplexType dspProperties) {
+    private org.apache.tomcat.jdbc.pool.PoolProperties createNativeDataSource(DataSourcePoolProperties dspProperties) {
         /* get the properties for the native Datasource. it is not created yet*/
-        DataSourcePropertiesComplexType dataSourceProperties = dspProperties.getDataSourceProperties();
+        DataSourceProperties dataSourceProperties = dspProperties.getDataSourceProperties();
         Map<String, String> datasourceMap = this.listToMap(dataSourceProperties.getProperty());
 
         /* Get datasource name from OE Context. Native DS is create dynamically
@@ -186,10 +185,12 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
                 "start.pool.configuration"));
 
-        PoolPropertiesComplexType contextPoolProperties = dspProperties.getPoolProperties();
+        PoolProperties contextPoolProperties = dspProperties.getPoolProperties();
         Map<String, String> poolMap = this.listToMap(contextPoolProperties.getProperty());
         // Create pool configuration
-        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = new PoolProperties();
+        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = 
+                new org.apache.tomcat.jdbc.pool.PoolProperties();
+        
         Class poolPropertiesClass = poolProperties.getClass();
         Map<String, Field> poolPropertiesFields = this.getAllFields(poolPropertiesClass);
         /* Use java reflexion to set up pool configurationwith context properties
@@ -254,14 +255,14 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         return poolProperties;
     }
 
-    /* List to Map is an internal methode used to convert a List<PropertyComplexType> to a Map.
+    /* List to Map is an internal methode used to convert a List<Property> to a Map.
      * Map will be use to set the DataSource and the Pool
      */
-    private Map<String, String> listToMap(List<PropertyComplexType> inputList) {
+    private Map<String, String> listToMap(List<Property> inputList) {
         Map<String, String> outputMap = new HashMap<String, String>();
-        Iterator<PropertyComplexType> it = inputList.iterator();
+        Iterator<Property> it = inputList.iterator();
         while (it.hasNext()) {
-            PropertyComplexType prop = it.next();
+            Property prop = it.next();
             List<JAXBElement<String>> nameAndValueAndDescription = prop.getNameAndValueAndDescription();
             Iterator<JAXBElement<String>> it2 = nameAndValueAndDescription.iterator();
             String key = null, value = null;

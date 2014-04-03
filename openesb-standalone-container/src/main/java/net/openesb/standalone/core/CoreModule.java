@@ -19,9 +19,9 @@ public class CoreModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Settings.class).toProvider(YamlSettingsProvider.class).asEagerSingleton();
+        bind(Settings.class).toProvider(YamlSettingsProvider.class).in(Scopes.SINGLETON);
         bind(TransactionManager.class).toProvider(TransactionManagerProvider.class).in(Scopes.SINGLETON);
-        bind(SecurityProvider.class).to(SecurityProviderImpl.class).asEagerSingleton();
+        bind(SecurityProvider.class).to(SecurityProviderImpl.class).in(Scopes.SINGLETON);
         bind(javax.management.remote.JMXAuthenticator.class).to(JMXAuthenticator.class).in(Scopes.SINGLETON);
     }
 }

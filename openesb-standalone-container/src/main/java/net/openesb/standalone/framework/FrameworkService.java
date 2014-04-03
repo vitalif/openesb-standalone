@@ -53,11 +53,14 @@ public class FrameworkService
                 platformContext.getInstallRoot());
 
         // --------------------------------------------
-        // TODO: removing this part asap
+        // TODO: removing this part asap and move into the HTTP server 
+        // Please have a look to the Rest API module
         System.setProperty("http.port",
                 settings.get("http.port", "4848"));
         System.setProperty("http.enabled",
                 settings.get("http.enabled", "true"));
+        System.setProperty("http.binding",
+                settings.get("http.binding", "localhost"));
         // --------------------------------------------
 
         try {

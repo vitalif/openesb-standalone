@@ -23,7 +23,7 @@
                     <archive>
                         <manifestEntries>
                             <Main-Class>net.openesb.standalone.startup.Bootstrap</Main-Class>
-                            <Class-Path>jbi.jar jbi-ext.jar jta-1_1-classes.zip</Class-Path>
+                            <Class-Path>jbi.jar jbi-ext.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

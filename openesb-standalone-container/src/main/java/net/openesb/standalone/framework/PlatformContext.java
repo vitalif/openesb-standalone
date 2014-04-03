@@ -18,7 +18,7 @@ import javax.transaction.TransactionManager;
 import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.Constants;
 import net.openesb.standalone.jmx.JMXService;
-import net.openesb.standalone.settings.Settings;
+import net.openesb.standalone.node.Node;
 
 /**
  * Implementation of PlatformContext for OpenESB Standalone.
@@ -28,22 +28,14 @@ import net.openesb.standalone.settings.Settings;
  */
 public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
 
-    private static final String INSTANCE_NAME = "instance.name";
-    
-    private final String mInstanceName;
-
     @Inject private JMXService jmxConnector;
     @Inject private SecurityProvider securityProvider;
     @Inject private TransactionManager transactionManager;
     @Inject private InitialContext namingContext;
+    @Inject private Node node;
+    
     private String mInstallRoot = System.getProperty(
             Constants.OPENESB_HOME_PROP);
-    
-    @Inject
-    public PlatformContext(Settings settings) {
-        mInstanceName = settings.get(INSTANCE_NAME,
-                Constants.DEFAULT_INSTANCE_NAME);
-    }
 
     /**
      * Get the TransactionManager for this implementation. The instance returned
@@ -82,7 +74,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getAdminServerName() {
-        return mInstanceName;
+        return node.name();
     }
 
     /**
@@ -103,7 +95,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getInstanceName() {
-        return mInstanceName;
+        return node.name();
     }
 
     /**
@@ -113,7 +105,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public boolean isInstanceUp(String instanceName) {
-        return mInstanceName.equals(instanceName);
+        return node.name().equals(instanceName);
     }
 
     /**
@@ -136,7 +128,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getTargetName() {
-        return mInstanceName;
+        return node.name();
     }
 
     /**
@@ -159,7 +151,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
     @Override
     public Set<String> getStandaloneServerNames() {
         HashSet<String> names = new HashSet<String>();
-        names.add(mInstanceName);
+        names.add(node.name());
         return names;
     }
 
@@ -201,7 +193,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public boolean isValidTarget(String targetName) {
-        return mInstanceName.equals(targetName);
+        return node.name().equals(targetName);
     }
 
     /**
@@ -223,7 +215,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public boolean isStandaloneServer(String targetName) {
-        return mInstanceName.equals(targetName);
+        return node.name().equals(targetName);
     }
 
     /**
@@ -275,7 +267,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getInstanceRoot() {
-        return mInstallRoot + File.separator + mInstanceName;
+        return mInstallRoot + File.separator + node.name();
     }
 
     /**

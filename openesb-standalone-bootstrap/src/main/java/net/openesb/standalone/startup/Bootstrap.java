@@ -105,7 +105,7 @@ public class Bootstrap {
         // quick sanity check on the install root
         if (!openesbHomeDir.isDirectory()
                 || !new File(openesbHomeDir, "lib/jbi_rt.jar").exists()) {
-            throw new RuntimeException("Invalid JBI install root: "
+            throw new RuntimeException("Invalid OpenESB Home: "
                     + openesbHomeDir.getAbsolutePath());
         }
 
@@ -159,9 +159,9 @@ public class Bootstrap {
         }
 
         if (errMsg != null) {
-            mLog.log(Level.SEVERE, "Failed to unload JBI framework: {0}", errMsg);
+            mLog.log(Level.SEVERE, "Failed to stop OpenESB Standalone Container: {0}", errMsg);
         } else {
-            mLog.log(Level.INFO, "JBI framework has been unloaded.");
+            mLog.log(Level.INFO, "OpenESB Standalone Container has has been stopped.");
         }
     }
 

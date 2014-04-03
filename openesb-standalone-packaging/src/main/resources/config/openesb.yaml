@@ -11,12 +11,13 @@
 
 ##################################### HTTP ########################################
 # Set a custom port to listen for HTTP traffic:
-#
 # http.port: 4848
 
 # Disable HTTP completely:
-#
 # http.enabled: false
+
+# HTTP Binding
+# http.binding: localhost
 
 ##################################### JNDI ########################################
 # Specify the context file to used for JNDI

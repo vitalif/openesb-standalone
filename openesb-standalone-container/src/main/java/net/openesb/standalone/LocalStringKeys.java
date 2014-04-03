@@ -14,6 +14,18 @@ public interface LocalStringKeys {
      */
     static final String CONTAINER_SHUTDOWN_ERROR =
             "CONTAINER_SHUTDOWN_ERROR";
+    static final String CONTAINER_INIT_INSTANCE =
+            "CONTAINER_INIT_INSTANCE";
+    static final String CONTAINER_INIT_INSTANCE_DONE =
+            "CONTAINER_INIT_INSTANCE_DONE";
+    static final String CONTAINER_START_INSTANCE =
+            "CONTAINER_START_INSTANCE";
+    static final String CONTAINER_START_INSTANCE_DONE =
+            "CONTAINER_START_INSTANCE_DONE";
+    static final String CONTAINER_STOP_INSTANCE =
+            "CONTAINER_STOP_INSTANCE";
+    static final String CONTAINER_STOP_INSTANCE_DONE =
+            "CONTAINER_STOP_INSTANCE_DONE";
     /**
      * Connector server Messages.
      */

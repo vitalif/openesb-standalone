@@ -17,4 +17,9 @@ public interface Node {
      */
     void stop();
     
+    /**
+     * Returns the node name.
+     * @return  The node name.
+     */
+    String name();
 }

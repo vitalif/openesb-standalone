@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -21,9 +20,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import net.openesb.standalone.LocalStringKeys;
-import net.openesb.standalone.naming.jaxb.DataSourcePoolPropertiesComplexType;
-import net.openesb.standalone.naming.jaxb.JdbcResourceComplexType;
-import net.openesb.standalone.naming.jaxb.OeContextComplexType;
+import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
+import net.openesb.standalone.naming.jaxb.JDBCResource;
 import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
 import net.openesb.standalone.naming.jndi.tomcat.TomcatDataSourcePoolFactory;
 import net.openesb.standalone.utils.I18NBundle;
@@ -38,9 +36,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
     private static final Logger LOG = Logger.getLogger(InitialContexFactoryImpl.class.getName());
     public static final String DATASOURCE_TYPE = "Datasource";
     public static final String XADATASOURCE_TYPE = "XADatasource";
-    private final Map<String, DataSourcePoolPropertiesComplexType> mDSPMap = new HashMap<String, DataSourcePoolPropertiesComplexType>();
+    private final Map<String, DataSourcePoolProperties> mDSPMap = new HashMap<String, DataSourcePoolProperties>();
     
-    @Inject
+//    @Inject
     private DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
 
 
@@ -72,11 +70,11 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
 
         /* Read the context from the URL */
         @SuppressWarnings("UnusedAssignment")
-        JAXBElement<OeContextComplexType> root = null;
+        JAXBElement<net.openesb.standalone.naming.jaxb.Context> root = null;
         try {
             JAXBContext jc = JAXBContext.newInstance("net.openesb.standalone.naming.jaxb");
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            root = (JAXBElement<OeContextComplexType>) unmarshaller.unmarshal(new URL(urlValue));
+            root = (JAXBElement<net.openesb.standalone.naming.jaxb.Context>) unmarshaller.unmarshal(new URL(urlValue));
         } catch (MalformedURLException ex) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, urlValue));
@@ -95,33 +93,33 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         }
 
         // This must be made with the xml file has an element root    
-        OeContextComplexType oeContext = root.getValue();
+        net.openesb.standalone.naming.jaxb.Context oeContext = root.getValue();
 
         /* OeContext contains the complete context */
         /* I create a map with the datasourcePool Name as key and datasourcePool as Value
          * This will be useful to instanciate the db connector later.
          */
-        List<DataSourcePoolPropertiesComplexType> dataSourcePoolList = oeContext.getDataSourcePoolProperties();
+        List<DataSourcePoolProperties> dataSourcePoolList = oeContext.getDataSourcePoolProperties();
         int listSize = dataSourcePoolList.size();
         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("number.dataSourcePoolProperties.found",
                 listSize));
 
         //Loop on dataSourcePoolList iterator
-        for (DataSourcePoolPropertiesComplexType dspComplexType : dataSourcePoolList) {
+        for (DataSourcePoolProperties dspComplexType : dataSourcePoolList) {
             mDSPMap.put(dspComplexType.getDbConnectorName(), dspComplexType);
             LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasourcepoolproperties.found.in.context",
                     dspComplexType.getDbConnectorName()));
         }
 
         // Now Let's read JdbcResource
-        List<JdbcResourceComplexType> jdbcResourceList = oeContext.getJdbcResources();
+        List<JDBCResource> jdbcResourceList = oeContext.getJdbcResources();
         listSize = jdbcResourceList.size();
 
         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("number.jdbcResource.declaration.found",
                 listSize));
 
         //Loop on JDBCResourceList iterator
-        for (JdbcResourceComplexType jdbcResource : jdbcResourceList) {
+        for (JDBCResource jdbcResource : jdbcResourceList) {
             /* For each jcbc resource I want to associate a dbConnector. 
              * DBConnector provide a connectionPool or a XAConnectionPool
              * I instanciate the dbConnetor in a lazy mode (when needed)
@@ -164,7 +162,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
             }
 
             // Retrieve DataSourcePoolPropertie
-            DataSourcePoolPropertiesComplexType dspProperties = mDSPMap.get(dbConnectorName);
+            DataSourcePoolProperties dspProperties = mDSPMap.get(dbConnectorName);
             // Check if Datasourse or XA Datasource            
             if (dspProperties.getResourceType().equals(InitialContexFactoryImpl.DATASOURCE_TYPE)) {
                 LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasource.in.process", jndiName));
