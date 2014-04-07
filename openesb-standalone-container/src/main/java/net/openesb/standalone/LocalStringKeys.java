@@ -82,4 +82,19 @@ public interface LocalStringKeys {
             "NAMING_UNMARSHAL_FAILURE";
     static final String NAMING_UNMARSHAL_SUCCESS =
             "NAMING_UNMARSHAL_SUCCESS";
+    
+    /**
+     * HTTP Messages.
+     */
+    static final String HTTP_SERVER_PORT =
+            "HTTP_SERVER_PORT";
+    static final String HTTP_START_SERVER =
+            "HTTP_START_SERVER";
+    static final String HTTP_START_SERVER_FAILED =
+            "HTTP_START_SERVER_FAILED";
+    static final String HTTP_STOP_SERVER =
+            "HTTP_STOP_SERVER";
+    static final String HTTP_SERVER_ENABLED =
+            "HTTP_SERVER_ENABLED";
+
 }
