@@ -71,7 +71,7 @@ for /r %%x in (%BOOSTRAP_PATTERN%) do (SET filename=%%x)
 if %filename%=="" Goto notfind
 
 :: Start OpenESB in a new Dos window
-%JAVA_HOME%\bin\java -Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager -Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks -Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true -Dopenesb.home=%OPENESB_HOME% -jar %filename% %*
+"%JAVA_HOME%\bin\java" "-Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties" -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager "-Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks" "-Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks" -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true "-Dopenesb.home=%OPENESB_HOME%" -jar %filename% %*
 
 GOTO endbatch
 
