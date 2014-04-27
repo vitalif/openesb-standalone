@@ -1,5 +1,6 @@
 package net.openesb.standalone.naming.jndi.impl;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -15,20 +16,28 @@ import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import net.openesb.standalone.Constants;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
 import net.openesb.standalone.naming.jaxb.JDBCResource;
 import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
 import net.openesb.standalone.naming.jndi.tomcat.TomcatDataSourcePoolFactory;
 import net.openesb.standalone.utils.I18NBundle;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Paul PEREZ (paul.perez at pymma.com)
+ * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
 public class InitialContexFactoryImpl implements InitialContextFactory {
@@ -67,13 +76,31 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.NAMING_CONTEXT_NO_CONTEXT_URL));
         }
-
+        
         /* Read the context from the URL */
-        @SuppressWarnings("UnusedAssignment")
         JAXBElement<net.openesb.standalone.naming.jaxb.Context> root = null;
         try {
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            
+            // Looking for the XSD from install root
+            String mInstallRoot = System.getProperty(Constants.OPENESB_HOME_PROP);
+            String schemaFile = mInstallRoot + File.separatorChar + "config" + File.separatorChar + "context.xsd";
+            
+            Schema schema = sf.newSchema(new File(schemaFile));
+            
             JAXBContext jc = JAXBContext.newInstance("net.openesb.standalone.naming.jaxb");
             Unmarshaller unmarshaller = jc.createUnmarshaller();
+            unmarshaller.setSchema(schema );
+            unmarshaller.setEventHandler(new ValidationEventHandler() {
+
+                @Override
+                public boolean handleEvent(ValidationEvent event) {
+                    // Returning false from the handleEvent method will cause the JAXB 
+                    // operation to stop
+                    return false;
+                }
+            });
+            
             root = (JAXBElement<net.openesb.standalone.naming.jaxb.Context>) unmarshaller.unmarshal(new URL(urlValue));
         } catch (MalformedURLException ex) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
@@ -83,6 +110,10 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
         } catch (JAXBException ex) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, urlValue), ex);
+
+            return initialContext;
+        } catch (SAXException ex) {
+            LOG.log(Level.SEVERE, "todo", ex);
 
             return initialContext;
         }
