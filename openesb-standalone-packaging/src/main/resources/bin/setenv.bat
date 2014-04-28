@@ -42,7 +42,7 @@
 :: If you need a local java home uncomment the following line 
 :: and set your local JAVA_HOME. Don't do it if you want to use 
 :: your JAVA_HOME setting defined in your machine
-:: SET JAVA_HOME= C:\Program Files\Java\jdk1.7.0_19
+:: SET JAVA_HOME=C:\Program Files\Java\jdk1.7.0_19
 
 
 :: Check if Java home is empty
