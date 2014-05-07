@@ -11,6 +11,6 @@ public class HttpModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        
+        bind(HttpServer.class).asEagerSingleton();
     }
 }

@@ -10,15 +10,18 @@ import javax.management.StandardMBean;
 import net.openesb.standalone.Constants;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.core.CoreModule;
+import net.openesb.standalone.env.Environment;
+import net.openesb.standalone.env.EnvironmentModule;
 import net.openesb.standalone.framework.FrameworkModule;
 import net.openesb.standalone.framework.FrameworkService;
 import net.openesb.standalone.http.HttpModule;
-import net.openesb.standalone.http.HttpService;
+import net.openesb.standalone.http.HttpServer;
 import net.openesb.standalone.inject.ModulesBuilder;
 import net.openesb.standalone.jmx.JMXService;
 import net.openesb.standalone.naming.NamingModule;
 import net.openesb.standalone.node.Node;
 import net.openesb.standalone.settings.Settings;
+import net.openesb.standalone.settings.SettingsModule;
 import net.openesb.standalone.utils.I18NBundle;
 
 /**
@@ -37,9 +40,7 @@ public class InstanceNode implements Node {
     
     private final Injector injector;
     
-    private JMXService jmxService;
-    private FrameworkService frameworkService;
-    private HttpService httpService;
+    private final Environment environment;
     
     public InstanceNode () {
         if(LOG.isLoggable(Level.INFO)) {
@@ -47,21 +48,22 @@ public class InstanceNode implements Node {
                     LocalStringKeys.CONTAINER_INIT_INSTANCE));
         }
         
+        Settings settings = InstanceSettingsPreparer.prepareSettings();
+        this.environment = new Environment(settings);
+        
         ModulesBuilder modules = new ModulesBuilder();
         
+        modules.add(new SettingsModule(settings));
         modules.add(new CoreModule());
         modules.add(new FrameworkModule());
         modules.add(new NamingModule());
         modules.add(new HttpModule());
         modules.add(new NodeModule(this));
+        modules.add(new EnvironmentModule(environment));
         
         injector = modules.createInjector();
-        
-        jmxService = injector.getInstance(JMXService.class);
-        frameworkService = injector.getInstance(FrameworkService.class);
-        httpService = injector.getInstance(HttpService.class);
-        
-        nodeName = injector.getInstance(Settings.class).get(INSTANCE_NAME,
+
+        nodeName = settings.get(INSTANCE_NAME,
                 Constants.DEFAULT_INSTANCE_NAME);
         
         if(LOG.isLoggable(Level.INFO)) {
@@ -79,11 +81,12 @@ public class InstanceNode implements Node {
         
         long startTime = System.currentTimeMillis(); // Get the start Time
         
-        jmxService.start();
-        frameworkService.start();
+        injector.getInstance(JMXService.class).start();
+        injector.getInstance(FrameworkService.class).start();
         
-        httpService.setEnvironmentContext(frameworkService.getEnvironment());
-        httpService.start();
+        injector.getInstance(HttpServer.class).setEnvironmentContext(
+                injector.getInstance(FrameworkService.class).getEnvironment());
+        injector.getInstance(HttpServer.class).start();
         
         PlatformContext platformContext = injector.getInstance(PlatformContext.class);
         
@@ -126,9 +129,9 @@ public class InstanceNode implements Node {
                     LocalStringKeys.CONTAINER_STOP_INSTANCE), nodeName);
         }
         
-        httpService.stop();
-        frameworkService.stop();
-        jmxService.stop();
+        injector.getInstance(HttpServer.class).stop();
+        injector.getInstance(FrameworkService.class).stop();
+        injector.getInstance(JMXService.class).stop();
         
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(

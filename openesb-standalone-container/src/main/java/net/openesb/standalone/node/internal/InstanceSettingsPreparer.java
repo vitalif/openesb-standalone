@@ -1,6 +1,5 @@
-package net.openesb.standalone.settings.yaml;
+package net.openesb.standalone.node.internal;
 
-import com.google.inject.Provider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,17 +23,17 @@ import org.yaml.snakeyaml.resolver.Resolver;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class YamlSettingsProvider implements Provider<Settings> {
-
+public class InstanceSettingsPreparer {
+    
     private static final Logger LOG =
-            Logger.getLogger(YamlSettingsProvider.class.getPackage().getName());
+            Logger.getLogger(InstanceSettingsPreparer.class.getPackage().getName());
+    
     private static final String CONFIG_FILE = "openesb.config";
 
-    private final String mInstallRoot = System.getProperty(
+    private static final String mInstallRoot = System.getProperty(
             Constants.OPENESB_HOME_PROP);
-
-    @Override
-    public Settings get() {
+    
+    public static Settings prepareSettings() {
         String configFile = System.getProperty(CONFIG_FILE);
 
         if (configFile == null) {

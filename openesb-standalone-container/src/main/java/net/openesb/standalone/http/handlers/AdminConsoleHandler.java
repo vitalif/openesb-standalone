@@ -8,7 +8,7 @@ import org.glassfish.grizzly.http.server.HttpHandler;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class ConsoleHandler implements Handler<HttpHandler> {
+public class AdminConsoleHandler implements Handler<HttpHandler> {
 
     private final static String DUMMY_CLASS = "net.openesb.console.DummyClass";
 
@@ -17,16 +17,12 @@ public class ConsoleHandler implements Handler<HttpHandler> {
         try {
             Class<?> clazz = Class.forName(
                     DUMMY_CLASS, false,
-                    ConsoleHandler.class.getClassLoader());
+                    AdminConsoleHandler.class.getClassLoader());
 
             return new CLStaticHttpHandler(
                     clazz.getClassLoader(), "/public_html/");
         } catch (Exception ex) {
             ex.printStackTrace();
-            /*
-             sLog.log(Level.WARNING,
-             "Unable to attache HTTP handler for the Web Console", ex);
-             */
         }
 
         return null;

@@ -15,5 +15,7 @@ public class FrameworkModule extends AbstractModule {
         bind(com.sun.jbi.platform.PlatformContext.class)
                 .to(net.openesb.standalone.framework.PlatformContext.class)
                 .in(Scopes.SINGLETON);
+        
+        bind(FrameworkService.class).toInstance(new FrameworkService());
     }
 }
