@@ -1,7 +1,8 @@
 package net.openesb.standalone.http.handlers;
 
-import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpHandler;
+import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.Response;
 
 /**
  *
@@ -10,26 +11,21 @@ import org.glassfish.grizzly.http.server.HttpHandler;
  */
 public class AdminConsoleHandler implements Handler<HttpHandler> {
 
-    private final static String DUMMY_CLASS = "net.openesb.console.DummyClass";
-
     @Override
     public HttpHandler getHandler() {
-        try {
-            Class<?> clazz = Class.forName(
-                    DUMMY_CLASS, false,
-                    AdminConsoleHandler.class.getClassLoader());
-
-            return new CLStaticHttpHandler(
-                    clazz.getClassLoader(), "/public_html/");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
+        return new RedirectHandler();
     }
 
     @Override
     public String path() {
         return "/webui";
+    }
+    
+    static class RedirectHandler extends HttpHandler {
+
+        @Override
+        public void service(Request request, Response response) throws Exception {
+            response.sendRedirect("/plugin/webui/");
+        }
     }
 }

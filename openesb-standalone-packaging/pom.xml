@@ -146,6 +146,7 @@
             <groupId>net.open-esb</groupId>
             <artifactId>openesb-web-console</artifactId>
             <version>${openesb-web-console.version}</version>
+            <type>zip</type>
         </dependency>
         
         <!-- OpenESB oeadmin-->

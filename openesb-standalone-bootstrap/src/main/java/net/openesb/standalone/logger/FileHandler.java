@@ -272,7 +272,7 @@ public class FileHandler
         if (directory == null)
             directory = getProperty(className + ".directory", "logs");
         if (prefix == null)
-            prefix = getProperty(className + ".prefix", "server.");
+            prefix = getProperty(className + ".prefix", "server");
         if (suffix == null)
             suffix = getProperty(className + ".suffix", ".log");
         String sBufferSize = getProperty(className + ".bufferSize", String.valueOf(bufferSize));

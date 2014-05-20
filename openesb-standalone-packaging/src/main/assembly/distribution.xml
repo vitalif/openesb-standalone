@@ -55,30 +55,17 @@
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
-        <!--
         <dependencySet>
             <includes>
-                <include>open-jbi-components:httpbc-full-installer</include>
-                <include>open-jbi-components:bpelse-installer</include>
-                <include>open-jbi-components:filebc-installer</include>
+                <include>net.open-esb:openesb-web-console</include>
             </includes>
-            <outputDirectory>components</outputDirectory>
+            <unpack>true</unpack>
+            <outputDirectory>plugins/webui/_site</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
-        <dependencySet>
-            <includes>
-                <include>open-jbi-components:encoderlib-installer</include>
-                <include>open-jbi-components:wsdlextlib-installer</include>
-                <include>open-esb:wsdlsl</include>
-            </includes>
-            <outputDirectory>shared-libraries</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-        </dependencySet>
-        -->
         <dependencySet>
             <includes>
                 <include>net.open-esb:openesb-rest-api:jar</include>
-                <include>net.open-esb:openesb-web-console</include>
                 <include>net.open-esb:openesb-model-api</include>
                 <include>net.open-esb:openesb-oeadmin</include>
             </includes>
