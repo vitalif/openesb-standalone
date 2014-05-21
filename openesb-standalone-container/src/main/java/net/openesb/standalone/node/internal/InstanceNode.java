@@ -83,9 +83,6 @@ public class InstanceNode implements Node {
         
         injector.getInstance(JMXService.class).start();
         injector.getInstance(FrameworkService.class).start();
-        
-        injector.getInstance(HttpServer.class).setEnvironmentContext(
-                injector.getInstance(FrameworkService.class).getEnvironment());
         injector.getInstance(HttpServer.class).start();
         
         PlatformContext platformContext = injector.getInstance(PlatformContext.class);

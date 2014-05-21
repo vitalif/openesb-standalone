@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import net.openesb.rest.api.OpenESBApplication;
-import net.openesb.rest.extension.RestServiceLifecycle;
 import net.openesb.standalone.Lifecycle;
 import net.openesb.standalone.LifecycleException;
 import net.openesb.standalone.LocalStringKeys;
@@ -45,10 +44,6 @@ public class HttpServer implements Lifecycle {
     public HttpServer(Settings settings, Environment environment) {
         this.settings = settings;
         this.environment = environment;
-    }
-    
-    public void setEnvironmentContext(EnvironmentContext environmentContext) {
-        RestServiceLifecycle.environmentContext = environmentContext;
     }
 
     @Override
