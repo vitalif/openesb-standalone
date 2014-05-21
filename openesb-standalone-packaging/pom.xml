@@ -163,6 +163,18 @@
             <version>${openesb-model-api.version}</version>
         </dependency>
         
+        <!-- OpenESB Management  -->
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-management-api</artifactId>
+            <version>${openesb-management.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.open-esb</groupId>
+            <artifactId>openesb-management-jmx</artifactId>
+            <version>${openesb-management.version}</version>
+        </dependency>
+        
         <!-- OpenESB Core Distribution -->
         <dependency>
             <groupId>net.open-esb</groupId>

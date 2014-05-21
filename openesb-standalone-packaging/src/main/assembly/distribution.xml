@@ -67,6 +67,8 @@
             <includes>
                 <include>net.open-esb:openesb-rest-api:jar</include>
                 <include>net.open-esb:openesb-model-api</include>
+                <include>net.open-esb:openesb-management-api</include>
+                <include>net.open-esb:openesb-management-jmx</include>
                 <include>net.open-esb:openesb-oeadmin</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
