@@ -5,7 +5,7 @@
     <parent>
         <groupId>net.open-esb.runtime.standalone</groupId>
         <artifactId>openesb-standalone</artifactId>
-        <version>1.0.0-alpha-3</version>
+        <version>1.0.0-beta-1-SNAPSHOT</version>
     </parent>
     
     <artifactId>openesb-standalone-bootstrap</artifactId>
