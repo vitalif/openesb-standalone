@@ -23,6 +23,7 @@ import net.openesb.standalone.node.Node;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.settings.SettingsModule;
 import net.openesb.standalone.utils.I18NBundle;
+import net.openesb.standalone.utils.ManifestUtils;
 
 /**
  *
@@ -115,7 +116,7 @@ public class InstanceNode implements Node {
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_START_INSTANCE_DONE), 
-                    new Object []{nodeName, (endTime-startTime)});
+                    new Object []{nodeName, ManifestUtils.getVersion(), (endTime-startTime)});
         }
     }
 

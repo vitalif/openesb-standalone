@@ -2,7 +2,9 @@ package net.openesb.standalone.plugins;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.openesb.standalone.env.Environment;
@@ -19,12 +21,21 @@ public class PluginsService {
     
     private final Environment environment;
 
+    private final Set<Plugin> plugins;
+    
     public PluginsService(Settings settings, Environment environment) {
         this.environment = environment;
+        this.plugins = new HashSet<Plugin>();
+        
+        loadPlugins();
         
         loadSitePlugins();
     }
 
+    private void loadPlugins() {
+        
+    }
+    
     private Map<PluginInfo, Plugin> loadSitePlugins() {
         Map<PluginInfo, Plugin> sitePlugins = new HashMap<PluginInfo, Plugin>();
 
