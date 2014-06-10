@@ -136,6 +136,7 @@ public class Bootstrap {
             throws Exception {
 
         String errMsg = null;
+        JMXConnector jmxConn = null;
         try {
             Map env = new HashMap();
             String[] creds = {"admin", "admin"};
@@ -144,18 +145,23 @@ public class Bootstrap {
             JMXServiceURL serviceURL = new JMXServiceURL(
                     String.format(DEFAULT_SERVICE_URL, DEFAULT_INSTANCE_PORT));
 
-            JMXConnector jmxConn = JMXConnectorFactory.connect(serviceURL, env);
+            jmxConn = JMXConnectorFactory.connect(serviceURL, env);
             MBeanServerConnection mbsConn = jmxConn.getMBeanServerConnection();
+            
             ObjectName fwMBeanName = new ObjectName("net.open-esb.standalone",
                     "instance", DEFAULT_INSTANCE_NAME);
             mbsConn.invoke(fwMBeanName, "stop", new Object[0], new String[0]);
-
+/*
         } catch (NumberFormatException nfEx) {
-            mLog.log(Level.SEVERE, "Invalid JMX connector port value.  {0}", nfEx.getMessage());
+            mLog.log(Level.SEVERE, "Invalid JMX connector port value.  {0}", nfEx.getMessage());*/
         } catch (javax.management.MBeanException mbEx) {
             errMsg = mbEx.getTargetException().toString();
         } catch (Throwable t) {
             errMsg = t.toString();
+        } finally {
+            if (jmxConn != null) {
+                jmxConn.close();
+            }
         }
 
         if (errMsg != null) {

@@ -43,6 +43,8 @@ public class InstanceNode implements Node {
     
     private final Environment environment;
     
+    private JMXService jMXService;
+    
     public InstanceNode () {
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
@@ -82,7 +84,9 @@ public class InstanceNode implements Node {
         
         long startTime = System.currentTimeMillis(); // Get the start Time
         
-        injector.getInstance(JMXService.class).start();
+        jMXService = injector.getInstance(JMXService.class);
+        jMXService.start();
+        
         injector.getInstance(FrameworkService.class).start();
         injector.getInstance(HttpServer.class).start();
         
@@ -129,7 +133,7 @@ public class InstanceNode implements Node {
         
         injector.getInstance(HttpServer.class).stop();
         injector.getInstance(FrameworkService.class).stop();
-        injector.getInstance(JMXService.class).stop();
+        jMXService.stop();
         
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
