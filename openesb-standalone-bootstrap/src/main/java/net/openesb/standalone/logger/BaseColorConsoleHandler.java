@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * Color Console Handler for jdk: using ANSI sequences
+ * Color Console Handler for jdk: using ANSI sequences directly
  * 
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community

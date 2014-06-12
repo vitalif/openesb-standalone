@@ -90,6 +90,7 @@
                 <include>org.slf4j:slf4j-jdk14</include>
                 <include>com.google.inject:guice</include>
                 <include>aopalliance:aopalliance</include>
+                <include>org.fusesource.jansi:jansi</include>
             </includes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>

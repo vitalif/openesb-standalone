@@ -38,5 +38,11 @@
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>${jansi.version}</version>
+        </dependency>
     </dependencies>
 </project>
