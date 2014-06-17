@@ -8,6 +8,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
 import net.openesb.standalone.Constants;
+import net.openesb.standalone.Lifecycle;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.core.CoreModule;
 import net.openesb.standalone.env.Environment;
@@ -20,6 +21,8 @@ import net.openesb.standalone.inject.ModulesBuilder;
 import net.openesb.standalone.jmx.JMXService;
 import net.openesb.standalone.naming.NamingModule;
 import net.openesb.standalone.node.Node;
+import net.openesb.standalone.plugins.PluginsModule;
+import net.openesb.standalone.plugins.PluginsService;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.settings.SettingsModule;
 import net.openesb.standalone.utils.I18NBundle;
@@ -45,6 +48,8 @@ public class InstanceNode implements Node {
     
     private JMXService jMXService;
     
+    private final PluginsService pluginsService;
+    
     public InstanceNode () {
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
@@ -53,10 +58,12 @@ public class InstanceNode implements Node {
         
         Settings settings = InstanceSettingsPreparer.prepareSettings();
         this.environment = new Environment(settings);
+        this.pluginsService = new PluginsService(settings, environment);
         
         ModulesBuilder modules = new ModulesBuilder();
         
         modules.add(new SettingsModule(settings));
+        modules.add(new PluginsModule(settings, pluginsService));
         modules.add(new CoreModule());
         modules.add(new FrameworkModule());
         modules.add(new NamingModule());
@@ -83,6 +90,10 @@ public class InstanceNode implements Node {
         }
         
         long startTime = System.currentTimeMillis(); // Get the start Time
+        
+        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
+            injector.getInstance(plugin).start();
+        }
         
         jMXService = injector.getInstance(JMXService.class);
         jMXService.start();
@@ -134,6 +145,10 @@ public class InstanceNode implements Node {
         injector.getInstance(HttpServer.class).stop();
         injector.getInstance(FrameworkService.class).stop();
         jMXService.stop();
+        
+        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
+            injector.getInstance(plugin).stop();
+        }
         
         if(LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(

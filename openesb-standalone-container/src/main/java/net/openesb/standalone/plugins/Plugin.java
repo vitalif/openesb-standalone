@@ -1,7 +1,7 @@
 package net.openesb.standalone.plugins;
 
 import com.google.inject.Module;
-import java.util.Set;
+import java.util.Collection;
 import net.openesb.standalone.Lifecycle;
 
 /**
@@ -21,13 +21,7 @@ public interface Plugin {
      */
     String description();
     
-    /**
-     * 
-     * @return 
-     */
-    String version();
+    Collection<Class<? extends Module>> modules();
     
-    Set<Module> modules();
-    
-    Set<Lifecycle> services();
+    Collection<Class<? extends Lifecycle>> services();
 }

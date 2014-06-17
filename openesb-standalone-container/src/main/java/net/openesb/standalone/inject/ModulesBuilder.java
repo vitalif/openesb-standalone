@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import java.util.Iterator;
 import java.util.List;
+import net.openesb.standalone.plugins.PluginsModule;
 
 /**
  *
@@ -23,6 +24,12 @@ public class ModulesBuilder implements Iterable<Module> {
 
     public ModulesBuilder add(Module module) {
         modules.add(module);
+        if (module instanceof PluginsModule) {
+            Iterable<? extends Module> plugins = ((PluginsModule) module).childModules();
+            for (Module plugin : plugins) {
+                add(plugin);
+            }
+        }
         return this;
     }
 
