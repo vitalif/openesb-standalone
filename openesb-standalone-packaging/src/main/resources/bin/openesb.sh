@@ -101,7 +101,7 @@ echo ""
 "$JAVA" $JAVA_OPTS \
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
         -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager \
-        -cp "$OPENESB_BOOT_CLASSPATH:lib/ext/jansi-1.11.jar" \
+        -cp "$OPENESB_BOOT_CLASSPATH:$OPENESB_HOME/lib/ext/jansi-1.11.jar" \
         -Djmx.invoke.getters=true \
         -Dopenesb.home=$OPENESB_HOME \
         net.openesb.standalone.startup.Bootstrap \
