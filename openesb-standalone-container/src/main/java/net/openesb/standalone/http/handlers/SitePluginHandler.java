@@ -16,11 +16,11 @@ import org.glassfish.grizzly.http.util.MimeType;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class PluginHandler implements Handler<HttpHandler> {
+public class SitePluginHandler implements Handler<HttpHandler> {
 
     private final Environment environment;
 
-    public PluginHandler(Environment environment) {
+    public SitePluginHandler(Environment environment) {
         this.environment = environment;
     }
 
