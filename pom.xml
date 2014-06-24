@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     
     <name>OpenESB - Standalone</name>
-    <description>OpenESB runtime in standalone mode</description>
+    <description>OpenESB Standalone runtime</description>
     
     <modules>
         <module>openesb-standalone-container</module>
