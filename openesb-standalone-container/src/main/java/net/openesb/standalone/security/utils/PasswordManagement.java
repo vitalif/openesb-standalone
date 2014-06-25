@@ -12,7 +12,7 @@ import sun.misc.BASE64Encoder;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class KeyStoreUtil implements com.sun.jbi.security.KeyStoreUtil {
+public class PasswordManagement {
 
     private final BASE64Encoder mBase64Encoder;
     private final BASE64Decoder mBase64Decoder;
@@ -20,20 +20,11 @@ public class KeyStoreUtil implements com.sun.jbi.security.KeyStoreUtil {
     private final static String encryptionKey = "A12EF89A23C6A5B7";
     private final static String IV = "A12EF89A23C6A5B7";
     
-    public KeyStoreUtil() {
+    public PasswordManagement() {
         mBase64Encoder = new BASE64Encoder();
         mBase64Decoder = new BASE64Decoder();
     }
     
-    /**
-     * Encrypts a message using a default key. 
-     *
-     * @param        clearText the byte array that will be encrypted
-     * @return       the encrypted byte array
-     * @exception    KeyStoreException if any error occurs retrieving the
-     * key to be used
-     */
-    @Override
     public byte[] encrypt(byte[] clearText) throws KeyStoreException {
         try {
             SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
@@ -61,7 +52,6 @@ public class KeyStoreUtil implements com.sun.jbi.security.KeyStoreUtil {
      * @exception    KeyStoreException if any error occurs retrieving the
      * key to be used
      */
-    @Override
     public byte[] decrypt(byte[] cipherText) throws KeyStoreException {
         try {
             SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
@@ -90,7 +80,6 @@ public class KeyStoreUtil implements com.sun.jbi.security.KeyStoreUtil {
      * @exception    KeyStoreException if any error occurs retrieving the
      * key to be used
      */
-    @Override
     public String encrypt(String clearText) throws KeyStoreException {
         try {
             byte[] cipherText = encrypt(clearText.getBytes());
@@ -109,13 +98,24 @@ public class KeyStoreUtil implements com.sun.jbi.security.KeyStoreUtil {
      * @exception    KeyStoreException if any error occurs retrieving the
      * key to be used
      */
-    @Override
     public String decrypt(String base64EncodedCipherText) throws KeyStoreException {
         try {
             byte[] clearText = decrypt(mBase64Decoder.decodeBuffer(base64EncodedCipherText));
             return new String(clearText);
         } catch (Exception ex) {
             throw new KeyStoreException(ex);
+        }
+    }
+    
+    public static void main(String[] args) throws Exception {
+        
+        if (args.length > 0 && !args[0].trim().isEmpty()) {
+            String clearPassword = args[0];
+            System.out.println("Generate encrypted password for <" + clearPassword +">");
+            String encryptedPassword = new PasswordManagement().encrypt(clearPassword);
+            System.out.println("Encrypted password is: " + encryptedPassword);
+        } else {
+            System.out.println("Please provide a password argument !");
         }
     }
 }

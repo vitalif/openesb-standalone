@@ -35,7 +35,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
     @Inject private Node node;
     
     private final KeyStoreUtil keyStoreUtil =
-            new net.openesb.standalone.security.utils.KeyStoreUtil();
+            new net.openesb.standalone.framework.KeyStoreUtil();
     
     private String mInstallRoot = System.getProperty(
             Constants.OPENESB_HOME_PROP);
