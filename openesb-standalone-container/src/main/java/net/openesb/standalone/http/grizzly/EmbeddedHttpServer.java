@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
 import net.openesb.rest.api.OpenESBApplication;
 import net.openesb.standalone.LifecycleException;
@@ -11,7 +12,6 @@ import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.env.Environment;
 import net.openesb.standalone.http.HttpServer;
 import net.openesb.standalone.http.handlers.AdminConsoleHandler;
-import net.openesb.standalone.http.handlers.Handler;
 import net.openesb.standalone.http.handlers.SitePluginHandler;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.utils.I18NBundle;
@@ -40,16 +40,17 @@ public class EmbeddedHttpServer implements HttpServer {
     
     private final Settings settings;
     private final Environment environment;
+    private boolean enabled;
 
     @Inject
     public EmbeddedHttpServer(Settings settings, Environment environment) {
         this.settings = settings;
         this.environment = environment;
+        this.init();
     }
-
-    @Override
-    public void start() throws LifecycleException {
-        boolean enabled = settings.getAsBoolean(HTTP_ENABLED_PROPERTY, DEFAULT_HTTP_ENABLED);
+    
+    private void init() {
+        enabled = settings.getAsBoolean(HTTP_ENABLED_PROPERTY, DEFAULT_HTTP_ENABLED);
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
@@ -83,7 +84,12 @@ public class EmbeddedHttpServer implements HttpServer {
             
             HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, new OpenESBApplication());
             config.addHttpHandler(handler, "/api");
+        }
+    }
 
+    @Override
+    public void start() throws LifecycleException {
+        if (enabled) {
             try {
                 if (LOG.isLoggable(Level.INFO)) {
                     LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
@@ -100,7 +106,7 @@ public class EmbeddedHttpServer implements HttpServer {
 
     @Override
     public void stop() throws LifecycleException {
-        if (httpServer != null) {
+        if (enabled && httpServer != null) {
             httpServer.shutdownNow();
             if (LOG.isLoggable(Level.INFO)) {
                 LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
@@ -139,5 +145,15 @@ public class EmbeddedHttpServer implements HttpServer {
 
         server.addListener(listener);
         return server;
+    }
+
+    @Override
+    public void addRestHandler(Application application, String rootURI) {
+        if (enabled) {
+            final ServerConfiguration config = httpServer.getServerConfiguration();
+            
+            HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, application);
+            config.addHttpHandler(handler, rootURI);
+        }
     }
 }

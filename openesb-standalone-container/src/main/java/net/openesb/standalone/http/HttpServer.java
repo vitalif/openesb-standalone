@@ -1,6 +1,7 @@
 package net.openesb.standalone.http;
 
 import net.openesb.standalone.Lifecycle;
+import javax.ws.rs.core.Application;
 
 /**
  *
@@ -9,4 +10,5 @@ import net.openesb.standalone.Lifecycle;
  */
 public interface HttpServer extends Lifecycle {
     
+    void addRestHandler(Application application, String rootURI);
 }
