@@ -39,6 +39,7 @@
                 <excludes>
                     <exclude>components/</exclude>
                     <exclude>doc/</exclude>
+                    <exclude>lib/jaxb-*.jar</exclude>
                     <exclude>shared-libraries/</exclude>
                     <exclude>readme.txt</exclude>
                     <exclude>copyright.txt</exclude>
