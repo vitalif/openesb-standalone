@@ -37,31 +37,27 @@ public class InstanceNode implements Node {
 
     private static final Logger LOG =
             Logger.getLogger(InstanceNode.class.getPackage().getName());
-    
     private static final String INSTANCE_NAME = "instance.name";
-    
     private final String nodeName;
-    
     private final Injector injector;
-    
     private final Environment environment;
-    
     private JMXService jMXService;
-    
     private final PluginsService pluginsService;
-    
-    public InstanceNode () {
-        if(LOG.isLoggable(Level.INFO)) {
+
+    public InstanceNode() {
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_INIT_INSTANCE));
         }
-        
+
         Settings settings = InstanceSettingsPreparer.prepareSettings();
         this.environment = new Environment(settings);
+        prepareSystemProperties();
+        
         this.pluginsService = new PluginsService(settings, environment);
-        
+
         ModulesBuilder modules = new ModulesBuilder();
-        
+
         modules.add(new SettingsModule(settings));
         modules.add(new PluginsModule(settings, pluginsService));
         modules.add(new CoreModule());
@@ -70,39 +66,39 @@ public class InstanceNode implements Node {
         modules.add(new HttpModule());
         modules.add(new NodeModule(this));
         modules.add(new EnvironmentModule(environment));
-        
+
         injector = modules.createInjector();
 
         nodeName = settings.get(INSTANCE_NAME,
                 Constants.DEFAULT_INSTANCE_NAME);
-        
-        if(LOG.isLoggable(Level.INFO)) {
+
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_INIT_INSTANCE_DONE), nodeName);
         }
     }
-    
+
     @Override
     public void start() {
-        if(LOG.isLoggable(Level.INFO)) {
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_START_INSTANCE), nodeName);
         }
-        
+
         long startTime = System.currentTimeMillis(); // Get the start Time
         
         for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
             injector.getInstance(plugin).start();
         }
-        
+
         jMXService = injector.getInstance(JMXService.class);
         jMXService.start();
-        
+
         injector.getInstance(FrameworkService.class).start();
         injector.getInstance(HttpServer.class).start();
-        
+
         PlatformContext platformContext = injector.getInstance(PlatformContext.class);
-        
+
         try {
             // Register a management MBean for this framework instance
             ObjectName fwMBeanName = new ObjectName("net.open-esb.standalone",
@@ -118,39 +114,39 @@ public class InstanceNode implements Node {
                     mbs.unregisterMBean(fwMBeanName);
                 }
             }
-            
+
             final StandardMBean mbean = new StandardMBean(this, Node.class);
             mbs.registerMBean(mbean, fwMBeanName);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         long endTime = System.currentTimeMillis(); // Get the end Time
-        
-        if(LOG.isLoggable(Level.INFO)) {
+
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                    LocalStringKeys.CONTAINER_START_INSTANCE_DONE), 
-                    new Object []{nodeName, ManifestUtils.getVersion(), (endTime-startTime)});
+                    LocalStringKeys.CONTAINER_START_INSTANCE_DONE),
+                    new Object[]{nodeName, ManifestUtils.getVersion(), (endTime - startTime)});
         }
     }
 
     @Override
     public void stop() {
-        if(LOG.isLoggable(Level.INFO)) {
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_STOP_INSTANCE), nodeName);
         }
-        
+
         injector.getInstance(HttpServer.class).stop();
         injector.getInstance(FrameworkService.class).stop();
         jMXService.stop();
-        
+
         for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
             injector.getInstance(plugin).stop();
         }
-        
-        if(LOG.isLoggable(Level.INFO)) {
+
+        if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.CONTAINER_STOP_INSTANCE_DONE), nodeName);
         }
@@ -159,5 +155,27 @@ public class InstanceNode implements Node {
     @Override
     public String name() {
         return this.nodeName;
+    }
+
+    /**
+     * This method is preparing the global environement to apply specific
+     * options before going further in the runtime.
+     */
+    private void prepareSystemProperties() {
+
+        if (System.getProperty("java.vendor").equals("IBM Corporation")) {
+            /**
+             * https://openesb.atlassian.net/browse/OESE-52
+             */
+            System.setProperty("com.sun.xml.ws.monitoring.endpoint", "false");
+            
+            /**
+             * https://openesb.atlassian.net/browse/OESE-53
+             */
+            System.setProperty("javax.xml.soap.MessageFactory", "com.sun.xml.internal.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl");
+            System.setProperty("javax.xml.soap.SOAPFactory", "com.sun.xml.internal.messaging.saaj.soap.ver1_1.SOAPFactory1_1Impl");
+            System.setProperty("javax.xml.soap.SOAPConnectionFactory", "com.sun.xml.internal.messaging.saaj.client.p2p.HttpSOAPConnectionFactory");
+            System.setProperty("javax.xml.soap.MetaFactory", "com.sun.xml.internal.messaging.saaj.soap.SAAJMetaFactoryImpl");
+        }
     }
 }
