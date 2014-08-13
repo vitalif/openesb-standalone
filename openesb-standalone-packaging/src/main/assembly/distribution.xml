@@ -73,6 +73,7 @@
                 <include>net.open-esb:openesb-oeadmin</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
+	    <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
         <dependencySet>
