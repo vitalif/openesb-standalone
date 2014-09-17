@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
 import net.openesb.rest.api.OpenESBApplication;
+import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.LifecycleException;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.env.Environment;
@@ -19,7 +20,9 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
 import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 /**
  *
@@ -42,10 +45,13 @@ public class EmbeddedHttpServer implements HttpServer {
     private final Environment environment;
     private boolean enabled;
 
+    private final SecurityProvider securityProvider;
+    
     @Inject
-    public EmbeddedHttpServer(Settings settings, Environment environment) {
+    public EmbeddedHttpServer(Settings settings, Environment environment, SecurityProvider securityProvider) {
         this.settings = settings;
         this.environment = environment;
+        this.securityProvider = securityProvider;
         this.init();
     }
     
@@ -82,7 +88,10 @@ public class EmbeddedHttpServer implements HttpServer {
              */
             RuntimeDelegate.setInstance(null);
             
-            HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, new OpenESBApplication());
+            ResourceConfig app = new OpenESBApplication();
+            app.register(new SecurityBridgeProvider());
+            
+            HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, app);
             config.addHttpHandler(handler, "/api");
         }
     }
@@ -155,5 +164,14 @@ public class EmbeddedHttpServer implements HttpServer {
             HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, application);
             config.addHttpHandler(handler, rootURI);
         }
+    }
+    
+    class SecurityBridgeProvider extends AbstractBinder {
+
+        @Override
+        protected void configure() {
+            bind(securityProvider).to(SecurityProvider.class);
+        }
+        
     }
 }

@@ -28,7 +28,7 @@ public class SecurityProviderImpl implements SecurityProvider {
     private static final Logger LOG =
             Logger.getLogger(SecurityProviderImpl.class.getPackage().getName());
     private final static String SETTINGS_KEY = "realm";
-    private final static String MANAGEMENT_REALM = "admin";
+    
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
     private final ShiroAuthenticator authenticator = new ShiroAuthenticator();
 

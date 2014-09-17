@@ -91,8 +91,8 @@ echo.
 echo **************************************************
 echo *
 echo * WARNING ...
-echo * Unable to find to start OpenESB standalone Edition 
-echo * Bootstrap jar file is misssinf
+echo * Unable to find OpenESB Standalone Edition 
+echo * Bootstrap jar file is misssing
 echo * Please check your installation  
 echo *
 echo **************************************************

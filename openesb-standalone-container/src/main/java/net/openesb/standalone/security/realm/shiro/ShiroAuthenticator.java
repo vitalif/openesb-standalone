@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import net.openesb.security.AuthenticationException;
 import net.openesb.security.AuthenticationToken;
+import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.security.realm.Realm;
 import net.openesb.standalone.security.realm.impl.PropertiesRealm;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 
@@ -31,6 +33,12 @@ public class ShiroAuthenticator {
             if (converter.canHandle(realm.getClass())) {
                 org.apache.shiro.realm.Realm sRealm = converter.convert((PropertiesRealm)realm);
                 DefaultSecurityManager manager = new DefaultSecurityManager(sRealm);
+                
+                // This should be done only one time for admin/management realm.
+                if (SecurityProvider.MANAGEMENT_REALM.equalsIgnoreCase(realm.getName())) {
+                    SecurityUtils.setSecurityManager(manager);
+                }
+                
                 securityManagers.put(realm.getName(), manager);
             }
         }
