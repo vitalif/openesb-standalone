@@ -92,7 +92,7 @@ echo **************************************************
 echo *
 echo * WARNING ...
 echo * Unable to find OpenESB Standalone Edition 
-echo * Bootstrap jar file is misssing
+echo * Bootstrap jar file is missing
 echo * Please check your installation  
 echo *
 echo **************************************************
