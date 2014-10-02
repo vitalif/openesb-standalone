@@ -49,7 +49,7 @@ directory containing the OpenESB installation.
 ====
 
 === Requirements
-OpenESB Standalone is build using Java, and requires at least http://java.com/[Java 6] in order to run. 
+OpenESB Standalone is build using Java, and requires at least http://java.com/[Java 7] in order to run. 
 The version of Java that will be sued can be set by setting the +JAVA_HOME+ environment variable.
 
 You should check your current Java installation before you begin:
