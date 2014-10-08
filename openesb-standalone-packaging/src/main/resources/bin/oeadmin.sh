@@ -57,7 +57,7 @@ fi
 # Setup OPENESB_HOME
 if [ "x$OPENESB_HOME" = "x" ]; then
     # get the full path (without any relative bits)
-    OPENESB_HOME=`cd $DIRNAME/..; pwd`
+    OPENESB_HOME=`cd $DIRNAME/..; pwd -P`
 fi
 
 export OPENESB_HOME
