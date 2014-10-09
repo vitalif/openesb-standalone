@@ -3,7 +3,17 @@ COLOR F8
 prompt OE-ADMIN$Q$G
 mode con:cols=180 lines=2500
 
-doskey oeadmin=java -jar %OPENESB_HOME%\lib\openesb-oeadmin.jar $*
+cd %OPENESB_HOME%
+
+:: the pattern is used to support OE SE Versionning
+set OEADMIN_PATTERN=openesb-oeadmin*.jar
+SET FILENAME=""
+
+for /r %%x in (%OEADMIN_PATTERN%) do (SET filename=%%x)
+
+if "%filename%"=="" Goto notfind
+
+doskey oeadmin=java -jar %filename% $*
 
 echo **********************************************************************************************
 echo *
@@ -19,3 +29,4 @@ echo *
 echo * Mode detail on www.open-esb.net 
 echo **********************************************************************************************
 echo.
+
