@@ -61,7 +61,7 @@
         <dependencies>
             <!-- OpenESB Core -->
             <dependency>
-                <groupId>net.open-esb</groupId>
+                <groupId>net.open-esb.core</groupId>
                 <artifactId>framework-core</artifactId>
                 <version>${openesb.version}</version>
                 <exclusions>
@@ -73,7 +73,7 @@
             </dependency>
             
             <dependency>
-                <groupId>net.open-esb</groupId>
+                <groupId>net.open-esb.core</groupId>
                 <artifactId>base</artifactId>
                 <version>${openesb.version}</version>
             </dependency>

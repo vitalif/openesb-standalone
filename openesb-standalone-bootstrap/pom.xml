@@ -21,6 +21,9 @@
                 <version>2.4</version>
                 <configuration>
                     <archive>
+                        <!--
+                        TODO: Check that this one is really needed ?
+                        -->
                         <manifestEntries>
                             <Main-Class>net.openesb.standalone.startup.Bootstrap</Main-Class>
                             <Class-Path>jbi.jar jbi-ext.jar</Class-Path>

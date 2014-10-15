@@ -50,7 +50,7 @@
     <dependencies>
         <!-- OpenESB Core dependencies -->
         <dependency>
-            <groupId>net.open-esb</groupId>
+            <groupId>net.open-esb.core</groupId>
             <artifactId>framework-core</artifactId>
             <exclusions>
                 <exclusion>

@@ -32,13 +32,14 @@
     <dependencySets>
         <dependencySet>
             <includes>
-                <include>net.open-esb:core-distribution:zip</include>
+                <include>net.open-esb.core:core-distribution:zip</include>
             </includes>
             <unpack>true</unpack>
             <unpackOptions>
                 <excludes>
                     <exclude>components/</exclude>
                     <exclude>doc/</exclude>
+                    <exclude>schemas/</exclude>
                     <exclude>lib/jaxb-*.jar</exclude>
                     <exclude>shared-libraries/</exclude>
                     <exclude>readme.txt</exclude>
