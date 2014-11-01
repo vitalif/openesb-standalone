@@ -21,12 +21,7 @@ public class LogFormatter extends Formatter {
     private static final SimpleDateFormat dateFormatter
 	    = new SimpleDateFormat(RFC_3339_DATE_FORMAT);
 
-    private static final String LINE_SEPARATOR
-	    = (String) java.security.AccessController.doPrivileged(
-		    new sun.security.action.GetPropertyAction("line.separator"));
-    
-    private static final String RECORD_BEGIN_MARKER = "[#|";
-    private static final String RECORD_END_MARKER = "|#]" + LINE_SEPARATOR;
+    private static final String LINE_SEPARATOR= System.lineSeparator();
     
     private static final char FIELD_SEPARATOR = ' ';
     private static final char NVPAIR_SEPARATOR = ';';
@@ -43,7 +38,7 @@ public class LogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
-	StringBuilder recordBuffer = new StringBuilder(RECORD_BEGIN_MARKER);
+	StringBuilder recordBuffer = new StringBuilder();
 	// The following operations are to format the date and time in a
 	// human readable  format.
 	// _REVISIT_: Use HiResolution timer to analyze the number of
@@ -88,7 +83,7 @@ public class LogFormatter extends Formatter {
 	    recordBuffer.append(sw.toString());
 	}
 
-	recordBuffer.append(RECORD_END_MARKER);
+	recordBuffer.append(LINE_SEPARATOR);
 	
 	return recordBuffer.toString();
     }
