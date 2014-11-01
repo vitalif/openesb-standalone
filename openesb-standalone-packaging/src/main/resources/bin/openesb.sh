@@ -100,7 +100,7 @@ echo ""
 # Execute the JVM in the foreground
 "$JAVA" $JAVA_OPTS \
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
-        -Djava.util.logging.manager=net.openesb.standalone.logger.LogManager \
+        -Djava.util.logging.manager=net.openesb.standalone.logging.LogManager \
         -cp "$OPENESB_BOOT_CLASSPATH:$OPENESB_HOME/lib/ext/jansi-1.11.jar" \
         -Djmx.invoke.getters=true \
         -Dopenesb.home=$OPENESB_HOME \

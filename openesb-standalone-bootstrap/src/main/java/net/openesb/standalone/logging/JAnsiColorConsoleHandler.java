@@ -1,4 +1,4 @@
-package net.openesb.standalone.logger;
+package net.openesb.standalone.logging;
 
 import java.util.logging.LogRecord;
 import org.fusesource.jansi.AnsiConsole;
