@@ -97,4 +97,43 @@ public interface LocalStringKeys {
     static final String HTTP_SERVER_ENABLED =
             "HTTP_SERVER_ENABLED";
 
+    /**
+     * Datasource Messages.
+     */
+    static final String DS_CLASS_NOT_FOUND =
+            "DS_CLASS_NOT_FOUND";
+    static final String DS_CREATE_DATASOURCE = 
+            "DS_CREATE_DATASOURCE";
+    static final String DS_UNABLE_TO_CREATE_DATASOURCE =
+            "DS_UNABLE_TO_CREATE_DATASOURCE";
+    static final String DS_UNABLE_TO_INSTANCIATE_CLASS =
+            "DS_UNABLE_TO_INSTANCIATE_CLASS";
+    static final String DS_UNABLE_TO_ACCESS_CLASS = 
+            "DS_UNABLE_TO_ACCESS_CLASS";
+    static final String DS_DATASOURCE_PROPERTIES_SETTLED = 
+            "DS_DATASOURCE_PROPERTIES_SETTLED";
+    static final String DS_DATASOURCE_PROPERTY_NOT_FOUND =
+            "DS_DATASOURCE_PROPERTY_NOT_FOUND";
+    static final String DS_UNABLE_TO_CREATE_MBEAN =
+            "DS_UNABLE_TO_CREATE_MBEAN";
+    static final String DS_DATASOURCE_PROPERTY_SET = 
+            "DS_DATASOURCE_PROPERTY_SET";
+    static final String DS_DATASOURCE_PROPERTY_NOT_SET =
+            "DS_DATASOURCE_PROPERTY_NOT_SET";
+    static final String DS_DATASOURCE_PROPERTY_INVALID_VALUE =
+            "DS_DATASOURCE_PROPERTY_INVALID_VALUE";
+    static final String DS_DATASOURCE_PROPERTY_ACCESS =
+            "DS_DATASOURCE_PROPERTY_ACCESS";
+    static final String DS_POOL_CONFIGURATION = 
+            "DS_POOL_CONFIGURATION";
+    static final String DS_POOL_PROPERTY_NOT_FOUND = 
+            "DS_POOL_PROPERTY_NOT_FOUND";
+    static final String DS_POOL_PROPERTY_SET = 
+            "DS_POOL_PROPERTY_SET";
+    static final String DS_POOL_PROPERTY_NOT_SET = 
+            "DS_POOL_PROPERTY_NOT_SET";
+    static final String DS_POOL_PROPERTY_INVALID_VALUE = 
+            "DS_POOL_PROPERTY_INVALID_VALUE";
+    static final String DS_POOL_PROPERTY_ACCESS = 
+            "DS_POOL_PROPERTY_ACCESS"; 
 }

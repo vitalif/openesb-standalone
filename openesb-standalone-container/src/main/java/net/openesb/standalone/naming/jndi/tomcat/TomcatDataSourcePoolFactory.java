@@ -15,6 +15,7 @@ import javax.management.ObjectName;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 import javax.xml.bind.JAXBElement;
+import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
 import net.openesb.standalone.naming.jaxb.DataSourceProperties;
 import net.openesb.standalone.naming.jaxb.PoolProperties;
@@ -42,82 +43,100 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
      */
     @Override
     public DataSource getDataSource(DataSourcePoolProperties dspProperties) {
-        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
-        org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
-        ds.setName(dspProperties.getDbConnectorName());
-        registerMBean(ds);
+        try {
+            org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+            org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
+            ds.setName(dspProperties.getDbConnectorName());
+            registerMBean(ds);
 
-        return ds;
+            return ds;
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_UNABLE_TO_CREATE_DATASOURCE, dspProperties.getDbConnectorName()), ex);
+
+            return null;
+        }
     }
 
     @Override
     public XADataSource getXADataSource(DataSourcePoolProperties dspProperties) {
-        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
-        org.apache.tomcat.jdbc.pool.XADataSource ds = new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
-        ds.setName(dspProperties.getDbConnectorName());
-        registerMBean(ds);
+        try {
+            org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = this.createNativeDataSource(dspProperties);
+            org.apache.tomcat.jdbc.pool.XADataSource ds = new org.apache.tomcat.jdbc.pool.XADataSource(poolProperties);
+            ds.setName(dspProperties.getDbConnectorName());
+            registerMBean(ds);
 
-        return ds;
+            return ds;
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_UNABLE_TO_CREATE_DATASOURCE, dspProperties.getDbConnectorName()), ex);
+
+            return null;
+        }
     }
 
-    private void registerMBean(org.apache.tomcat.jdbc.pool.DataSource ds) {
+    private void registerMBean(org.apache.tomcat.jdbc.pool.DataSource ds) throws Exception {
+        ds.createPool();
+
         try {
-            ds.createPool();
             ds.setJmxEnabled(true);
 
             MBeanServer mBeanServer = java.lang.management.ManagementFactory.getPlatformMBeanServer();
 
             String mBeanName = "net.open-esb.standalone:type=DataSources,name=" + ds.getName();
             mBeanServer.registerMBean(ds.getPool().getJmxPool(), new ObjectName(mBeanName));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_UNABLE_TO_CREATE_MBEAN, ds.getName()), ex);
+
         }
     }
 
-    private org.apache.tomcat.jdbc.pool.PoolProperties createNativeDataSource(DataSourcePoolProperties dspProperties) {
+    private org.apache.tomcat.jdbc.pool.PoolProperties createNativeDataSource(DataSourcePoolProperties dspProperties) throws Exception {
         /* get the properties for the native Datasource. it is not created yet*/
         DataSourceProperties dataSourceProperties = dspProperties.getDataSourceProperties();
         Map<String, String> datasourceMap = this.listToMap(dataSourceProperties.getProperty());
 
-        /* Get datasource name from OE Context. Native DS is create dynamically
+        /* Get datasource name from OE Context. Native DS is created dynamically
          * so the class must be present in the classpath. DS Instance not created yet
          */
         String dsName = dspProperties.getDatasourceClassname();
-        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("start.instanciate.datasource",
-                dsName));
+
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_CREATE_DATASOURCE, dspProperties.getDbConnectorName()));
+        }
 
         Class<?> dsClass;
         try {
             dsClass = Class.forName(dsName);
         } catch (ClassNotFoundException ex) {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("datasource.class.not.found",
-                    dsName));
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage("catch.exception"),
-                    ex);
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_CLASS_NOT_FOUND, dsName, dspProperties.getDbConnectorName()));
 
-            /* An exception don't stop JNDI context process so we return a null Datasource. */
-            return null;
+            throw ex;
         }
 
         /*Return Fields declared in a class and its ancesters */
         Map<String, Field> dsFields = this.getAllFields(dsClass);
-        /*Create datasource instance. This is the instance that will be set with reflexion and returned
+
+        /*
+         * Create datasource instance. 
+         * 
+         * This is the instance that will be set with reflexion and returned
          * to the caller
          */
-
         Object nativeDS;
         try {
             nativeDS = dsClass.newInstance();
         } catch (InstantiationException ex) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    "impossible.instanciate.datasource", dsName), ex);
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    "catch.exception"), ex);
-            return null;
+                    LocalStringKeys.DS_UNABLE_TO_INSTANCIATE_CLASS, dsName, dspProperties.getDbConnectorName()));
+            throw ex;
         } catch (IllegalAccessException ex) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    "catch.exception"), ex);
-            return null;
+                    LocalStringKeys.DS_UNABLE_TO_ACCESS_CLASS, dsName, dspProperties.getDbConnectorName()));
+            throw ex;
         }
 
         /* Use java reflexion to set up Native Datasource declared in the context */
@@ -127,13 +146,19 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             String fieldName = keys.next();
             Field field = dsFields.get(fieldName);
             if (null == field) {
-                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                        "invalid.field.name", fieldName, dsName));
+                LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.DS_DATASOURCE_PROPERTY_NOT_FOUND, fieldName, dspProperties.getDbConnectorName(), dsName));
             } else {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                }
+                boolean accessible = field.isAccessible();
+                field.setAccessible(true);
+
                 String fieldValue = datasourceMap.get(fieldName);
+
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
+                            LocalStringKeys.DS_DATASOURCE_PROPERTY_SET, fieldName, fieldValue, dspProperties.getDbConnectorName()));
+                }
+
                 try {
                     if (field.getType().equals(byte.class)) {
                         field.set(nativeDS, Byte.parseByte(fieldValue));
@@ -154,21 +179,19 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
                     } else if (field.getType().equals(String.class)) {
                         field.set(nativeDS, fieldValue);
                     } else {
-                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                                "field.not.set", fieldName));
-                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                                "field.type.not.process", fieldName, dsName, field.getType()));
+                        LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                                LocalStringKeys.DS_DATASOURCE_PROPERTY_NOT_SET, fieldName, field.getType(), dspProperties.getDbConnectorName()));
                     }
                 } catch (IllegalArgumentException ex) {
-                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                            "field.not.set", fieldName));
                     LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            "catch.exception"), ex);
+                            LocalStringKeys.DS_DATASOURCE_PROPERTY_INVALID_VALUE, fieldValue, fieldName));
+                    throw ex;
                 } catch (IllegalAccessException ex) {
-                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                            "field.not.set", fieldName));
                     LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            "catch.exception"), ex);
+                            LocalStringKeys.DS_DATASOURCE_PROPERTY_ACCESS, fieldName));
+                    throw ex;
+                } finally {
+                    field.setAccessible(accessible);
                 }
             }
         }
@@ -176,21 +199,25 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         /* Datasouce fields are set with data proterties found in the context 
          * Now let's set the pool with the pool proterties found in the context
          * get the properties for the pool */
-        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
-                "native.datasource.set.succesfully", dsName));
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_DATASOURCE_PROPERTIES_SETTLED, dspProperties.getDbConnectorName()));
+        }
 
         /**
          * ** Set up Pool
          */
-        LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
-                "start.pool.configuration"));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.DS_POOL_CONFIGURATION, dspProperties.getDbConnectorName()));
+        }
 
         PoolProperties contextPoolProperties = dspProperties.getPoolProperties();
         Map<String, String> poolMap = this.listToMap(contextPoolProperties.getProperty());
         // Create pool configuration
-        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties = 
-                new org.apache.tomcat.jdbc.pool.PoolProperties();
-        
+        org.apache.tomcat.jdbc.pool.PoolProperties poolProperties
+                = new org.apache.tomcat.jdbc.pool.PoolProperties();
+
         Class poolPropertiesClass = poolProperties.getClass();
         Map<String, Field> poolPropertiesFields = this.getAllFields(poolPropertiesClass);
         /* Use java reflexion to set up pool configurationwith context properties
@@ -203,12 +230,12 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             String fieldName = keys.next();
             Field field = poolPropertiesFields.get(fieldName);
             if (null == field) {
-                LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                        "invalid.field.name", fieldName, poolPropertiesClass));
+                LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                        LocalStringKeys.DS_POOL_PROPERTY_NOT_FOUND, fieldName, dspProperties.getDbConnectorName(), dsName));
             } else {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                }
+                boolean accessible = field.isAccessible();
+                field.setAccessible(true);
+                
                 String fieldValue = poolMap.get(fieldName);
                 try {
                     if (field.getType().equals(byte.class)) {
@@ -230,21 +257,19 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
                     } else if (field.getType().equals(String.class)) {
                         field.set(poolProperties, fieldValue);
                     } else {
-                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                                "field.not.set", fieldName));
-                        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
-                                "field.type.not.process", fieldName, poolPropertiesClass, field.getType()));
+                        LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                                LocalStringKeys.DS_POOL_PROPERTY_NOT_SET, fieldName, field.getType(), dspProperties.getDbConnectorName()));
                     }
                 } catch (IllegalArgumentException ex) {
-                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                            "field.not.set", fieldName));
                     LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            "catch.exception"), ex);
+                            LocalStringKeys.DS_POOL_PROPERTY_INVALID_VALUE, fieldValue, fieldName));
+                    throw ex;
                 } catch (IllegalAccessException ex) {
-                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                            "field.not.set", fieldName));
                     LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            "catch.exception"), ex);
+                            LocalStringKeys.DS_POOL_PROPERTY_ACCESS, fieldName));
+                    throw ex;
+                } finally {
+                    field.setAccessible(accessible);
                 }
             }
         }
