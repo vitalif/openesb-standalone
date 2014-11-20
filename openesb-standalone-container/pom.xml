@@ -108,11 +108,6 @@
             <version>${tomcat.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP-java6</artifactId>
-            <version>2.1.0</version>
-        </dependency>
         
         <!-- Injection support -->
         <dependency>

@@ -1,4 +1,4 @@
-package net.openesb.standalone.naming.jndi.tomcat;
+package net.openesb.standalone.naming.jndi.ds.tomcat;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import net.openesb.standalone.naming.jaxb.DataSourcePoolProperties;
 import net.openesb.standalone.naming.jaxb.DataSourceProperties;
 import net.openesb.standalone.naming.jaxb.PoolProperties;
 import net.openesb.standalone.naming.jaxb.Property;
-import net.openesb.standalone.naming.jndi.DataSourcePoolFactory;
+import net.openesb.standalone.naming.jndi.ds.DataSourcePoolFactory;
 import net.openesb.standalone.utils.I18NBundle;
 
 /**

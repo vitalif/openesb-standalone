@@ -1,4 +1,4 @@
-package net.openesb.standalone.naming.jndi;
+package net.openesb.standalone.naming.jndi.ds;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;

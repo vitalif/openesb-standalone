@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import net.openesb.standalone.LocalStringKeys;
-import net.openesb.standalone.naming.jndi.impl.InitialContexFactoryImpl;
+import net.openesb.standalone.naming.jndi.InitialContexFactoryImpl;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.utils.I18NBundle;
 import net.openesb.standalone.utils.StringUtils;
