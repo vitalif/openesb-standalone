@@ -62,7 +62,7 @@
         
         <!-- OpenESB Rest API-->
         <dependency>
-            <groupId>net.open-esb</groupId>
+            <groupId>net.open-esb.admin</groupId>
             <artifactId>openesb-rest-api</artifactId>
             <version>${openesb-rest-api.version}</version>
         </dependency>
