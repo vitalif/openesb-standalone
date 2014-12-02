@@ -10,11 +10,17 @@
     
     <groupId>net.open-esb.runtime.standalone</groupId>
     <artifactId>openesb-standalone</artifactId>
-    <version>3.0.0.RC1-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>OpenESB - Standalone</name>
     <description>OpenESB Standalone runtime</description>
+    
+    <scm>
+        <url>git@bitbucket.org:openesb/openesb-standalone.git</url>
+        <connection>scm:git:git@bitbucket.org:openesb/openesb-standalone.git</connection>
+        <developerConnection>scm:git:git@bitbucket.org:openesb/openesb-standalone.git</developerConnection>
+    </scm>
     
     <modules>
         <module>openesb-standalone-container</module>
