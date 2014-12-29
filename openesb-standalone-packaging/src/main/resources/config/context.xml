@@ -1,5 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <context xmlns="http://www.open-esb.net/standalone/jndi/">
-     
+    <!--
+        WARNING:Be aware that you have to add JDBC driver in the classpath 
+                before being able to use this example !
+    -->
+    
+    <!--
+        <dataSource-pool-properties>
+            <dbConnector-name>postgresNonXAPool</dbConnector-name>
+            <datasource-classname>org.postgresql.ds.PGSimpleDataSource</datasource-classname>        
+            <resource-type>Datasource</resource-type>
+            <database-name>POSTGRESQL</database-name>       
+            <database-vendor>Postgres</database-vendor>
+            <database-version>9.3.4</database-version>                
+            <dbconnector-description>DBConnector for postgres</dbconnector-description>
+            <dataSource-properties>
+                <property>
+                    <name>user</name>
+                    <value>postgres</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>password</name>
+                    <value>postgres</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>serverName</name>
+                    <value>localhost</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>portNumber</name>
+                    <value>1527</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>databaseName</name>
+                    <value>bpelse</value>
+                    <description></description>
+                </property>    
+            </dataSource-properties>
+            <pool-properties>
+                <property>
+                    <name>initialSize</name>
+                    <value>11</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>maxActive</name>
+                    <value>20</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>maxIdle</name>
+                    <value>10</value>
+                    <description></description>
+                </property>
+                <property>
+                    <name>minIdle</name>
+                    <value>10</value>
+                    <description></description>
+                </property>
+            </pool-properties>
+        </dataSource-pool-properties>
+
+        <jdbc-resources>
+            <dbConnector-name>postgresNonXAPool</dbConnector-name>
+            <jndi-name>bpelseNonXA</jndi-name>        
+            <description>Datasource connection to Postgres</description>
+        </jdbc-resources>
+
+        <jdbc-resources>
+            <dbConnector-name>postgresXAPool</dbConnector-name>
+            <jndi-name>bpelseXA</jndi-name>        
+            <description>Datasource connection to Postgres</description>
+        </jdbc-resources>
+     -->
 </context>
