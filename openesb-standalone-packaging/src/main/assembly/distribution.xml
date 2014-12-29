@@ -59,7 +59,7 @@
         </dependencySet>
         <dependencySet>
             <includes>
-                <include>net.open-esb:openesb-web-console</include>
+                <include>net.open-esb.admin:openesb-web-console</include>
             </includes>
             <unpack>true</unpack>
             <outputDirectory>plugins/webui/_site</outputDirectory>

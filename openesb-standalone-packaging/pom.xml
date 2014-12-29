@@ -149,7 +149,7 @@
         </dependency>
         
         <dependency>
-            <groupId>net.open-esb</groupId>
+            <groupId>net.open-esb.admin</groupId>
             <artifactId>openesb-web-console</artifactId>
             <version>${openesb-web-console.version}</version>
             <type>zip</type>
