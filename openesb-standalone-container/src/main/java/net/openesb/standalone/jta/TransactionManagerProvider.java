@@ -8,6 +8,7 @@ import javax.transaction.TransactionManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.transaction.SystemException;
 
 /**
  *
@@ -24,6 +25,12 @@ public class TransactionManagerProvider implements Provider<TransactionManager> 
         UserTransactionManager utm = new UserTransactionManager();
         
         try {
+            try {
+                utm.init();
+            } catch (SystemException ex) {
+                Logger.getLogger(TransactionManagerProvider.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             initialContext.createSubcontext("java:comp");
             initialContext.bind("java:comp/UserTransaction", utm);
         } catch (NamingException ex) {
