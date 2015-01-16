@@ -185,7 +185,7 @@
         <dependency>
             <groupId>net.open-esb.core</groupId>
             <artifactId>core-distribution</artifactId>
-            <version>${openesb.version}</version>
+            <version>${openesb-core.version}</version>
             <type>zip</type>
             <exclusions>
                 <exclusion>
