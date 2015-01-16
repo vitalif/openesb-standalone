@@ -19,6 +19,8 @@ import net.openesb.standalone.http.HttpModule;
 import net.openesb.standalone.http.HttpServer;
 import net.openesb.standalone.inject.ModulesBuilder;
 import net.openesb.standalone.jmx.JMXService;
+import net.openesb.standalone.jta.TransactionManagerService;
+import net.openesb.standalone.jta.TransactionModule;
 import net.openesb.standalone.naming.NamingModule;
 import net.openesb.standalone.node.Node;
 import net.openesb.standalone.plugins.PluginsModule;
@@ -42,6 +44,7 @@ public class InstanceNode implements Node {
     private final Injector injector;
     private final Environment environment;
     private JMXService jMXService;
+    private TransactionManagerService tmService;
     private final PluginsService pluginsService;
 
     public InstanceNode() {
@@ -63,6 +66,7 @@ public class InstanceNode implements Node {
         modules.add(new CoreModule());
         modules.add(new FrameworkModule());
         modules.add(new NamingModule());
+        modules.add(new TransactionModule());
         modules.add(new HttpModule());
         modules.add(new NodeModule(this));
         modules.add(new EnvironmentModule(environment));
@@ -94,6 +98,9 @@ public class InstanceNode implements Node {
         jMXService = injector.getInstance(JMXService.class);
         jMXService.start();
 
+        tmService = injector.getInstance(TransactionManagerService.class);
+        tmService.start();
+        
         injector.getInstance(FrameworkService.class).start();
         injector.getInstance(HttpServer.class).start();
 
@@ -140,6 +147,7 @@ public class InstanceNode implements Node {
 
         injector.getInstance(HttpServer.class).stop();
         injector.getInstance(FrameworkService.class).stop();
+        tmService.stop();
         jMXService.stop();
 
         for (Class<? extends Lifecycle> plugin : pluginsService.services()) {

@@ -26,7 +26,7 @@ echo * -Type oeadmin + a commande to execute the command
 echo * -Type oeadmin to get the command list
 echo * -Type exit to leave this window
 echo *
-echo * Mode detail on www.open-esb.net 
+echo * Mode details on www.open-esb.net 
 echo **********************************************************************************************
 echo.
 

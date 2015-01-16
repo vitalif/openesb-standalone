@@ -19,7 +19,7 @@
 ## [year] [name of copyright owner]
 ##
 ##
-##  Copyright OpenESB Community 2014.
+##  Copyright OpenESB Community 2015.
 ## *****************************************************************
 
 ### ====================================================================== ###
@@ -99,6 +99,7 @@ echo ""
 
 # Execute the JVM in the foreground
 "$JAVA" $JAVA_OPTS \
+        -Dcom.atomikos.icatch.file=$OPENESB_HOME/tm/jta.properties \
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
         -Djava.util.logging.manager=net.openesb.standalone.logging.LogManager \
         -cp "$OPENESB_BOOT_CLASSPATH:$OPENESB_HOME/lib/ext/jansi-1.11.jar" \

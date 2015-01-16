@@ -16,7 +16,7 @@
 :: your own identifying information: Portions Copyright
 :: [year] [name of copyright owner]
 
-::  Copyright OpenESB Community 2014.
+::  Copyright OpenESB Community 2015.
 :: ******************************************************************************
 
 :: ******************** Read me first *******************************************
@@ -35,7 +35,7 @@ echo =========================================================================
 echo.
 echo Welcome to OpenESB Standalone Edition for Windows
 echo.
-echo More detail on http://www.open-esb.net
+echo More details on http://www.open-esb.net
 echo.
 echo ========================================================================= 
 
@@ -71,7 +71,7 @@ for /r %%x in (%BOOSTRAP_PATTERN%) do (SET filename=%%x)
 if "%filename%"=="" Goto notfind
 
 :: Start OpenESB in a new Dos window
-"%JAVA_HOME%\bin\java" "-Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties" -Djava.util.logging.manager=net.openesb.standalone.logging.LogManager -cp "%filename%;%OPENESB_HOME%/lib/ext/jansi-1.11.jar" "-Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks" "-Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks" -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true "-Dopenesb.home=%OPENESB_HOME%" net.openesb.standalone.startup.Bootstrap %*
+"%JAVA_HOME%\bin\java" "-Dcom.atomikos.icatch.file=%OPENESB_HOME%/tm/jta.properties" "-Djava.util.logging.config.file=%OPENESB_HOME%/config/logger.properties" -Djava.util.logging.manager=net.openesb.standalone.logging.LogManager -cp "%filename%;%OPENESB_HOME%/lib/ext/jansi-1.11.jar" "-Djavax.net.ssl.keyStore=%OPENESB_HOME%/keystore.jks" "-Djavax.net.ssl.trustStore=%OPENESB_HOME%/cacerts.jks" -Djavax.net.ssl.keyStorePassword=changeit -Djmx.invoke.getters=true "-Dopenesb.home=%OPENESB_HOME%" net.openesb.standalone.startup.Bootstrap %*
 
 GOTO endbatch
 

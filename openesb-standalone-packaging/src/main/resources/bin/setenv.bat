@@ -16,7 +16,7 @@
 :: your own identifying information: Portions Copyright
 :: [year] [name of copyright owner]
 
-::  Copyright OpenESB Community 2014.
+::  Copyright OpenESB Community 2015.
 :: ******************************************************************************
 
 :: ******************** Read me first *******************************************
