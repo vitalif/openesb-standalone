@@ -10,7 +10,7 @@
     
     <groupId>net.open-esb.runtime.standalone</groupId>
     <artifactId>openesb-standalone</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <packaging>pom</packaging>
     
     <name>OpenESB - Standalone</name>
@@ -29,7 +29,7 @@
     </modules>
     
     <properties>
-        <openesb-core.version>2.4.0</openesb-core.version>
+        <openesb-core.version>2.4.1-SNAPSHOT</openesb-core.version>
         <openesb-rest-api.version>1.0.0</openesb-rest-api.version>
         <openesb-web-console.version>1.0.1-SNAPSHOT</openesb-web-console.version>
         <openesb-model-api.version>1.0.0</openesb-model-api.version>
@@ -68,7 +68,7 @@
             <dependency>
                 <groupId>net.open-esb.core</groupId>
                 <artifactId>framework-core</artifactId>
-                <version>${openesb-core.version}</version>
+                <version>2.4.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>jbiplatform</groupId>
