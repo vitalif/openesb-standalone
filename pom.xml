@@ -35,7 +35,7 @@
         <openesb-model-api.version>1.0.0</openesb-model-api.version>
         <openesb-management.version>1.0.0</openesb-management.version>
         <openesb-oeadmin.version>1.0.1-SNAPSHOT</openesb-oeadmin.version>
-        <atomikos.version>3.9.3</atomikos.version>
+        <atomikos.version>3.8.0</atomikos.version>
         <tomcat.version>7.0.57</tomcat.version>
         <snakeyaml.version>1.14</snakeyaml.version>
         <!--jgroups.version>3.4.2.Final</jgroups.version-->
