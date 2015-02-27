@@ -151,7 +151,7 @@
         <dependency>
             <groupId>net.open-esb.admin</groupId>
             <artifactId>openesb-web-console</artifactId>
-            <version>1.0.1</version>
+            <version>${openesb-web-console.version}</version>
             <type>zip</type>
         </dependency>
         
@@ -159,7 +159,7 @@
         <dependency>
             <groupId>net.open-esb.admin</groupId>
             <artifactId>openesb-oeadmin</artifactId>
-            <version>1.0.1</version>
+            <version>${openesb-oeadmin.version}</version>
         </dependency>
         
         <!-- OpenESB Model API -->
@@ -185,7 +185,7 @@
         <dependency>
             <groupId>net.open-esb.core</groupId>
             <artifactId>core-distribution</artifactId>
-            <version>2.4.1</version>
+            <version>${openesb-core.version}</version>
             <type>zip</type>
             <exclusions>
                 <exclusion>

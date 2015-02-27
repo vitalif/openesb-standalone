@@ -31,7 +31,7 @@
     <properties>
         <openesb-core.version>2.4.1</openesb-core.version>
         <openesb-rest-api.version>1.0.1</openesb-rest-api.version>
-        <openesb-web-console.version>1.0.1</openesb-web-console.version>
+        <openesb-web-console.version>1.0.2-SNAPSHOT</openesb-web-console.version>
         <openesb-model-api.version>1.0.0</openesb-model-api.version>
         <openesb-management.version>1.0.1</openesb-management.version>
         <openesb-oeadmin.version>1.0.1</openesb-oeadmin.version>
