@@ -90,9 +90,9 @@
         
         <!-- JavaEE API -->
         <dependency>
-            <groupId>org.apache.geronimo.ext.openejb</groupId>
+            <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>5.0.3</version>
+            <version>${javaee-api.version}</version>
         </dependency>
         
         <!-- Apache Shiro -->
