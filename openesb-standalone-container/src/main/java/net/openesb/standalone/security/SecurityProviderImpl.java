@@ -26,7 +26,7 @@ import net.openesb.standalone.utils.I18NBundle;
 public class SecurityProviderImpl implements SecurityProvider {
 
     private static final Logger LOG =
-            Logger.getLogger(SecurityProviderImpl.class.getPackage().getName());
+            Logger.getLogger(SecurityProviderImpl.class.getName());
     private final static String SETTINGS_KEY = "realm";
     
     private final Map<String, Realm> realms = new HashMap<String, Realm>();

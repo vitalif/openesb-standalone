@@ -38,7 +38,8 @@ import net.openesb.standalone.utils.ManifestUtils;
 public class InstanceNode implements Node {
 
     private static final Logger LOG =
-            Logger.getLogger(InstanceNode.class.getPackage().getName());
+            Logger.getLogger(InstanceNode.class.getName());
+    
     private static final String INSTANCE_NAME = "instance.name";
     private final String nodeName;
     private final Injector injector;
