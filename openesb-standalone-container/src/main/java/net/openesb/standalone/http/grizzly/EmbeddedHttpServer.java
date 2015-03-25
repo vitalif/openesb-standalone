@@ -93,7 +93,7 @@ public class EmbeddedHttpServer implements HttpServer {
             RuntimeDelegate.setInstance(null);
 
             addManagementHandler();
-        //    addPluginsHandler();
+            addPluginsHandler();
         }
     }
 
