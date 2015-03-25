@@ -55,7 +55,7 @@ public class JMXService implements Lifecycle {
         }
 
         // if the URL is localhost, start up an Registry
-        if (serviceUrl.indexOf("localhost") > -1
+        if (serviceUrl.contains("localhost")
                 && url.getProtocol().compareToIgnoreCase("rmi") == 0) {
             try {
                 int registryPort = getURLLocalHostPort(serviceUrl);
