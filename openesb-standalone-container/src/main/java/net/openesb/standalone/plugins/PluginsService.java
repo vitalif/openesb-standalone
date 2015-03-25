@@ -34,11 +34,13 @@ public class PluginsService {
     private final Settings settings;
     private final Environment environment;
     private final Set<Plugin> plugins;
+    private Set<PluginInfo> pluginInfos;
 
     public PluginsService(Settings settings, Environment environment) {
         this.settings = settings;
         this.environment = environment;
 
+        this.pluginInfos = new HashSet<PluginInfo>();
         // Load plugins in the classloader
         loadPluginsIntoClassLoader();
         this.plugins = loadPluginsFromClasspath();
@@ -117,7 +119,11 @@ public class PluginsService {
                     String pluginVersion = pluginProps.getProperty("version", PluginInfo.VERSION_NOT_AVAILABLE);
                     Plugin plugin = loadPlugin(pluginClassName, settings);
 
+                    PluginInfo info = new PluginInfo(plugin.name(), plugin.description(), true, pluginVersion);
+                    
                     plugins.add(plugin);
+                    pluginInfos.add(info);
+                    
                 } catch (Throwable e) {
                     LOGGER.log(Level.SEVERE, "Failed to load plugin from [" + pluginUrl + "]", e);
                 } finally {
@@ -162,6 +168,10 @@ public class PluginsService {
     
     public Set<Plugin> plugins() {
         return plugins;
+    }
+    
+    public Set<PluginInfo> pluginInfos() {
+        return pluginInfos;
     }
     
     public Collection<Class<? extends Lifecycle>> services() {
