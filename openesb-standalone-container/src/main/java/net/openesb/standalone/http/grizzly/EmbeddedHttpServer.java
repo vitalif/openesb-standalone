@@ -70,7 +70,7 @@ public class EmbeddedHttpServer implements HttpServer {
             final ServerConfiguration config = httpServer.getServerConfiguration();
 
             AdminConsoleHandler consoleHandler = new AdminConsoleHandler();
-            config.addHttpHandler(consoleHandler.getHandler(), consoleHandler.path());
+            config.addHttpHandler(consoleHandler.getHandler(), "/", consoleHandler.path());
             
             SitePluginHandler pluginHandler = new SitePluginHandler(environment);
             config.addHttpHandler(pluginHandler.getHandler(), pluginHandler.path());
