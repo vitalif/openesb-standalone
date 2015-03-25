@@ -14,6 +14,8 @@ import net.openesb.standalone.env.Environment;
 import net.openesb.standalone.http.HttpServer;
 import net.openesb.standalone.http.handlers.AdminConsoleHandler;
 import net.openesb.standalone.http.handlers.SitePluginHandler;
+import net.openesb.standalone.plugins.PluginsService;
+import net.openesb.standalone.plugins.rest.PluginsApplication;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.utils.I18NBundle;
 import org.glassfish.grizzly.http.server.HttpHandler;
@@ -30,9 +32,9 @@ import org.glassfish.jersey.server.ResourceConfig;
  * @author OpenESB Community
  */
 public class EmbeddedHttpServer implements HttpServer {
-    
-    private static final Logger LOG =
-            Logger.getLogger(HttpServer.class.getPackage().getName());
+
+    private static final Logger LOG
+            = Logger.getLogger(HttpServer.class.getPackage().getName());
     private static final String HTTP_LISTENER_NAME = "openesb-http-server";
     private static final String HTTP_PORT_PROPERTY = "http.port";
     private static final String HTTP_ENABLED_PROPERTY = "http.enabled";
@@ -40,21 +42,23 @@ public class EmbeddedHttpServer implements HttpServer {
     private static final int DEFAULT_HTTP_PORT = 4848;
     private static final boolean DEFAULT_HTTP_ENABLED = true;
     private org.glassfish.grizzly.http.server.HttpServer httpServer = null;
-    
+
     private final Settings settings;
     private final Environment environment;
     private boolean enabled;
 
     private final SecurityProvider securityProvider;
-    
+    private final PluginsService pluginsService;
+
     @Inject
-    public EmbeddedHttpServer(Settings settings, Environment environment, SecurityProvider securityProvider) {
+    public EmbeddedHttpServer(Settings settings, Environment environment, SecurityProvider securityProvider, PluginsService pluginsService) {
         this.settings = settings;
         this.environment = environment;
         this.securityProvider = securityProvider;
+        this.pluginsService = pluginsService;
         this.init();
     }
-    
+
     private void init() {
         enabled = settings.getAsBoolean(HTTP_ENABLED_PROPERTY, DEFAULT_HTTP_ENABLED);
 
@@ -74,7 +78,7 @@ public class EmbeddedHttpServer implements HttpServer {
             
             SitePluginHandler pluginHandler = new SitePluginHandler(environment);
             config.addHttpHandler(pluginHandler.getHandler(), pluginHandler.path());
-            
+
             /*
              * OESE-46
              * https://openesb.atlassian.net/browse/OESE-46
@@ -87,13 +91,43 @@ public class EmbeddedHttpServer implements HttpServer {
              * to JAX-RS 2.
              */
             RuntimeDelegate.setInstance(null);
-            
-            ResourceConfig app = new OpenESBApplication();
-            app.register(new SecurityBridgeProvider());
-            
-            HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, app);
-            config.addHttpHandler(handler, "/api");
+
+            addManagementHandler();
+        //    addPluginsHandler();
         }
+    }
+
+    private void addManagementHandler() {
+        ResourceConfig app = new OpenESBApplication();
+
+        app.register(new AbstractBinder() {
+
+            @Override
+            protected void configure() {
+                bind(securityProvider).to(SecurityProvider.class);
+            }
+        });
+
+        addJerseyHandler(app, "/api");
+    }
+
+    private void addPluginsHandler() {
+        ResourceConfig app = new PluginsApplication();
+        
+        app.register(new AbstractBinder() {
+
+            @Override
+            protected void configure() {
+                bind(pluginsService).to(PluginsService.class);
+            }
+        });
+
+        addJerseyHandler(app, "/plugins");
+    }
+
+    private void addJerseyHandler(ResourceConfig resourceConfig, String mapping) {
+        HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, resourceConfig);
+        httpServer.getServerConfiguration().addHttpHandler(handler, mapping);
     }
 
     @Override
@@ -134,8 +168,8 @@ public class EmbeddedHttpServer implements HttpServer {
                     LocalStringKeys.HTTP_SERVER_PORT, port));
         }
 
-        final org.glassfish.grizzly.http.server.HttpServer server = 
-                new org.glassfish.grizzly.http.server.HttpServer();
+        final org.glassfish.grizzly.http.server.HttpServer server
+                = new org.glassfish.grizzly.http.server.HttpServer();
         final NetworkListener listener = new NetworkListener(HTTP_LISTENER_NAME,
                 binding, port);
 
@@ -160,18 +194,9 @@ public class EmbeddedHttpServer implements HttpServer {
     public void addRestHandler(Application application, String rootURI) {
         if (enabled) {
             final ServerConfiguration config = httpServer.getServerConfiguration();
-            
+
             HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, application);
             config.addHttpHandler(handler, rootURI);
         }
-    }
-    
-    class SecurityBridgeProvider extends AbstractBinder {
-
-        @Override
-        protected void configure() {
-            bind(securityProvider).to(SecurityProvider.class);
-        }
-        
     }
 }
