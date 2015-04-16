@@ -2,10 +2,13 @@
 
 <context xmlns="http://www.open-esb.net/standalone/jndi/">
     <!--
-        WARNING:Be aware that you have to add JDBC driver in the classpath 
+        WARNING:Be aware that you have to add JDBC driver in the classpath
+                (e.g. lib/ext of you OpenESB installation dir)
                 before being able to use this example !
     -->
-    
+
+    <!-- PostgreSQL config sample -->
+
     <!--
         <dataSource-pool-properties>
             <dbConnector-name>postgresNonXAPool</dbConnector-name>
@@ -78,4 +81,150 @@
             <description>Datasource connection to Postgres</description>
         </jdbc-resources>
      -->
+
+    <!-- Oracle config sample -->
+
+    <!--
+
+    <dataSource-pool-properties>
+        <dbConnector-name>oracleXAPool</dbConnector-name>
+        <datasource-classname>oracle.jdbc.xa.client.OracleXADataSource</datasource-classname>
+        <resource-type>Datasource</resource-type>
+        <database-name>Oracle</database-name>
+        <database-vendor>Oracle</database-vendor>
+        <database-version>11</database-version>
+        <dbconnector-description>DBConnector for Oracle XA</dbconnector-description>
+        <dataSource-properties>
+            <property>
+                <name>user</name>
+                <value>***</value>
+                <description></description>
+            </property>
+            <property>
+                <name>password</name>
+                <value>***</value>
+                <description></description>
+            </property>
+            <property>
+                <name>serverName</name>
+                <value>localhost</value>
+                <description></description>
+            </property>
+            <property>
+                <name>portNumber</name>
+                <value>1521</value>
+                <description></description>
+            </property>
+            <property>
+                <name>databaseName</name>
+                <value>XE</value>
+                <description></description>
+            </property>
+            <property>
+                <name>driverType</name>
+                <value>thin</value>
+                <description></description>
+            </property>
+        </dataSource-properties>
+        <pool-properties>
+            <property>
+                <name>initialSize</name>
+                <value>11</value>
+                <description></description>
+            </property>
+            <property>
+                <name>maxActive</name>
+                <value>20</value>
+                <description></description>
+            </property>
+            <property>
+                <name>maxIdle</name>
+                <value>10</value>
+                <description></description>
+            </property>
+            <property>
+                <name>minIdle</name>
+                <value>10</value>
+                <description></description>
+            </property>
+        </pool-properties>
+    </dataSource-pool-properties>
+
+    <dataSource-pool-properties>
+        <dbConnector-name>oracleNonXAPool</dbConnector-name>
+        <datasource-classname>oracle.jdbc.pool.OracleDataSource</datasource-classname>
+        <resource-type>Datasource</resource-type>
+        <database-name>Oracle</database-name>
+        <database-vendor>Oracle</database-vendor>
+        <database-version>11</database-version>
+        <dbconnector-description>DBConnector for Oracle NonXA</dbconnector-description>
+        <dataSource-properties>
+            <property>
+                <name>user</name>
+                <value>***</value>
+                <description></description>
+            </property>
+            <property>
+                <name>password</name>
+                <value>***</value>
+                <description></description>
+            </property>
+            <property>
+                <name>serverName</name>
+                <value>localhost</value>
+                <description></description>
+            </property>
+            <property>
+                <name>portNumber</name>
+                <value>1521</value>
+                <description></description>
+            </property>
+            <property>
+                <name>databaseName</name>
+                <value>XE</value>
+                <description></description>
+            </property>
+            <property>
+                <name>driverType</name>
+                <value>thin</value>
+                <description></description>
+            </property>
+        </dataSource-properties>
+        <pool-properties>
+            <property>
+                <name>initialSize</name>
+                <value>11</value>
+                <description></description>
+            </property>
+            <property>
+                <name>maxActive</name>
+                <value>20</value>
+                <description></description>
+            </property>
+            <property>
+                <name>maxIdle</name>
+                <value>10</value>
+                <description></description>
+            </property>
+            <property>
+                <name>minIdle</name>
+                <value>10</value>
+                <description></description>
+            </property>
+        </pool-properties>
+    </dataSource-pool-properties>
+
+    <jdbc-resources>
+        <dbConnector-name>oracleNonXAPool</dbConnector-name>
+        <jndi-name>bpelseNonXA</jndi-name>
+        <description>Datasource connection to Oracle NonXA</description>
+    </jdbc-resources>
+
+    <jdbc-resources>
+        <dbConnector-name>oracleXAPool</dbConnector-name>
+        <jndi-name>bpelseXA</jndi-name>
+        <description>Datasource connection to Oracle XA</description>
+    </jdbc-resources>
+
+    -->
 </context>

@@ -62,7 +62,7 @@ fi
 
 export OPENESB_HOME
 
-export JAVA_OPTS="$JAVA_OPTS"
+export JAVA_OPTS
 
 # Setup the JVM
 if [ "x$JAVA" = "x" ]; then
