@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -26,55 +27,46 @@ import net.openesb.standalone.utils.I18NBundle;
  * @author David BRASSELY (brasseld at gmail.com)
  * @author OpenESB Community
  */
-public class InitialContexFactoryImpl implements InitialContextFactory {
+public class InitialContexFactoryImpl extends AbstractContextFactory implements InitialContextFactory {
 
     private static final Logger LOG = Logger.getLogger(InitialContexFactoryImpl.class.getName());
     public static final String DATASOURCE_TYPE = "Datasource";
     public static final String XADATASOURCE_TYPE = "XADatasource";
     private final Map<String, DataSourcePoolProperties> mDSPMap = new HashMap<String, DataSourcePoolProperties>();
-    
-//    @Inject
-    private DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
 
+    private final DataSourcePoolFactory mDSPFactory = new TomcatDataSourcePoolFactory();
 
-    /* Regarding the exception management, If the context file if not correct, 
-     * I choosed to return an initial context in any case even empty. So if input data 
-     is not correct, I log this information but catch the exception in order to return 
-     an initial context. Another policy would be to stop at any exception. I did not choose
-     it. Naming exception will be thrown only if I cannot create the initial context  */
-    /* The initial context I use is the one found in Tomcat 7 */
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
+        Context namingContext = getContext();
+        
+        String urlValue = (String) environment.get(Context.PROVIDER_URL);
+        if (urlValue == null) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_NO_CONTEXT_URL));
+        } else {
+            Set<net.openesb.standalone.naming.jaxb.Context> contexts = loadContexts(urlValue);
+            for (net.openesb.standalone.naming.jaxb.Context context : contexts) {
+                try {
+                    populate(context, namingContext);
+                } catch (NamingException ne) {
+                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                            LocalStringKeys.NAMING_CONTEXT_BIND_FAILURE));
+                }
+            }
+        }
+
+        return namingContext;
+    }
+    
+    private Context getContext() throws NamingException {
         /*Context initialisation Just set the system properties and  use the class InitialContext*/
         System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
-        Context initialContext = new InitialContext();
+        return new InitialContext();
+    }
 
-        /* Second step read the XML file  URL where context configuration is described
-         * The URL can be file:// http:// ... 
-         * The XML File URL must be in environement hashmap and read the key URL must be equal to 
-         * CONTEXT_URL*/
-        String urlValue = null;
-        if (environment.containsKey(Context.PROVIDER_URL)) {
-            urlValue = (String) environment.get(Context.PROVIDER_URL);
-        } else {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    LocalStringKeys.NAMING_CONTEXT_NO_CONTEXT_URL));
-        }
-
-        /* Read the context from the URL */
-        net.openesb.standalone.naming.jaxb.Context context = null;
-        
-        try {
-            context = new JAXBContextReader(urlValue).getContext();
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, urlValue), ex);
-
-            // Skip context population
-            return initialContext;
-        }
-
+    private void populate(net.openesb.standalone.naming.jaxb.Context context, Context namingContext) throws NamingException {
         /* OeContext contains the complete context */
         /* I create a map with the datasourcePool Name as key and datasourcePool as Value
          * This will be useful to instanciate the db connector later.
@@ -116,16 +108,15 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
              * second instance is not taken into account 
              */
             try {
-                initialContext.lookup(jndiName);
+                namingContext.lookup(jndiName);
                 LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("jndi.value.already.defined", jndiName));
                 continue;
             } catch (NamingException ex) {
                 // Nothing else to do. Having an exception is the normal process
             }
 
-
             Map<String, DataSource> datasourceMap = new HashMap<String, DataSource>();
-            
+
             /* Create datasource or XA Datasource thanks to the underlying dbConnector 
              * DBConnector refeence is in the DataSourcePoolProperties. DBConnector are instanciated
              * dynamically and must be present in the classpath
@@ -136,9 +127,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
              */
             if (datasourceMap.containsKey(dbConnectorName)) {
                 if (datasourceMap.get(dbConnectorName) instanceof XADataSource) {
-                    initialContext.rebind(jndiName, (XADataSource) datasourceMap.get(dbConnectorName));
+                    namingContext.rebind(jndiName, (XADataSource) datasourceMap.get(dbConnectorName));
                 } else {
-                    initialContext.rebind(jndiName, datasourceMap.get(dbConnectorName));
+                    namingContext.rebind(jndiName, datasourceMap.get(dbConnectorName));
                 }
                 continue;
             }
@@ -154,9 +145,9 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                     if (null != dataSource) {
                         datasourceMap.put(dbConnectorName, dataSource);
                         try {
-                            initialContext.rebind(jndiName, dataSource);
+                            namingContext.rebind(jndiName, dataSource);
                         } catch (NamingException ex) {
-                            initialContext.bind(jndiName, dataSource);
+                            namingContext.bind(jndiName, dataSource);
                         }
                         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("datasource.processed.bind.success", jndiName));
                     }
@@ -168,7 +159,7 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                     if (null != xaDataSource) {
                         /* Store the XAdatasource in a map for reusing purpose see above */
                         datasourceMap.put(dbConnectorName, (DataSource) xaDataSource);
-                        initialContext.rebind(jndiName, xaDataSource);
+                        namingContext.rebind(jndiName, xaDataSource);
                         LOG.log(Level.FINE, I18NBundle.getBundle().getMessage("xadatasource.processed.bind.success", jndiName));
                     }
                 } else {
@@ -177,7 +168,5 @@ public class InitialContexFactoryImpl implements InitialContextFactory {
                 }
             }
         }
-        
-        return initialContext;
     }
 }

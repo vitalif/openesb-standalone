@@ -91,10 +91,6 @@ public class InstanceNode implements Node {
         }
 
         long startTime = System.currentTimeMillis(); // Get the start Time
-        
-        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
-            injector.getInstance(plugin).start();
-        }
 
         jMXService = injector.getInstance(JMXService.class);
         jMXService.start();
@@ -105,6 +101,10 @@ public class InstanceNode implements Node {
         injector.getInstance(FrameworkService.class).start();
         injector.getInstance(HttpServer.class).start();
 
+        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
+            injector.getInstance(plugin).start();
+        }
+        
         PlatformContext platformContext = injector.getInstance(PlatformContext.class);
 
         try {
@@ -146,14 +146,14 @@ public class InstanceNode implements Node {
                     LocalStringKeys.CONTAINER_STOP_INSTANCE), nodeName);
         }
 
+        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
+            injector.getInstance(plugin).stop();
+        }
+        
         injector.getInstance(HttpServer.class).stop();
         injector.getInstance(FrameworkService.class).stop();
         tmService.stop();
         jMXService.stop();
-
-        for (Class<? extends Lifecycle> plugin : pluginsService.services()) {
-            injector.getInstance(plugin).stop();
-        }
 
         if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(

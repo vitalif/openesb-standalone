@@ -23,7 +23,7 @@ import net.openesb.standalone.utils.StringUtils;
 public class ContextProvider implements Provider<InitialContext> {
 
     private static final Logger LOG =
-            Logger.getLogger(ContextProvider.class.getPackage().getName());
+            Logger.getLogger(ContextProvider.class.getName());
     
     private static final String DEFAULT_CONTEXT_XML = "${openesb.home}/config/context.xml";
     private static final String CONTEXT_PATH = "jndi.context";

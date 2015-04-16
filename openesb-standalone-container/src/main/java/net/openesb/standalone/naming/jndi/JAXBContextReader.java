@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
@@ -16,6 +17,7 @@ import net.openesb.standalone.Constants;
 import net.openesb.standalone.LocalStringKeys;
 import net.openesb.standalone.naming.jaxb.Context;
 import net.openesb.standalone.utils.I18NBundle;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -27,11 +29,8 @@ public final class JAXBContextReader {
     private static final Logger LOG = Logger.getLogger(JAXBContextReader.class.getName());
 
     private final Unmarshaller unmarshaller;
-    private final String contextFile;
 
-    public JAXBContextReader(String contextFile) throws Exception {
-        this.contextFile = contextFile;
-
+    public JAXBContextReader() throws Exception {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -53,17 +52,20 @@ public final class JAXBContextReader {
                     return false;
                 }
             });
-        } catch (Exception ex) {
+        } catch (SAXException saxe) {
             LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                    LocalStringKeys.NAMING_CONTEXT_CONTEXT_URL_INVALID, contextFile));
-
-            throw ex;
+                    LocalStringKeys.NAMING_CONTEXT_SCHEMA_FAILURE));
+            throw saxe;
+        } catch (JAXBException jaxbe) {
+            LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.NAMING_CONTEXT_JAXB_FAILURE));
+            throw jaxbe;
         }
     }
 
-    public Context getContext() throws Exception {
+    public Context getContext(URL contextUrl) throws Exception {
         Context context = ((JAXBElement<Context>) unmarshaller.unmarshal(
-                new URL(contextFile))).getValue();
+                contextUrl)).getValue();
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(

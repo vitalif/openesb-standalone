@@ -82,6 +82,14 @@ public interface LocalStringKeys {
             "NAMING_UNMARSHAL_FAILURE";
     static final String NAMING_UNMARSHAL_SUCCESS =
             "NAMING_UNMARSHAL_SUCCESS";
+    static final String NAMING_CONTEXT_LOADING_URL =
+            "NAMING_CONTEXT_LOADING_URL";
+    static final String NAMING_CONTEXT_BIND_FAILURE =
+            "NAMING_CONTEXT_BIND_FAILURE";
+    static final String NAMING_CONTEXT_SCHEMA_FAILURE =
+            "NAMING_CONTEXT_SCHEMA_FAILURE";
+    static final String NAMING_CONTEXT_JAXB_FAILURE =
+            "NAMING_CONTEXT_JAXB_FAILURE";    
     
     /**
      * HTTP Messages.
