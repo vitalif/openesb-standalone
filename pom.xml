@@ -46,6 +46,7 @@
         <guice.version>3.0</guice.version>
         <jansi.version>1.11</jansi.version>
         <javaee-api.version>7.0</javaee-api.version>
+        <mailapi.version>1.5.3</mailapi.version>
     </properties>
     
     <build>

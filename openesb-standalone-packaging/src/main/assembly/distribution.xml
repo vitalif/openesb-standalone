@@ -103,6 +103,7 @@
                 <include>com.google.inject:guice</include>
                 <include>aopalliance:aopalliance</include>
                 <include>org.fusesource.jansi:jansi</include>
+                <include>com.sun.mail:mailapi</include>
             </includes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>

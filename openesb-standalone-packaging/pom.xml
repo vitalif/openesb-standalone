@@ -198,5 +198,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Mai API-->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>mailapi</artifactId>
+            <version>${mailapi.version}</version>
+        </dependency>
     </dependencies>
 </project>
