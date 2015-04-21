@@ -104,6 +104,8 @@ public interface LocalStringKeys {
             "HTTP_STOP_SERVER";
     static final String HTTP_SERVER_ENABLED =
             "HTTP_SERVER_ENABLED";
+    static final String HTTP_REST_REGISTER_APPLICATION =
+            "HTTP_REST_REGISTER_APPLICATION";
 
     /**
      * Datasource Messages.

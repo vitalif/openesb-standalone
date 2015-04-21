@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
-import net.openesb.rest.api.OpenESBApplication;
 import net.openesb.security.SecurityProvider;
 import net.openesb.standalone.LifecycleException;
 import net.openesb.standalone.LocalStringKeys;
@@ -16,6 +15,7 @@ import net.openesb.standalone.http.handlers.AdminConsoleHandler;
 import net.openesb.standalone.http.handlers.SitePluginHandler;
 import net.openesb.standalone.plugins.PluginsService;
 import net.openesb.standalone.plugins.rest.PluginsApplication;
+import net.openesb.standalone.rest.ExtendedManagementApplication;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.utils.I18NBundle;
 import org.glassfish.grizzly.http.server.HttpHandler;
@@ -98,9 +98,10 @@ public class EmbeddedHttpServer implements HttpServer {
     }
 
     private void addManagementHandler() {
-        ResourceConfig app = new OpenESBApplication();
-
-        app.register(new AbstractBinder() {
+        Application app = new ExtendedManagementApplication();
+        ResourceConfig rc = ResourceConfig.forApplication(app);
+        
+        rc.register(new AbstractBinder() {
 
             @Override
             protected void configure() {
@@ -108,7 +109,7 @@ public class EmbeddedHttpServer implements HttpServer {
             }
         });
 
-        addJerseyHandler(app, "/api");
+        addJerseyHandler(rc, "/api");
     }
 
     private void addPluginsHandler() {
@@ -128,6 +129,8 @@ public class EmbeddedHttpServer implements HttpServer {
     private void addJerseyHandler(ResourceConfig resourceConfig, String mapping) {
         HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, resourceConfig);
         httpServer.getServerConfiguration().addHttpHandler(handler, mapping);
+        LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
+                    LocalStringKeys.HTTP_REST_REGISTER_APPLICATION, resourceConfig.getApplication().getClass().getName(), mapping));
     }
 
     @Override
