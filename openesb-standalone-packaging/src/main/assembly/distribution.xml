@@ -60,7 +60,7 @@
         </dependencySet>
         <dependencySet>
             <includes>
-                <include>net.open-esb.admin:openesb-rest-api:zip:distribution</include>
+                <include>net.open-esb.admin:openesb-rest-api-jaxrs:zip:distribution</include>
             </includes>
             <unpack>true</unpack>
             <outputDirectory>lib/ext</outputDirectory>
@@ -76,7 +76,7 @@
         </dependencySet>
         <dependencySet>
             <includes>
-                <include>net.open-esb.admin:openesb-rest-api:jar</include>
+                <include>net.open-esb.admin:openesb-rest-api-jaxrs:jar</include>
                 <include>net.open-esb:openesb-model-api</include>
                 <include>net.open-esb.admin:openesb-management-api</include>
                 <include>net.open-esb.admin:openesb-management-jmx</include>

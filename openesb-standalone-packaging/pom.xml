@@ -136,7 +136,7 @@
         <!-- OpenESB REST API & Web Console -->
         <dependency>
             <groupId>net.open-esb.admin</groupId>
-            <artifactId>openesb-rest-api</artifactId>
+            <artifactId>openesb-rest-api-jaxrs</artifactId>
             <version>${openesb-rest-api.version}</version>
             <classifier>distribution</classifier>
             <type>zip</type>
@@ -144,7 +144,7 @@
         
         <dependency>
             <groupId>net.open-esb.admin</groupId>
-            <artifactId>openesb-rest-api</artifactId>
+            <artifactId>openesb-rest-api-jaxrs</artifactId>
             <version>${openesb-rest-api.version}</version>
         </dependency>
         
