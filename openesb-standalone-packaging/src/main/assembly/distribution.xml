@@ -38,6 +38,7 @@
             </excludes>
         </fileSet>
     </fileSets>
+    
     <dependencySets>
         <dependencySet>
             <includes>
@@ -58,14 +59,16 @@
             </unpackOptions>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
+        <!--
         <dependencySet>
             <includes>
-                <include>net.open-esb.admin:openesb-rest-api-jaxrs:zip:distribution</include>
+                <include>net.open-esb.admin:openesb-rest-api-core:zip:distribution</include>
             </includes>
             <unpack>true</unpack>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
+        -->
         <dependencySet>
             <includes>
                 <include>net.open-esb.admin:openesb-web-console</include>
@@ -76,14 +79,13 @@
         </dependencySet>
         <dependencySet>
             <includes>
-                <include>net.open-esb.admin:openesb-rest-api-jaxrs:jar</include>
+                <include>net.open-esb.admin:openesb-rest-api-core</include>
                 <include>net.open-esb:openesb-model-api</include>
                 <include>net.open-esb.admin:openesb-management-api</include>
                 <include>net.open-esb.admin:openesb-management-jmx</include>
                 <include>net.open-esb.admin:openesb-oeadmin</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
-	    <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
         <dependencySet>
@@ -101,10 +103,16 @@
                 <include>org.slf4j:slf4j-api</include>
                 <include>org.slf4j:slf4j-jdk14</include>
                 <include>com.google.inject:guice</include>
-                <include>aopalliance:aopalliance</include>
                 <include>org.fusesource.jansi:jansi</include>
                 <include>com.sun.mail:mailapi</include>
+                <!-- This one includes HK2 / Jersey and Grizzly -->
+                <include>org.glassfish.*:*</include>
+                <include>com.fasterxml.jackson.*:*</include>
+                <include>org.jvnet.mimepull:mimepull</include>
             </includes>
+            <excludes>
+                <exclude>org.glassfish.hk2.external:javax.inject</exclude>
+            </excludes>
             <outputDirectory>lib/ext</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>

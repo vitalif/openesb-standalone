@@ -134,17 +134,19 @@
         </dependency>
         
         <!-- OpenESB REST API & Web Console -->
+        <!--
         <dependency>
             <groupId>net.open-esb.admin</groupId>
-            <artifactId>openesb-rest-api-jaxrs</artifactId>
+            <artifactId>openesb-rest-api-core</artifactId>
             <version>${openesb-rest-api.version}</version>
             <classifier>distribution</classifier>
             <type>zip</type>
         </dependency>
+        -->
         
         <dependency>
             <groupId>net.open-esb.admin</groupId>
-            <artifactId>openesb-rest-api-jaxrs</artifactId>
+            <artifactId>openesb-rest-api-core</artifactId>
             <version>${openesb-rest-api.version}</version>
         </dependency>
         
@@ -199,11 +201,23 @@
             </exclusions>
         </dependency>
         
-        <!-- Mai API-->
+        <!-- Mail API-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>mailapi</artifactId>
             <version>${mailapi.version}</version>
+        </dependency>
+        
+        <!-- Grizzly HTTP Container -->
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-http-server</artifactId>
+            <version>${grizzly.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-servlet</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
     </dependencies>
 </project>
