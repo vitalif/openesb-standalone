@@ -109,6 +109,7 @@
                 <include>org.glassfish.*:*</include>
                 <include>com.fasterxml.jackson.*:*</include>
                 <include>org.jvnet.mimepull:mimepull</include>
+                <include>org.javassist:javassist</include>
             </includes>
             <excludes>
                 <exclude>org.glassfish.hk2.external:javax.inject</exclude>
