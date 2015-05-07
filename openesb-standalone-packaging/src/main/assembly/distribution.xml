@@ -94,7 +94,6 @@
                 <include>com.atomikos:transactions</include>
                 <include>com.atomikos:transactions-api</include>
                 <include>com.atomikos:atomikos-util</include>
-                <include>javax:javaee-api</include>
                 <include>org.apache.tomcat:tomcat-jdbc</include>
                 <include>org.apache.tomcat:tomcat-juli</include>
                 <include>org.apache.tomcat:tomcat-catalina</include>
@@ -110,6 +109,13 @@
                 <include>com.fasterxml.jackson.*:*</include>
                 <include>org.jvnet.mimepull:mimepull</include>
                 <include>org.javassist:javassist</include>
+                <include>javax.servlet:javax.servlet-api</include>
+                <include>javax.jms:javax.jms-api</include>
+                <include>javax.inject:javax.inject</include>
+                <include>javax.ws.rs:javax.ws.rs-api</include>
+                <include>javax.transaction:javax.transaction-api</include>
+                <include>javax.annotation:javax.annotation-api</include>
+                <include>javax.validation:validation-api</include>
             </includes>
             <excludes>
                 <exclude>org.glassfish.hk2.external:javax.inject</exclude>
