@@ -19,6 +19,7 @@ import net.openesb.standalone.rest.ExtendedManagementApplication;
 import net.openesb.standalone.settings.Settings;
 import net.openesb.standalone.utils.I18NBundle;
 import org.glassfish.grizzly.http.server.HttpHandler;
+import org.glassfish.grizzly.http.server.HttpHandlerRegistration;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
 import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
@@ -109,7 +110,7 @@ public class EmbeddedHttpServer implements HttpServer {
             }
         });
 
-        addJerseyHandler(rc, "/api");
+        addJerseyHandler(rc, "/openesb/api");
     }
 
     private void addPluginsHandler() {
@@ -128,7 +129,10 @@ public class EmbeddedHttpServer implements HttpServer {
 
     private void addJerseyHandler(ResourceConfig resourceConfig, String mapping) {
         HttpHandler handler = ContainerFactory.createContainer(HttpHandler.class, resourceConfig);
-        httpServer.getServerConfiguration().addHttpHandler(handler, mapping);
+        
+        httpServer.getServerConfiguration().addHttpHandler(handler, 
+                HttpHandlerRegistration.bulder().contextPath(mapping).build());
+        
         LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
                     LocalStringKeys.HTTP_REST_REGISTER_APPLICATION, resourceConfig.getApplication().getClass().getName(), mapping));
     }
