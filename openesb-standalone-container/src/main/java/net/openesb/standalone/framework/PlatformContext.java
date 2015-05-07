@@ -37,9 +37,13 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
     private final KeyStoreUtil keyStoreUtil =
             new net.openesb.standalone.framework.KeyStoreUtil();
     
-    private final String mInstallRoot = System.getProperty(
-            Constants.OPENESB_HOME_PROP);
+    private final String mInstallRoot;
 
+    public PlatformContext() {
+        mInstallRoot = System.getProperty(Constants.OPENESB_WORK_PROP,
+                System.getProperty(Constants.OPENESB_HOME_PROP));
+    }
+    
     /**
      * Get the TransactionManager for this implementation. The instance returned
      * is an implementation of the standard JTS interface. If none is available,
