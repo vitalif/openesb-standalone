@@ -34,7 +34,7 @@
         <openesb-web-console.version>1.0.3-SNAPSHOT</openesb-web-console.version>
         <openesb-model-api.version>1.0.0</openesb-model-api.version>
         <openesb-management.version>1.0.2-SNAPSHOT</openesb-management.version>
-        <openesb-oeadmin.version>1.0.1</openesb-oeadmin.version>
+        <openesb-oeadmin.version>1.0.2-SNAPSHOT</openesb-oeadmin.version>
         <atomikos.version>3.8.0</atomikos.version>
         <tomcat.version>7.0.57</tomcat.version>
         <snakeyaml.version>1.14</snakeyaml.version>
@@ -45,7 +45,6 @@
         <slf4j.version>1.7.6</slf4j.version>
         <guice.version>3.0</guice.version>
         <jansi.version>1.11</jansi.version>
-        <javaee-api.version>7.0</javaee-api.version>
         <mailapi.version>1.5.3</mailapi.version>
         <grizzly.version>2.3.17</grizzly.version>
         <jersey.version>2.14</jersey.version>
