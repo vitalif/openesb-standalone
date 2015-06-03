@@ -103,7 +103,7 @@
                 <include>org.slf4j:slf4j-jdk14</include>
                 <include>com.google.inject:guice</include>
                 <include>org.fusesource.jansi:jansi</include>
-                <include>com.sun.mail:mailapi</include>
+                <include>javax.mail:mail</include>
                 <!-- This one includes HK2 / Jersey and Grizzly -->
                 <include>org.glassfish.*:*</include>
                 <include>com.fasterxml.jackson.*:*</include>

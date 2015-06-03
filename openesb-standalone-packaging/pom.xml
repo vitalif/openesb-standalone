@@ -184,11 +184,11 @@
             </exclusions>
         </dependency>
         
-        <!-- Mail API-->
+        <!-- Mail -->
         <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>mailapi</artifactId>
-            <version>${mailapi.version}</version>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
         </dependency>
         
         <!-- Grizzly HTTP Container -->

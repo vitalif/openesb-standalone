@@ -45,7 +45,7 @@
         <slf4j.version>1.7.6</slf4j.version>
         <guice.version>3.0</guice.version>
         <jansi.version>1.11</jansi.version>
-        <mailapi.version>1.5.3</mailapi.version>
+        <mail.version>1.4.7</mail.version>
         <grizzly.version>2.3.17</grizzly.version>
         <jersey.version>2.14</jersey.version>
     </properties>
