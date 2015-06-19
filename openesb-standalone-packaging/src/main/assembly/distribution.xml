@@ -29,7 +29,7 @@
             </excludes>
         </fileSet>
         
-        <!-- Just to create an empty logs directory -->
+        <!-- Just to create an empty TM logs directory -->
         <fileSet>
             <directory>src/main/assembly</directory>
             <outputDirectory>/tm/logs</outputDirectory>
@@ -59,16 +59,6 @@
             </unpackOptions>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
-        <!--
-        <dependencySet>
-            <includes>
-                <include>net.open-esb.admin:openesb-rest-api-core:zip:distribution</include>
-            </includes>
-            <unpack>true</unpack>
-            <outputDirectory>lib/ext</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-        </dependencySet>
-        -->
         <dependencySet>
             <includes>
                 <include>net.open-esb.admin:openesb-web-console</include>
