@@ -10,7 +10,7 @@
     
     <groupId>net.open-esb.runtime.standalone</groupId>
     <artifactId>openesb-standalone</artifactId>
-    <version>3.0.5</version>
+    <version>3.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>OpenESB - Standalone</name>
