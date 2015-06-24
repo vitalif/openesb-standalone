@@ -29,12 +29,12 @@
     </modules>
     
     <properties>
-        <openesb-core.version>2.4.1</openesb-core.version>
-        <openesb-rest-api.version>1.0.2-SNAPSHOT</openesb-rest-api.version>
-        <openesb-web-console.version>1.0.3-SNAPSHOT</openesb-web-console.version>
+        <openesb-core.version>2.4.2</openesb-core.version>
+        <openesb-rest-api.version>1.0.2</openesb-rest-api.version>
+        <openesb-web-console.version>1.0.3</openesb-web-console.version>
         <openesb-model-api.version>1.0.0</openesb-model-api.version>
-        <openesb-management.version>1.0.2-SNAPSHOT</openesb-management.version>
-        <openesb-oeadmin.version>1.0.2-SNAPSHOT</openesb-oeadmin.version>
+        <openesb-management.version>1.0.3</openesb-management.version>
+        <openesb-oeadmin.version>1.0.2</openesb-oeadmin.version>
         <atomikos.version>3.8.0</atomikos.version>
         <tomcat.version>7.0.57</tomcat.version>
         <snakeyaml.version>1.14</snakeyaml.version>
