@@ -147,7 +147,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getTargetName() {
-        return mClusterName != null ? mClusterName : node.name();
+        return node.name();
     }
 
     /**
@@ -159,7 +159,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public String getTargetName(String instanceName) {
-        return mClusterName != null ? mClusterName : instanceName;
+        return instanceName;
     }
 
     /**
@@ -169,12 +169,12 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public Set<String> getStandaloneServerNames() {
-        if (mClusterName == null) {
+        //if (mClusterName == null) {
             HashSet<String> names = new HashSet<String>();
             names.add(node.name());
             return names;
-        }
-        return new HashSet<String>();
+        //}
+        //return new HashSet<String>();
     }
 
     /**
@@ -246,7 +246,7 @@ public class PlatformContext implements com.sun.jbi.platform.PlatformContext {
      */
     @Override
     public boolean isStandaloneServer(String targetName) {
-        return mClusterName == null && node.name().equals(targetName);
+        return /*mClusterName == null && */node.name().equals(targetName);
     }
 
     /**
