@@ -1,6 +1,7 @@
 package net.openesb.standalone.naming.jndi.ds.tomcat;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,9 +118,6 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             throw ex;
         }
 
-        /*Return Fields declared in a class and its ancesters */
-        Map<String, Field> dsFields = this.getAllFields(dsClass);
-
         /*
          * Create datasource instance. 
          * 
@@ -139,65 +137,10 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
             throw ex;
         }
 
-        /* Use java reflexion to set up Native Datasource declared in the context */
-        Set<String> dspSet = datasourceMap.keySet();
-        Iterator<String> keys = dspSet.iterator();
-        while (keys.hasNext()) {
-            String fieldName = keys.next();
-            Field field = dsFields.get(fieldName);
-            if (null == field) {
-                LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                        LocalStringKeys.DS_DATASOURCE_PROPERTY_NOT_FOUND, fieldName, dspProperties.getDbConnectorName(), dsName));
-            } else {
-                boolean accessible = field.isAccessible();
-                field.setAccessible(true);
+        setAllProperties(nativeDS, datasourceMap, "DS_DATASOURCE_");
 
-                String fieldValue = datasourceMap.get(fieldName);
-
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.DS_DATASOURCE_PROPERTY_SET, fieldName, fieldValue, dspProperties.getDbConnectorName()));
-                }
-
-                try {
-                    if (field.getType().equals(byte.class)) {
-                        field.set(nativeDS, Byte.parseByte(fieldValue));
-                    } else if (field.getType().equals(boolean.class)) {
-                        field.set(nativeDS, Boolean.parseBoolean(fieldValue));
-                    } else if (field.getType().equals(char.class)) {
-                        field.set(nativeDS, fieldValue.charAt(0));
-                    } else if (field.getType().equals(short.class)) {
-                        field.set(nativeDS, Short.parseShort(fieldValue));
-                    } else if (field.getType().equals(int.class)) {
-                        field.set(nativeDS, Integer.parseInt(fieldValue));
-                    } else if (field.getType().equals(long.class)) {
-                        field.set(nativeDS, Long.parseLong(fieldValue));
-                    } else if (field.getType().equals(float.class)) {
-                        field.set(nativeDS, Float.parseFloat(fieldValue));
-                    } else if (field.getType().equals(double.class)) {
-                        field.set(nativeDS, Double.parseDouble(fieldValue));
-                    } else if (field.getType().equals(String.class)) {
-                        field.set(nativeDS, fieldValue);
-                    } else {
-                        LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                                LocalStringKeys.DS_DATASOURCE_PROPERTY_NOT_SET, fieldName, field.getType(), dspProperties.getDbConnectorName()));
-                    }
-                } catch (IllegalArgumentException ex) {
-                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.DS_DATASOURCE_PROPERTY_INVALID_VALUE, fieldValue, fieldName));
-                    throw ex;
-                } catch (IllegalAccessException ex) {
-                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.DS_DATASOURCE_PROPERTY_ACCESS, fieldName));
-                    throw ex;
-                } finally {
-                    field.setAccessible(accessible);
-                }
-            }
-        }
-
-        /* Datasouce fields are set with data proterties found in the context 
-         * Now let's set the pool with the pool proterties found in the context
+        /* Datasouce fields are set with data properties found in the context 
+         * Now let's set the pool with the pool properties found in the context
          * get the properties for the pool */
         if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, I18NBundle.getBundle().getMessage(
@@ -216,68 +159,77 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         Map<String, String> poolMap = this.listToMap(contextPoolProperties.getProperty());
         // Create pool configuration
         org.apache.tomcat.jdbc.pool.PoolProperties poolProperties
-                = new org.apache.tomcat.jdbc.pool.PoolProperties();
+            = new org.apache.tomcat.jdbc.pool.PoolProperties();
 
-        Class poolPropertiesClass = poolProperties.getClass();
-        Map<String, Field> poolPropertiesFields = this.getAllFields(poolPropertiesClass);
-        /* Use java reflexion to set up pool configurationwith context properties
-         */
-        Set<String> poolPropertiesSet = poolMap.keySet();
-        keys = poolPropertiesSet.iterator();
+        setAllProperties(poolProperties, poolMap, "DS_POOL_");
 
-        while (keys.hasNext()) {
-
-            String fieldName = keys.next();
-            Field field = poolPropertiesFields.get(fieldName);
-            if (null == field) {
-                LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                        LocalStringKeys.DS_POOL_PROPERTY_NOT_FOUND, fieldName, dspProperties.getDbConnectorName(), dsName));
-            } else {
-                boolean accessible = field.isAccessible();
-                field.setAccessible(true);
-                
-                String fieldValue = poolMap.get(fieldName);
-                try {
-                    if (field.getType().equals(byte.class)) {
-                        field.set(poolProperties, Byte.parseByte(fieldValue));
-                    } else if (field.getType().equals(boolean.class)) {
-                        field.set(poolProperties, Boolean.parseBoolean(fieldValue));
-                    } else if (field.getType().equals(char.class)) {
-                        field.set(poolProperties, fieldValue.charAt(0));
-                    } else if (field.getType().equals(short.class)) {
-                        field.set(poolProperties, Short.parseShort(fieldValue));
-                    } else if (field.getType().equals(int.class)) {
-                        field.set(poolProperties, Integer.parseInt(fieldValue));
-                    } else if (field.getType().equals(long.class)) {
-                        field.set(poolProperties, Long.parseLong(fieldValue));
-                    } else if (field.getType().equals(float.class)) {
-                        field.set(poolProperties, Float.parseFloat(fieldValue));
-                    } else if (field.getType().equals(double.class)) {
-                        field.set(poolProperties, Double.parseDouble(fieldValue));
-                    } else if (field.getType().equals(String.class)) {
-                        field.set(poolProperties, fieldValue);
-                    } else {
-                        LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
-                                LocalStringKeys.DS_POOL_PROPERTY_NOT_SET, fieldName, field.getType(), dspProperties.getDbConnectorName()));
-                    }
-                } catch (IllegalArgumentException ex) {
-                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.DS_POOL_PROPERTY_INVALID_VALUE, fieldValue, fieldName));
-                    throw ex;
-                } catch (IllegalAccessException ex) {
-                    LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
-                            LocalStringKeys.DS_POOL_PROPERTY_ACCESS, fieldName));
-                    throw ex;
-                } finally {
-                    field.setAccessible(accessible);
-                }
-            }
-        }
-        // set the pool and get a Poolled Datasource       
+        // set the pool and get a Pooled Datasource
         poolProperties.setDataSource(nativeDS);
         poolProperties.setJmxEnabled(true);
 
         return poolProperties;
+    }
+
+    /**
+     * Use java reflection to call setters on an object
+     */
+    private void setAllProperties(Object obj, Map<String, String> props, String errPrefix)
+         throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+    {
+        Class cl = obj.getClass();
+        Map<String, Method> setters = getAllSetters(cl);
+        Set<String> propSet = props.keySet();
+        Iterator<String> keys = propSet.iterator();
+        while (keys.hasNext()) {
+            String fieldName = keys.next();
+            Method m = setters.get(fieldName.toLowerCase());
+            if (null == m) {
+                LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                    errPrefix+"PROPERTY_NOT_FOUND", fieldName, cl.getName()));
+                continue;
+            }
+            String fieldValue = props.get(fieldName);
+            Class<?>[] paramTypes = m.getParameterTypes();
+            if (paramTypes.length != 1) {
+                LOG.log(Level.WARNING, "Method is not a setter or has more than 1 argument: "+cl.getName()+"."+m.getName());
+                continue;
+            }
+            Class<?> t = paramTypes[0];
+            try {
+                if (t.equals(byte.class)) {
+                    m.invoke(obj, Byte.parseByte(fieldValue));
+                } else if (t.equals(boolean.class)) {
+                    m.invoke(obj, Boolean.parseBoolean(fieldValue));
+                } else if (t.equals(char.class)) {
+                    m.invoke(obj, fieldValue.charAt(0));
+                } else if (t.equals(short.class)) {
+                    m.invoke(obj, Short.parseShort(fieldValue));
+                } else if (t.equals(int.class)) {
+                    m.invoke(obj, Integer.parseInt(fieldValue));
+                } else if (t.equals(long.class)) {
+                    m.invoke(obj, Long.parseLong(fieldValue));
+                } else if (t.equals(float.class)) {
+                    m.invoke(obj, Float.parseFloat(fieldValue));
+                } else if (t.equals(double.class)) {
+                    m.invoke(obj, Double.parseDouble(fieldValue));
+                } else if (t.equals(String.class)) {
+                    m.invoke(obj, fieldValue);
+                } else {
+                    LOG.log(Level.WARNING, I18NBundle.getBundle().getMessage(
+                        errPrefix+"PROPERTY_NOT_SET", fieldName, t, cl.getName()));
+                }
+            } catch (InvocationTargetException ex) {
+                throw ex;
+            } catch (IllegalArgumentException ex) {
+                LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    errPrefix+"PROPERTY_INVALID_VALUE", fieldValue, fieldName));
+                throw ex;
+            } catch (IllegalAccessException ex) {
+                LOG.log(Level.SEVERE, I18NBundle.getBundle().getMessage(
+                    errPrefix+"PROPERTY_ACCESS", fieldName));
+                throw ex;
+            }
+        }
     }
 
     /* List to Map is an internal methode used to convert a List<Property> to a Map.
@@ -306,24 +258,17 @@ public class TomcatDataSourcePoolFactory implements DataSourcePoolFactory {
         return outputMap;
     }
 
-    /* getAll field is used to get all the fields declared in a class + its ancesters
-     * getDeclaredField just returns the field declared at the class level and not 
-     * at the ancester levels. The retured map contains key-values pairs with Field name and Field object
+    /* getAllSetters is used to get all the setters declared in a class and its ancestors.
+     * The retured map contains key-values pairs with lowercased field names and Method objects.
      */
-    private Map<String, Field> getAllFields(Class<?> type) {
-        List<Field> listFields = new ArrayList<Field>();
-        for (Class<?> c = type; c
-                != Object.class; c = c.getSuperclass()) {
-            listFields.addAll(Arrays.asList(c.getDeclaredFields()));
+    private Map<String, Method> getAllSetters(Class<?> type) {
+        Map<String, Method> mapSetters = new HashMap<String, Method>();
+        Method[] methods = type.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            String name = methods[i].getName().toLowerCase();
+            if (name.startsWith("set"))
+                mapSetters.put(name.substring(3), methods[i]);
         }
-        Map<String, Field> mapFields = new HashMap<String, Field>();
-        Iterator<Field> fieldIterator = listFields.iterator();
-
-        while (fieldIterator.hasNext()) {
-            Field field = fieldIterator.next();
-            String fieldName = field.getName();
-            mapFields.put(fieldName, field);
-        }
-        return mapFields;
+        return mapSetters;
     }
 }
