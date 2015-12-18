@@ -102,6 +102,7 @@ echo ""
         -Dcom.atomikos.icatch.file=$OPENESB_HOME/tm/jta.properties \
         -Djava.util.logging.config.file=$OPENESB_HOME/config/logger.properties \
         -Djava.util.logging.manager=net.openesb.standalone.logging.LogManager \
+        -Djava.security.egd=file:///dev/urandom \
         -cp "$OPENESB_BOOT_CLASSPATH:$OPENESB_HOME/lib/ext/jansi-1.11.jar" \
         -Djmx.invoke.getters=true \
         -Dopenesb.home=$OPENESB_HOME \
